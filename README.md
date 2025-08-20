@@ -5,20 +5,32 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+## Ruby version
+3.3.7
 
-* System dependencies
+## Configuration
 
-* Configuration
+## Database set up
 
-* Database creation
+### create database
+```bash
+bin/rails db:create
+```
 
-* Database initialization
+### apply schema
+dry-run
 
-* How to run the test suite
+```bash
+bundle exec ridgepole -c config/database.yml -E development -f db/schemas/Schemafile --apply --dry-run
+bundle exec ridgepole -c config/database.yml -E test -f db/schemas/Schemafile --apply --dry-run
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+apply
+```bash
+bundle exec ridgepole -c config/database.yml -E development -f db/schemas/Schemafile --apply
+bundle exec ridgepole -c config/database.yml -E test -f db/schemas/Schemafile --apply
+```
 
-* Deployment instructions
+## How to run the test suite
 
-* ...
+## Services (job queues, cache servers, search engines, etc.)

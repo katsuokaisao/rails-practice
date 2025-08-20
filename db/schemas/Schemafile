@@ -1,0 +1,6 @@
+require 'decisions.schema.rb'
+require 'post_histories.schema.rb'
+require 'posts.schema.rb'
+require 'reports.schema.rb'
+require 'threads.schema.rb'
+require 'users.schema.rb'

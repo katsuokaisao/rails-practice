@@ -16,14 +16,27 @@
 
 * {
     margin: 0px;
+    padding: 0px;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
 }
 
 .flash-messages {
     width: stretch;
+
     .flash-alert {
         border-radius: 3px;
         color: #c80d2a;
         background-color: #efc3c3;
         padding: 8px;
     }
+}
+
+.material-icons {
+    font-size: 24px;
+    color: #666;
+    vertical-align: middle;
 }

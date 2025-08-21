@@ -1,0 +1,27 @@
+<header>
+    <div class="header-left">
+        <%= link_to "BoardApp", root_path, class: "logo" %>
+    </div>
+    <div class="header-right">
+        <button class="user-menu-trigger">
+            <span class="material-icons user-icon">account_circle</span>
+            <span class="material-icons">expand_more</span>
+        </button>
+        <div class="user-menu">
+            <ul class="dropdown-list">
+                <li class="dropdown-item">
+                    <%= link_to edit_user_registration_path do %>
+                        <span class="material-icons">edit</span>
+                        ユーザ情報編集
+                    <% end %>
+                </li>
+                <li class="dropdown-item">
+                    <%= button_to destroy_user_session_path, method: :delete, class: "logout" do %>
+                        <span class="material-icons">logout</span>
+                        ログアウト
+                    <% end %>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BoardAppsss</title>
+    <title>BoardApp</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -13,12 +13,16 @@
 
   <body class="<%= root_class_name %>">
     <main>
-      <div class="flash-messages">
-        <% flash.each do |type, message| %>
-          <div class="flash-<%= type %>"><%= message %></div>
-        <% end %>
-      </div>
-      <%= yield %>
+      <article>
+        <section>
+          <div class="flash-messages">
+            <% flash.each do |type, message| %>
+              <div class="flash-<%= type %>"><%= message %></div>
+            <% end %>
+          </div>
+          <%= yield %>
+        </section>
+      </article>
     </main>
   </body>
 </html>

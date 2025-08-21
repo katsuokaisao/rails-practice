@@ -14,6 +14,7 @@ Things you may want to cover:
 
 ### create database
 ```bash
+bin/rails db:drop
 bin/rails db:create
 ```
 

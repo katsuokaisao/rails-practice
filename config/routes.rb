@@ -1,12 +1,15 @@
 Rails.application.routes.draw do
-  get 'home/index'
+  root to: 'home#index'
+
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
-  get 'up' => 'rails/health#show', as: :rails_health_check
+  devise_scope :user do
+    get 'moderators/sign_in', to: 'moderators/sessions#new', as: :new_moderator_session
+    post 'moderators/sign_in', to: 'moderators/sessions#create', as: :moderator_session
+    delete 'moderators/sign_out', to: 'moderators/sessions#destroy', as: :destroy_moderator_session
+  end
 
-  # Defines the root path route ("/")
-  # root "comments#index"
-  root to: 'home#index'
+  get 'up' => 'rails/health#show', as: :rails_health_check
 end

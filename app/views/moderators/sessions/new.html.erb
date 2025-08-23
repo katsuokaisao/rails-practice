@@ -1,4 +1,4 @@
-<h2>Moderator Log in</h2>
+<h2><%= t('views.shared.authentication.moderator_login') %></h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -21,6 +21,6 @@
   <% end %>
 
   <div class="actions">
-    <%= f.submit "Log in" %>
+    <%= f.submit t('views.shared.authentication.login') %>
   </div>
 <% end %>

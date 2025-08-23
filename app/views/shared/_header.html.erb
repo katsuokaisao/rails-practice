@@ -1,6 +1,6 @@
 <header>
     <div class="header-left">
-        <%= link_to "BoardApp", root_path, class: "logo" %>
+        <%= link_to t('views.shared.application_title'), root_path, class: "logo" %>
     </div>
     <div class="header-right">
         <button class="user-menu-trigger">
@@ -12,13 +12,13 @@
                 <li class="dropdown-item">
                     <%= link_to edit_user_registration_path do %>
                         <span class="material-icons">edit</span>
-                        ユーザ情報編集
+                        <%= t('views.shared.header.user_edit') %>
                     <% end %>
                 </li>
                 <li class="dropdown-item">
                     <%= button_to destroy_user_session_path, method: :delete, class: "logout" do %>
                         <span class="material-icons">logout</span>
-                        ログアウト
+                        <%= t('views.shared.header.logout') %>
                     <% end %>
                 </li>
             </ul>

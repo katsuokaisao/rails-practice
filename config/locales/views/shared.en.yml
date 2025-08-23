@@ -1,0 +1,11 @@
+en:
+  views:
+    shared:
+      application_title: "Forum App"
+      header:
+        user_edit: "User Edit"
+        logout: "Logout"
+      authentication:
+        login: "Login"
+        signup: "Sign Up"
+        moderator_login: "Moderator Login"

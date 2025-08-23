@@ -11,6 +11,7 @@ gem "bootsnap", require: false
 gem "ridgepole"
 gem "devise"
 gem "actionmailer", "~> 7.1"
+gem 'rails-i18n'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"

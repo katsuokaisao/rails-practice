@@ -1,4 +1,4 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<h2><%= t('views.shared.title.edit', resource: resource_name.to_s.humanize) %></h2>
 
 <%= form_for(resource, as: resource_name, url: user_registration_path) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -9,11 +9,11 @@
   </div>
 
   <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i>
+    <%= f.label :password %> <i>(<%= t('devise.registrations.edit.leave_blank_if_you_don_t_want_to_change_it') %>)</i>
     <%= f.password_field :password, autocomplete: "new-password" %>
     <% if @minimum_password_length %>
 
-      <em><%= @minimum_password_length %> characters minimum</em>
+      <em><%= @minimum_password_length %> <%= t('devise.registrations.edit.characters_minimum') %></em>
     <% end %>
   </div>
 
@@ -23,13 +23,13 @@
   </div>
 
   <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i>
+    <%= f.label :current_password %> <i>(<%= t('devise.registrations.edit.we_need_your_current_password_to_confirm_your_changes') %>)</i>
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Update" %>
+    <%= f.submit t('devise.registrations.edit.update') %>
   </div>
 <% end %>
 
-<%= link_to "Back", (request.referer || root_path) %>
+<%= link_to t('views.shared.action.back'), (request.referer || root_path) %>

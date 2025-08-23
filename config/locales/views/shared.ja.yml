@@ -9,3 +9,7 @@ ja:
         login: "ログイン"
         signup: "新規登録"
         moderator_login: "モデレータログイン"
+      action:
+        back: "戻る"
+      title:
+        edit: "%{resource}編集"

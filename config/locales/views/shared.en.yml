@@ -9,3 +9,7 @@ en:
         login: "Login"
         signup: "Sign Up"
         moderator_login: "Moderator Login"
+      action:
+        back: "Back"
+      title:
+        edit: "Edit %{resource}"

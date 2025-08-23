@@ -12,24 +12,39 @@ Things you may want to cover:
 
 ## Database set up
 
-### create database
+### 開発環境のセットアップ（リセット + スキーマ適用 + シード）
+
 ```bash
-bin/rails db:drop
-bin/rails db:create
+bin/rake db:custom:setup
 ```
 
-### apply schema
-dry-run
+このタスクは以下を順次実行します：
+- データベースのドロップ・作成
+- Ridgepoleによるスキーマ適用
+- シードデータの投入
+
+### テスト環境のセットアップ（リセット + スキーマ適用）
 
 ```bash
-bundle exec ridgepole -c config/database.yml -E development -f db/schemas/Schemafile --apply --dry-run
-bundle exec ridgepole -c config/database.yml -E test -f db/schemas/Schemafile --apply --dry-run
+bin/rake db:custom:setup_test
 ```
 
-apply
+このタスクは以下を順次実行します：
+- テスト用データベースのドロップ・作成
+- Ridgepoleによるスキーマ適用
+
+### スキーマのみ適用
+
+#### dry-run（変更内容の確認）
+
 ```bash
-bundle exec ridgepole -c config/database.yml -E development -f db/schemas/Schemafile --apply
-bundle exec ridgepole -c config/database.yml -E test -f db/schemas/Schemafile --apply
+bin/rake db:custom:ridgepole_dry_run
+```
+
+#### 実際の適用
+
+```bash
+bin/rake db:custom:ridgepole_apply
 ```
 
 ## How to run the test suite

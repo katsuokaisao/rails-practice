@@ -40,9 +40,3 @@
         }
     }
 }
-
-.users_registrations_controller.edit_action.update_action {
-    i {
-        font-size: 12px;
-    }
-}

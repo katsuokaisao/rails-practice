@@ -19,15 +19,13 @@ AllCops:
 
 plugins:
   - rubocop-rails
-  # - rubocop-rspec
+  - rubocop-rspec
 
-# ドキュメント関連
 Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'config/initializers/**/*'
 
-# ブロック長制限
 Metrics/BlockLength:
   Max: 25
   Exclude:
@@ -36,19 +34,16 @@ Metrics/BlockLength:
     - 'lib/tasks/**/*'
     - 'config/environments/**/*'
 
-# 行長制限
 Layout/LineLength:
   Max: 120
   Exclude:
     - 'config/initializers/**/*'
 
-# メソッド長制限
 Metrics/MethodLength:
   Max: 10
   Exclude:
     - 'app/controllers/users/registrations_controller.rb'
 
-# ABC複雑度
 Metrics/AbcSize:
   Max: 17
   Exclude:
@@ -59,3 +54,15 @@ Rails/LexicallyScopedActionFilter:
   Exclude:
     - 'app/controllers/users/**/*'
     - 'app/controllers/admins/**/*'
+
+Rails/Output:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 15
+  Include:
+    - 'spec/system/**/*'
+
+RSpec/MultipleExpectations:
+  Exclude:
+    - 'spec/system/**/*'

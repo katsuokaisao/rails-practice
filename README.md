@@ -49,4 +49,25 @@ bin/rake db:custom:ridgepole_apply
 
 ## How to run the test suite
 
+### テスト用データベースのセットアップ
+
+```bash
+bin/rake db:custom:setup_test
+```
+
+### RSpecテストの実行
+
+```bash
+bundle exec rspec
+```
+
+### E2Eテスト環境
+このプロジェクトでは**Capybara + Playwright**を使用してE2Eテストを実装しています。
+
+#### 使用技術
+- **Capybara**: RubyのWebアプリケーション用テストフレームワーク
+- **capybara-playwright-driver**: PlaywrightをCapybaraで使用するためのドライバー
+- **Playwright**: 高速で安定したブラウザ自動化ツール
+
+
 ## Services (job queues, cache servers, search engines, etc.)

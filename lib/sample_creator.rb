@@ -30,7 +30,7 @@ class SampleCreator
       puts "User: #{user.nickname}"
     end
 
-    puts "=== Moderators ==="
+    puts '=== Moderators ==='
     Moderator.find_each do |moderator|
       puts "Moderator: #{moderator.nickname}"
     end

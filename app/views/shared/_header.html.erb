@@ -3,35 +3,48 @@
         <%= link_to t('views.shared.application_title'), root_path, class: "logo" %>
     </div>
     <div class="header-right">
-        <button class="user-menu-trigger">
-            <span class="material-icons user-icon">account_circle</span>
-            <span class="material-icons">expand_more</span>
-        </button>
-        <div class="user-menu">
-            <ul class="dropdown-list">
-                <li class="dropdown-item">
-                    <%= link_to edit_user_profile_path do %>
-                        <span class="material-icons">edit</span>
-                        <%= t('views.shared.header.profile') %>
-                    <% end %>
-                </li>
-                <li class="dropdown-item">
-                    <%= link_to edit_user_password_path do %>
-                        <span class="material-icons">lock</span>
-                        <%= t('views.shared.header.password') %>
-                    <% end %>
-                </li>
-                <li class="dropdown-item">
-                    <%= button_to destroy_user_session_path, method: :delete, class: "logout" do %>
-                        <span class="material-icons">logout</span>
-                        <%= t('views.shared.header.logout') %>
-                    <% end %>
-                    <%= button_to destroy_moderator_session_path, method: :delete, class: "logout" do %>
-                        <span class="material-icons">logout</span>
-                        <%= t('views.shared.header.logout') %>
-                    <% end %>
-                </li>
-            </ul>
-        </div>
+        <% if user_signed_in? %>
+            <button class="user-menu-trigger">
+                <span class="material-icons user-icon">account_circle</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="user-menu">
+                <ul class="dropdown-list">
+                    <li class="dropdown-item">
+                        <%= link_to edit_user_profile_path do %>
+                            <span class="material-icons">edit</span>
+                            <%= t('views.shared.header.profile') %>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= link_to edit_user_password_path do %>
+                            <span class="material-icons">lock</span>
+                            <%= t('views.shared.header.password') %>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= button_to destroy_user_session_path, method: :delete, class: "logout" do %>
+                            <span class="material-icons">logout</span>
+                            <%= t('views.shared.header.logout') %>
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+        <% elsif moderator_signed_in? %>
+            <button class="user-menu-trigger">
+                <span class="material-icons user-icon">admin_panel_settings</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="user-menu">
+                <ul class="dropdown-list">
+                    <li class="dropdown-item">
+                        <%= button_to destroy_moderator_session_path, method: :delete, class: "logout" do %>
+                            <span class="material-icons">logout</span>
+                            <%= t('views.shared.header.logout') %>
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+        <% end %>
     </div>
 </header>

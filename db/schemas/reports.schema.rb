@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 create_table 'reports', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.string   'target_type',    null: false, comment: "(enum: 'comment' | 'user')"
   t.bigint   'target_user_id', null: true

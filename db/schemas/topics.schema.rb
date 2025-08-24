@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 create_table 'topics', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint   'author_id',  null: false
   t.string   'title',      null: false

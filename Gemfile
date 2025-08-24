@@ -1,20 +1,22 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
-ruby "3.3.7"
+source 'https://rubygems.org'
 
-gem "rails", "~> 7.1.5", ">= 7.1.5.1"
-gem "sprockets-rails"
-gem "mysql2", "~> 0.5"
-gem "puma", ">= 5.0"
-gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "bootsnap", require: false
-gem "ridgepole"
-gem "devise"
-gem "actionmailer", "~> 7.1"
+ruby '3.3.7'
+
+gem 'actionmailer', '~> 7.1'
+gem 'bootsnap', require: false
+gem 'devise'
+gem 'mysql2', '~> 0.5'
+gem 'puma', '>= 5.0'
+gem 'rails', '~> 7.1.5', '>= 7.1.5.1'
 gem 'rails-i18n'
+gem 'ridgepole'
+gem 'sprockets-rails'
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+gem 'importmap-rails'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -24,12 +26,17 @@ gem "importmap-rails"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+  gem 'debug', platforms: %i[mri windows]
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem "web-console"
+  gem 'web-console'
+
+  gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rails', require: false
+  # gem 'rubocop-rspec', require: false
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 create_table 'comment_histories', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint   'comment_id', null: false
   t.bigint   'topic_id', null: false

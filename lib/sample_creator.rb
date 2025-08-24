@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 class SampleCreator
   class << self
     def create
-      self.new.create
+      new.create
     end
   end
 
   def create
-    create_users()
-    create_moderators()
-    put_all_accounts()
+    create_users
+    create_moderators
+    put_all_accounts
   end
 
   private
@@ -21,8 +23,8 @@ class SampleCreator
 
   def create_moderator(nickname)
     Moderator.find_or_create_by(nickname: nickname) do |moderator|
-      moderator.password = "password"
-      moderator.password_confirmation = "password"
+      moderator.password = 'password'
+      moderator.password_confirmation = 'password'
     end
   end
 
@@ -34,13 +36,13 @@ class SampleCreator
 
   def create_user(nickname)
     User.find_or_create_by(nickname: nickname) do |user|
-      user.password = "password"
-      user.password_confirmation = "password"
+      user.password = 'password'
+      user.password_confirmation = 'password'
     end
   end
 
   def put_all_accounts
-    puts "=== Users ==="
+    puts '=== Users ==='
     User.all.each do |user|
       puts "User: #{user.nickname}"
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 create_table 'users', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.string   'nickname',           null: false
   t.string   'encrypted_password', null: false

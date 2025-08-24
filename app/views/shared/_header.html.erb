@@ -26,6 +26,10 @@
                         <span class="material-icons">logout</span>
                         <%= t('views.shared.header.logout') %>
                     <% end %>
+                    <%= button_to destroy_moderator_session_path, method: :delete, class: "logout" do %>
+                        <span class="material-icons">logout</span>
+                        <%= t('views.shared.header.logout') %>
+                    <% end %>
                 </li>
             </ul>
         </div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   NICKNAME_MIN_LENGTH = 1
   NICKNAME_MAX_LENGTH = 50

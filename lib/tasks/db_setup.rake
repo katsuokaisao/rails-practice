@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :db do
   namespace :custom do
     desc 'Reset & apply ridgepole, then seed (development)'

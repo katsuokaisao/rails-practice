@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Moderator < ApplicationRecord
   NICKNAME_MIN_LENGTH = 1
   NICKNAME_MAX_LENGTH = 50

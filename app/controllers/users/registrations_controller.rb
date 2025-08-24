@@ -83,12 +83,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
-  def after_update_path_for(resource)
+  def update_resource(resource, params)
+    case update_kind
+    when :profile  then resource.update_without_password(params)
+    when :password then resource.update_with_password(params)
+    end
+  end
+
+  def after_update_path_for(_resource)
     case update_kind
     when :profile  then edit_user_profile_path
     when :password then root_path
-    else
-      super(resource)
     end
   end
 

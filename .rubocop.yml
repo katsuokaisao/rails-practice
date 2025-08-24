@@ -1,0 +1,49 @@
+# RuboCop設定ファイル
+# プロジェクト全体のコーディング規約を定義
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    # 自動生成ファイル
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'storage/**/*'
+    - 'public/**/*'
+    - '.ruby-lsp/**/*'
+    - '.vscode/**/*'
+
+# ドキュメント関連
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+    - 'config/initializers/**/*'
+
+# ブロック長制限
+Metrics/BlockLength:
+  Max: 25
+  Exclude:
+    - 'config/routes.rb'
+    - 'spec/**/*'
+    - 'lib/tasks/**/*'
+    - 'config/environments/**/*'
+
+# 行長制限
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'config/initializers/**/*'
+
+# メソッド長制限
+Metrics/MethodLength:
+  Max: 10
+  Exclude:
+    - 'app/controllers/users/registrations_controller.rb'
+
+# ABC複雑度
+Metrics/AbcSize:
+  Max: 17
+  Exclude:
+    - 'app/controllers/users/registrations_controller.rb'

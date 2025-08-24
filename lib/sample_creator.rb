@@ -5,9 +5,7 @@
 # 開発用のサンプルデータを作成する。
 class SampleCreator
   class << self
-    def create
-      new.create
-    end
+    delegate :create, to: :new
   end
 
   def create

@@ -14,6 +14,8 @@ AllCops:
     - 'public/**/*'
     - '.ruby-lsp/**/*'
     - '.vscode/**/*'
+    - spec/spec_helper.rb
+    - spec/rails_helper.rb
 
 plugins:
   - rubocop-rails

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'open3'
+
 namespace :db do
   namespace :custom do
     desc 'Reset & apply ridgepole, then seed (development)'
@@ -49,8 +51,13 @@ namespace :db do
 
     def run!(*args, env: {})
       puts ([env.map { |k, v| "#{k}=#{v}" }.join(' ')] + args).reject(&:empty?).join(' ')
-      ok = env.empty? ? system(*args) : system(env, *args)
-      abort("FAILED: #{args.inspect}") unless ok
+
+      stdout, stderr, status = Open3.capture3(env, *args)
+
+      puts stdout unless stdout.empty?
+      warn stderr unless stderr.empty?
+
+      abort("FAILED: #{args.inspect}") unless status.success?
     end
   end
 end

@@ -100,10 +100,18 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    diff-lcs (1.6.2)
     diffy (3.4.4)
     drb (2.2.3)
     erb (5.0.2)
     erubi (1.13.1)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -231,6 +239,23 @@ GEM
       activerecord (>= 6.1, < 8.1)
       diffy
       logger
+    rspec-core (3.13.4)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (7.1.1)
+      actionpack (>= 7.0)
+      activesupport (>= 7.0)
+      railties (>= 7.0)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.4)
     rubocop (1.80.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -255,6 +280,9 @@ GEM
       rack (>= 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.44.0, < 2.0)
+    rubocop-rspec (3.6.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     sprockets (4.2.2)
@@ -303,15 +331,19 @@ DEPENDENCIES
   bootsnap
   debug
   devise
+  factory_bot_rails
+  faker
   importmap-rails
   mysql2 (~> 0.5)
   puma (>= 5.0)
   rails (~> 7.1.5, >= 7.1.5.1)
   rails-i18n
   ridgepole
+  rspec-rails
   rubocop
   rubocop-performance
   rubocop-rails
+  rubocop-rspec
   sprockets-rails
   tzinfo-data
   web-console

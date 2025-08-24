@@ -8,7 +8,7 @@ class SampleCreator
   def create
     create_users()
     create_moderators()
-    put_users()
+    put_all_accounts()
   end
 
   private
@@ -20,10 +20,9 @@ class SampleCreator
   end
 
   def create_moderator(nickname)
-    User.find_or_create_by(nickname: nickname) do |user|
-      user.password = "password"
-      user.password_confirmation = "password"
-      user.role = :moderator
+    Moderator.find_or_create_by(nickname: nickname) do |moderator|
+      moderator.password = "password"
+      moderator.password_confirmation = "password"
     end
   end
 
@@ -40,9 +39,15 @@ class SampleCreator
     end
   end
 
-  def put_users
+  def put_all_accounts
+    puts "=== Users ==="
     User.all.each do |user|
-      puts "User: #{user.nickname}, Role: #{user.role}"
+      puts "User: #{user.nickname}"
+    end
+
+    puts "\n=== Moderators ==="
+    Moderator.all.each do |moderator|
+      puts "Moderator: #{moderator.nickname}"
     end
   end
 end

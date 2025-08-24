@@ -10,5 +10,5 @@ create_table 'decisions', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t
   t.index ['decided_by'], name: 'idx_decisions_decided_by'
 end
 
-add_foreign_key 'decisions', 'reports', column: 'report_id'
-add_foreign_key 'decisions', 'users',   column: 'decided_by'
+add_foreign_key 'decisions', 'reports',    column: 'report_id'
+add_foreign_key 'decisions', 'moderators', column: 'decided_by'

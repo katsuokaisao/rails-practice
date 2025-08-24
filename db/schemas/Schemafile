@@ -1,6 +1,7 @@
 require 'decisions.schema.rb'
 require 'comment_histories.schema.rb'
 require 'comments.schema.rb'
+require 'moderators.schema.rb'
 require 'reports.schema.rb'
 require 'topics.schema.rb'
 require 'users.schema.rb'

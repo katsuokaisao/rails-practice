@@ -17,11 +17,11 @@ Rails.application.routes.draw do
     end
     get 'users/profile',  to: 'users/registrations#profile',  as: :edit_user_profile
     get 'users/password', to: 'users/registrations#password', as: :edit_user_password
-
-    get 'moderators/sign_in', to: 'moderators/sessions#new', as: :new_moderator_session
-    post 'moderators/sign_in', to: 'moderators/sessions#create', as: :moderator_session
-    delete 'moderators/sign_out', to: 'moderators/sessions#destroy', as: :destroy_moderator_session
   end
+
+  devise_for :moderators, controllers: {
+    sessions: 'moderators/sessions'
+  }, skip: [:registrations], path: 'moderators', path_names: { sign_in: 'sign_in', sign_out: 'sign_out' }
 
   get 'up' => 'rails/health#show', as: :rails_health_check
 end

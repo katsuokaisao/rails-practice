@@ -3,7 +3,10 @@ class User < ApplicationRecord
   NICKNAME_MAX_LENGTH = 50
   PASSWORD_MIN_LENGTH = 1
   PASSWORD_MAX_LENGTH = 50
+
   devise :database_authenticatable, :registerable
+
+  enum :role, %i[user moderator], suffix: true
 
   validates_presence_of     :nickname
   validates_uniqueness_of   :nickname
@@ -12,8 +15,8 @@ class User < ApplicationRecord
   # user sign up: password, password_confirmation
   # user account update: current_password, password, password_confirmation
   with_options if: -> { new_record? || password_update? } do
-    validates_presence_of     :password
     validates_confirmation_of :password
+    validates_presence_of     :password
     validates_length_of       :password, minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH, allow_blank: true
   end
 

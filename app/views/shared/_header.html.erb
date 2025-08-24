@@ -10,9 +10,15 @@
         <div class="user-menu">
             <ul class="dropdown-list">
                 <li class="dropdown-item">
-                    <%= link_to edit_user_registration_path do %>
+                    <%= link_to edit_user_profile_path do %>
                         <span class="material-icons">edit</span>
-                        <%= t('views.shared.header.user_edit') %>
+                        <%= t('views.shared.header.profile') %>
+                    <% end %>
+                </li>
+                <li class="dropdown-item">
+                    <%= link_to edit_user_password_path do %>
+                        <span class="material-icons">lock</span>
+                        <%= t('views.shared.header.password') %>
                     <% end %>
                 </li>
                 <li class="dropdown-item">

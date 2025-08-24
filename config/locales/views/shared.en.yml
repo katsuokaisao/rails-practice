@@ -3,7 +3,8 @@ en:
     shared:
       application_title: "Forum App"
       header:
-        user_edit: "User Edit"
+        profile: "Profile"
+        password: "Password"
         logout: "Logout"
       authentication:
         login: "Login"

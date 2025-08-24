@@ -3,7 +3,8 @@ ja:
     shared:
       application_title: "掲示板アプリ"
       header:
-        user_edit: "ユーザー編集"
+        profile: "プロフィール"
+        password: "パスワード"
         logout: "ログアウト"
       authentication:
         login: "ログイン"

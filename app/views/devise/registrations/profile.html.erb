@@ -1,0 +1,23 @@
+<h2><%= t('.title') %></h2>
+
+<%= form_for(resource, as: resource_name, url: user_registration_path) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <%= f.hidden_field :update_kind, value: "profile" %>
+
+  <div class="field">
+    <%= f.label :nickname %>
+    <%= f.text_field :nickname, autofocus: true, autocomplete: "nickname" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :current_password %> <i>(<%= t('devise.registrations.shared.messages.current_password_help') %>)</i>
+    <%= f.password_field :current_password, autocomplete: "current-password" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit t('.actions.update') %>
+  </div>
+<% end %>
+
+<%= link_to t('views.shared.action.back'), (request.referer || root_path) %>

@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# ユーザーモデル
+#
+# 会員ユーザに該当する。
+# 掲示板にお題を投稿したり、お題に対してコメントを投稿したりできる。
 class User < ApplicationRecord
   NICKNAME_MIN_LENGTH = 1
   NICKNAME_MAX_LENGTH = 50

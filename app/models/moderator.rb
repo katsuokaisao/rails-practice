@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# モデレーターモデル
+#
+# 管理者ユーザのこと
+# 通報の結果を審査するのが主な役割
 class Moderator < ApplicationRecord
   NICKNAME_MIN_LENGTH = 1
   NICKNAME_MAX_LENGTH = 50

@@ -15,6 +15,10 @@ AllCops:
     - '.ruby-lsp/**/*'
     - '.vscode/**/*'
 
+plugins:
+  - rubocop-rails
+  # - rubocop-rspec
+
 # ドキュメント関連
 Style/Documentation:
   Exclude:
@@ -47,3 +51,9 @@ Metrics/AbcSize:
   Max: 17
   Exclude:
     - 'app/controllers/users/registrations_controller.rb'
+
+# Deviseコントローラーでは親クラスのアクションを使用するため除外
+Rails/LexicallyScopedActionFilter:
+  Exclude:
+    - 'app/controllers/users/**/*'
+    - 'app/controllers/admins/**/*'

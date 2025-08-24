@@ -43,14 +43,14 @@ class SampleCreator
   end
 
   def put_all_accounts
-    puts '=== Users ==='
-    User.all.each do |user|
-      puts "User: #{user.nickname}"
+    Rails.logger.debug '=== Users ==='
+    User.find_each do |user|
+      Rails.logger.debug "User: #{user.nickname}"
     end
 
-    puts "\n=== Moderators ==="
-    Moderator.all.each do |moderator|
-      puts "Moderator: #{moderator.nickname}"
+    Rails.logger.debug "\n=== Moderators ==="
+    Moderator.find_each do |moderator|
+      Rails.logger.debug "Moderator: #{moderator.nickname}"
     end
   end
 end

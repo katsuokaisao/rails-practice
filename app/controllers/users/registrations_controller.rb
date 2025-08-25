@@ -24,12 +24,12 @@ module Users
 
     # GET /resource/profile
     def profile
-      render :profile
+      render :profile, layout: 'application'
     end
 
     # GET /resource/password
     def password
-      render :password
+      render :password, layout: 'application'
     end
 
     # PUT /resource

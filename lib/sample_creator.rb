@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# サンプルデータ作成クラス
-#
-# 開発用のサンプルデータを作成する。
 class SampleCreator
   class << self
     delegate :create, to: :new

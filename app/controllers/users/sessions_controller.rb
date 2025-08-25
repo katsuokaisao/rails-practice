@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module Users
-  # ユーザーセッションコントローラー
-  #
-  # ユーザーのログイン・ログアウト処理を制御する。
-  # Deviseの標準機能を使用してユーザー認証セッションを管理する。
   class SessionsController < Devise::SessionsController
     # before_action :configure_sign_in_params, only: [:create]
     layout 'user'

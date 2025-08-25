@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module Users
-  # ユーザー登録コントローラー
-  #
-  # ユーザーの新規登録、プロフィール更新、パスワード変更を制御する。
-  # Deviseの標準機能を拡張してカスタムレイアウトと更新処理を提供する。
   class RegistrationsController < Devise::RegistrationsController
     layout 'user'
 

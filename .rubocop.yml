@@ -21,11 +21,6 @@ plugins:
   - rubocop-rails
   - rubocop-rspec
 
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'config/initializers/**/*'
-
 Metrics/BlockLength:
   Max: 25
   Exclude:
@@ -72,3 +67,6 @@ RSpec/MultipleExpectations:
 
 RSpec/NestedGroups:
   Max: 5
+
+Style/Documentation:
+  Enabled: false

@@ -21,9 +21,6 @@ require 'action_view/railtie'
 Bundler.require(*Rails.groups)
 
 module BoardApp
-  # ボードアプリケーション設定クラス
-  #
-  # Railsアプリケーションの基本設定を管理する。
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1

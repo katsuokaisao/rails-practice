@@ -88,4 +88,54 @@ RSpec.describe 'ユーザー認証', type: :system do
       expect(current_path).to eq(new_user_session_path)
     end
   end
+
+  describe 'プロフィール変更' do
+    it 'ユーザーがプロフィールを正常に更新できる' do
+      login_as user
+      visit edit_user_profile_path
+
+      fill_in 'ニックネーム', with: 'updated_nickname'
+      click_button 'プロフィールを更新'
+
+      expect(page).to have_content('アカウント情報を変更しました。')
+      expect(current_path).to eq(edit_user_profile_path)
+    end
+
+    it '無効なニックネームでは更新できない' do
+      login_as user
+      visit edit_user_profile_path
+
+      fill_in 'ニックネーム', with: ''
+      click_button 'プロフィールを更新'
+
+      expect(page).to have_content('ニックネームを入力してください')
+    end
+  end
+
+  describe 'パスワード更新' do
+    it 'ユーザーがパスワードを正常に更新できる' do
+      login_as user
+      visit edit_user_password_path
+
+      fill_in 'パスワード', with: 'newpassword123'
+      fill_in 'パスワード（確認用）', with: 'newpassword123'
+      fill_in '現在のパスワード', with: 'password123'
+      click_button 'パスワードを更新'
+
+      expect(page).to have_content('アカウント情報を変更しました。')
+      expect(current_path).to eq(root_path)
+    end
+
+    it '無効なパスワードでは更新できない' do
+      login_as user
+      visit edit_user_password_path
+
+      fill_in 'パスワード', with: 'short'
+      fill_in 'パスワード（確認用）', with: 'short'
+      fill_in '現在のパスワード', with: 'password123'
+      click_button 'パスワードを更新'
+
+      expect(page).to have_content('パスワードは8文字以上で入力してください')
+    end
+  end
 end

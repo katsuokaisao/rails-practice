@@ -23,7 +23,7 @@ Capybara.register_driver(:playwright_no_headless) do |app|
 end
 
 Capybara.configure do |config|
-  config.default_max_wait_time = 15
+  config.default_max_wait_time = 5
   config.default_driver = :playwright_custom
 end
 

@@ -6,8 +6,7 @@ module Users
   # ユーザーの新規登録、プロフィール更新、パスワード変更を制御する。
   # Deviseの標準機能を拡張してカスタムレイアウトと更新処理を提供する。
   class RegistrationsController < Devise::RegistrationsController
-    layout 'user', except: %i[profile password]
-    layout 'application', only: %i[profile password]
+    layout 'user'
 
     # before_action :configure_sign_up_params, only: [:create]
     # before_action :configure_account_update_params, only: [:update]

@@ -32,11 +32,11 @@ module Moderators
     # end
 
     # TODO: 審査一覧画面できたらそこに飛ばす
-    def after_sign_in_path_for(resource)
+    def after_sign_in_path_for(_resource)
       root_path
     end
 
-    def after_sign_out_path_for(resource)
+    def after_sign_out_path_for(_resource)
       new_moderator_session_path
     end
   end

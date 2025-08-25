@@ -85,7 +85,7 @@ RSpec.describe 'ユーザー認証', type: :system do
       find('.user-menu-trigger').click
       click_button 'ログアウト'
       expect(page).to have_content('ログアウトしました')
-      expect(current_path).to eq(root_path)
+      expect(current_path).to eq(new_user_session_path)
     end
   end
 end

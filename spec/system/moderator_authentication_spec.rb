@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'モデレーター認証', type: :system do
-  let(:moderator) { create(:moderator, password: 'password123') }
+  let(:moderator) { create(:moderator, password: 'password123', password_confirmation: 'password123') }
 
   describe 'モデレーターログイン' do
     it '正しい認証情報でログインできる' do
@@ -40,7 +40,7 @@ RSpec.describe 'モデレーター認証', type: :system do
       click_button 'ログアウト'
 
       expect(page).to have_content('ログアウトしました')
-      expect(current_path).to eq(root_path)
+      expect(current_path).to eq(new_moderator_session_path)
     end
   end
 

@@ -12,5 +12,10 @@ ja:
         moderator_login: "モデレータログイン"
       action:
         back: "戻る"
+        show: "詳細"
+        edit: "編集"
+        new: "新規作成"
       title:
-        edit: "%{resource}編集"
+        index: "%{resource} 一覧"
+        new: "%{resource} 新規作成"
+        edit: "%{resource} 編集"

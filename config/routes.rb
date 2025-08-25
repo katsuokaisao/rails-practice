@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'home#index'
+  root to: 'topics#index'
 
   devise_for :users, controllers: {
     sessions: 'users/sessions',
@@ -24,6 +24,8 @@ Rails.application.routes.draw do
   devise_for :moderators, controllers: {
     sessions: 'moderators/sessions'
   }, skip: [:registrations], path: 'moderators', path_names: { sign_in: 'sign_in', sign_out: 'sign_out' }
+
+  resources :topics, except: %i[destroy]
 
   get 'up' => 'rails/health#show', as: :rails_health_check
 end

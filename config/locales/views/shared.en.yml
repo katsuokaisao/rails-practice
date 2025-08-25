@@ -12,5 +12,10 @@ en:
         moderator_login: "Moderator Login"
       action:
         back: "Back"
+        show: "Details"
+        edit: "Edit"
+        new: "New"
       title:
+        index: "%{resource} List"
+        new: "Create New %{resource}"
         edit: "Edit %{resource}"

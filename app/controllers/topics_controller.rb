@@ -5,7 +5,11 @@ class TopicsController < ApplicationController
   before_action :set_topic, only: %i[show edit update]
 
   def index
-    @topics = Topic.eager_load(:author).order(created_at: :desc)
+    @pagination = Pagination::Paginator.new(
+      relation: base_relation, page: params[:page], per: params[:per]
+    ).call
+
+    redirect_to topics_path, alert: t('flash.pagination.out_of_bounds') if @pagination.out_of_bounds
   end
 
   def show; end
@@ -41,5 +45,11 @@ class TopicsController < ApplicationController
 
   def topic_params
     params.require(:topic).permit(:title)
+  end
+
+  def base_relation
+    Topic
+      .order(created_at: :desc, id: :desc)
+      .includes(:author)
   end
 end

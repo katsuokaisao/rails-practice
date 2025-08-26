@@ -24,7 +24,7 @@ class SampleCreator
 
   def create_topics
     users = User.all.to_a
-    10.times do
+    200.times do
       FactoryBot.create(:topic, title: Faker::Book.title, author: users.sample)
     end
   end

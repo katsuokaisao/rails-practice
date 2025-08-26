@@ -1,0 +1,11 @@
+<% unless @pagination.page == 1 and @pagination.ahead == 0 %>
+  <nav class="pagination">
+    <% @pagination.window_numbers.each do |num| %>
+      <% if num == @pagination.page %>
+        <span class="is-current"><%= num %></span>
+      <% else %>
+        <%= link_to num, topics_path(page: num, per: @pagination.per) %>
+      <% end %>
+    <% end %>
+  </nav>
+<% end %>

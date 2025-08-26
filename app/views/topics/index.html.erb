@@ -1,9 +1,30 @@
-<h2><%= t('views.shared.title.index', resource: Topic.model_name.human) %></h2>
-<% @topics.each do |topic| %>
-  <h3><%= topic.title %></h3>
-  <p>作成者: <%= topic.author.nickname %></p>
-  <p>作成日: <%= topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-  <%= link_to t('views.shared.action.show'), topic_path(topic) %>
-  <%= link_to t('views.shared.action.edit'), edit_topic_path(topic) %>
-<% end %>
-<%= link_to t('views.shared.action.new'), new_topic_path %>
+<article>
+  <div class="topic-header">
+    <h2><%= t('views.shared.title.index', resource: Topic.model_name.human) %></h2>
+    <div class="topic-actions">
+      <%= link_to new_topic_path do %>
+        <%= t('views.topics.action.new', resource: Topic.model_name.human) %>
+      <% end %>
+    </div>
+  </div>
+  <ul class="topics-list">
+    <% @topics.each do |topic| %>
+      <li class="topic-item">
+        <div>
+          <%= link_to topic_path(topic) do %>
+            <h3><%= topic.title %></h3>
+          <% end %>
+          <div class="topic-details">
+            <p>作成者: <%= topic.author.nickname %></p>
+            <p>作成日: <%= topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+          </div>
+        </div>
+        <div class="edit-actions">
+          <%= link_to edit_topic_path(topic) do %>
+            <span class="material-icons">edit</span>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</article>

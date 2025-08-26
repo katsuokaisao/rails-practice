@@ -1,0 +1,36 @@
+.topics_controller.index_action {
+    article {
+        width: stretch;
+
+        .topic-header {
+            padding-inline: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .topic-actions {
+                padding: 8px;
+                font-weight: 600;
+            }
+        }
+
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+
+            .topic-details p {
+                font-size: 0.9rem;
+                color: #4b5563;
+            }
+
+            .edit-actions {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column-reverse;
+            }
+        }
+    }
+}

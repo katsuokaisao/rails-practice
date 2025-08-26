@@ -19,7 +19,6 @@
     padding: 0px;
     border: 0;
     outline: 0;
-    font-size: 100%;
     vertical-align: baseline;
     background: transparent;
 }
@@ -27,6 +26,12 @@
 i,
 em {
     font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    color: #0074b6;
+    cursor: pointer;
 }
 
 .flash-messages {
@@ -44,4 +49,16 @@ em {
     font-size: 24px;
     color: #666;
     vertical-align: middle;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-inline: auto;
+    margin-block-start: 3%;
+    margin-block-end: 5%;
+    max-width: 500px;
+    width: 100%;
 }

@@ -9,6 +9,7 @@ class SampleCreator
     create_users
     create_moderators
     create_topics
+    create_comments
     put_records
   end
 
@@ -19,7 +20,7 @@ class SampleCreator
   end
 
   def create_users
-    FactoryBot.create_list(:user, 3)
+    FactoryBot.create_list(:user, 10)
   end
 
   def create_topics
@@ -29,10 +30,20 @@ class SampleCreator
     end
   end
 
+  def create_comments
+    topics = Topic.all.to_a
+    users = User.all.to_a
+    2000.times do
+      FactoryBot.create(:comment, content: Faker::Lorem.paragraphs(number: 3).join("\n\n"), topic: topics.sample,
+                                  author: users.sample)
+    end
+  end
+
   def put_records
     puts_users
     puts_moderators
     puts_topics
+    puts_comments
   end
 
   def puts_users
@@ -48,8 +59,16 @@ class SampleCreator
   end
 
   def puts_topics
-    Topic.find_each do |topic|
+    puts 'Topics sample'
+    Topic.take(10).each do |topic|
       puts "Topic: #{topic.title}, Author: #{topic.author.nickname}"
+    end
+  end
+
+  def puts_comments
+    puts 'Comments sample'
+    Comment.take(10).each do |comment|
+      puts "Topic: #{comment.topic.title}, Author: #{comment.author.nickname}, Comment: #{comment.content}"
     end
   end
 end

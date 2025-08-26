@@ -16,7 +16,6 @@ Things you may want to cover:
 
 ```bash
 bin/rake db:custom:setup
-bin/rake db:custom:ridgepole_export
 ```
 
 このタスクは以下を順次実行します：

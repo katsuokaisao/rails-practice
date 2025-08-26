@@ -4,7 +4,7 @@
       <% if num == @pagination.page %>
         <span class="is-current"><%= num %></span>
       <% else %>
-        <%= link_to num, topics_path(page: num, per: @pagination.per) %>
+        <%= link_to num, @pagination.page_path(request.path, num) %>
       <% end %>
     <% end %>
   </nav>

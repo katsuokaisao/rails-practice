@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 module Pagination
-  Result = Data.define(:records, :page, :per, :ahead, :window_numbers, :out_of_bounds)
+  Result = Data.define(:records, :page, :per, :ahead, :window_numbers, :out_of_bounds) do
+    def page_path(base_path, page_num = page)
+      uri = URI.parse(base_path)
+      "#{uri.path}?page=#{page_num}&per=#{per}"
+    end
+  end
 
   class Paginator
     WINDOW_HALF = 4

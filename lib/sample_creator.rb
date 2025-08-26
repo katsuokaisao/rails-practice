@@ -11,6 +11,7 @@ class SampleCreator
     create_topics
     create_comments
     attach_100_comments_to_latest_topics
+    create_comment_histories_for_latest_topics_and_comments
     put_records
   end
 
@@ -51,11 +52,24 @@ class SampleCreator
     end
   end
 
+  def create_comment_histories_for_latest_topics_and_comments
+    topics = Topic.order(created_at: :desc).limit(10)
+    topics.each do |topic|
+      comments = topic.comments.order(created_at: :desc).limit(10)
+      comments.each do |comment|
+        5.times do
+          FactoryBot.create(:comment_history, comment: comment)
+        end
+      end
+    end
+  end
+
   def put_records
     puts_users
     puts_moderators
     puts_topics
     puts_comments
+    puts_comment_histories
   end
 
   def puts_users
@@ -81,6 +95,17 @@ class SampleCreator
     puts 'Comments sample'
     Comment.take(10).each do |comment|
       puts "Topic: #{comment.topic.title}, Author: #{comment.author.nickname}, Comment: #{comment.content}"
+    end
+  end
+
+  def puts_comment_histories
+    puts 'Comment Histories sample'
+    CommentHistory.take(10).each do |comment_history|
+      puts <<~MSG
+        Comment: #{comment_history.comment.content},
+        Author: #{comment_history.author.nickname},
+        Version: #{comment_history.version_no}
+      MSG
     end
   end
 end

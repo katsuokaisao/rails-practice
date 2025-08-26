@@ -17,5 +17,6 @@ en:
         new: "New"
       title:
         index: "%{resource} List"
+        show: "%{resource} Details"
         new: "Create New %{resource}"
         edit: "Edit %{resource}"

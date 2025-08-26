@@ -34,3 +34,33 @@
         }
     }
 }
+
+
+.topics_controller.show_action {
+    .topic-show {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+
+        h3 {
+            margin-bottom: 8px;
+        }
+
+        .topic-details p {
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 4px;
+        }
+    }
+
+    .topic-comments {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+
+        h4 {
+            margin-bottom: 8px;
+        }
+    }
+}

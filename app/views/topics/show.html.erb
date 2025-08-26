@@ -1,7 +1,10 @@
-<h2><%= @topic.title %></h2>
-<p>作成者: <%= @topic.author.nickname %></p>
-<p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-<div>
-    <%= link_to t('views.shared.action.back'), topics_path %>
-    <%= link_to t('views.shared.action.edit'), edit_topic_path(@topic) %>
-</div>
+<section class="topic-show">
+    <h3><%= @topic.title %></h3>
+    <div class="topic-details">
+        <p>作成者: <%= @topic.author.nickname %></p>
+        <p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+    </div>
+</section>
+<section class="topic-comments">
+  <h4>コメント一覧追加予定</h4>
+</section>

@@ -17,5 +17,6 @@ ja:
         new: "新規作成"
       title:
         index: "%{resource} 一覧"
+        show: "%{resource} 詳細"
         new: "%{resource} 新規作成"
         edit: "%{resource} 編集"

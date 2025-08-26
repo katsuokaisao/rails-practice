@@ -6,13 +6,19 @@ class TopicsController < ApplicationController
 
   def index
     @pagination = Pagination::Paginator.new(
-      relation: base_relation, page: params[:page], per: params[:per]
+      relation: topics, page: params[:page], per: params[:per]
     ).call
 
     redirect_to topics_path, alert: t('flash.pagination.out_of_bounds') if @pagination.out_of_bounds
   end
 
-  def show; end
+  def show
+    @pagination = Pagination::Paginator.new(
+      relation: comments, page: params[:page], per: params[:per]
+    ).call
+
+    redirect_to topic_path(@topic), alert: t('flash.pagination.out_of_bounds') if @pagination.out_of_bounds
+  end
 
   def new
     @topic = Topic.new
@@ -47,9 +53,13 @@ class TopicsController < ApplicationController
     params.require(:topic).permit(:title)
   end
 
-  def base_relation
+  def topics
     Topic
       .order(created_at: :desc, id: :desc)
       .includes(:author)
+  end
+
+  def comments
+    @topic.comments.eager_load(:author).order(created_at: :desc)
   end
 end

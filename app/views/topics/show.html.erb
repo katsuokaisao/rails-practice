@@ -5,15 +5,27 @@
         <p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
     </div>
 </section>
+<section class="form-card">
+  <div id="topic-comment-messages"></div>
+  <%= form_with(model: [@topic, Comment.new], local: false, id: "new-comment-form") do |f| %>
+    <div class="field">
+      <%= f.label :content, "コメント内容" %>
+      <%= f.text_area :content, rows: 3 %>
+    </div>
+    <div class="actions">
+      <%= f.submit "コメントする" %>
+    </div>
+  <% end %>
+</section>
 <section class="topic-comments">
   <h4>コメント</h4>
-  <div class="comment-list">
-      <% @pagination.records.each do |comment| %>
-        <div class="comment">
-          <p><strong><%= comment.author.nickname %></strong>: <%= comment.content %></p>
-          <p class="comment-meta">作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-        </div>
-      <% end %>
+  <div id="comment-list" class="comment-list">
+    <% @pagination.records.to_a.reverse.each do |comment| %>
+      <div class="comment">
+        <p><strong><%= comment.author.nickname %></strong>: <%= comment.content %></p>
+        <p class="comment-meta">作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      </div>
+    <% end %>
   </div>
   <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
 </section>

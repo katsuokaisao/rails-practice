@@ -10,3 +10,5 @@ ja:
       destroy:
         notice: "%{resource}が削除されました。"
         alert: "%{resource}を削除できませんでした。"
+      comment_created:
+        notice: "コメントが投稿されました。"

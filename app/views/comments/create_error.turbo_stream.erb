@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "topic-comment-messages" do %>
+  <div class="alert" id="topic-comment-messages">
+    <ul>
+      <% @comment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

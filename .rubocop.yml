@@ -37,13 +37,13 @@ Layout/LineLength:
 Metrics/MethodLength:
   Max: 10
   Exclude:
-    - 'app/controllers/users/registrations_controller.rb'
+    - 'app/controllers/**/*'
     - lib/pagination/paginator.rb
 
 Metrics/AbcSize:
   Max: 17
   Exclude:
-    - 'app/controllers/users/registrations_controller.rb'
+    - 'app/controllers/**/*'
 
 # Deviseコントローラーでは親クラスのアクションを使用するため除外
 Rails/LexicallyScopedActionFilter:

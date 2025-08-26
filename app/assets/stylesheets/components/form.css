@@ -36,5 +36,13 @@
             border-radius: 10px;
             font-size: 16px;
         }
+
+        textarea {
+            width: stretch;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
     }
 }

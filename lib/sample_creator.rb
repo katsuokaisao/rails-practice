@@ -10,6 +10,7 @@ class SampleCreator
     create_moderators
     create_topics
     create_comments
+    attach_100_comments_to_latest_topics
     put_records
   end
 
@@ -36,6 +37,17 @@ class SampleCreator
     2000.times do
       FactoryBot.create(:comment, content: Faker::Lorem.paragraphs(number: 3).join("\n\n"), topic: topics.sample,
                                   author: users.sample)
+    end
+  end
+
+  def attach_100_comments_to_latest_topics
+    users = User.all.to_a
+    topics = Topic.order(created_at: :desc).limit(10)
+    topics.each do |topic|
+      100.times do
+        FactoryBot.create(:comment, content: Faker::Lorem.paragraphs(number: 3).join("\n\n"), topic: topic,
+                                    author: users.sample)
+      end
     end
   end
 

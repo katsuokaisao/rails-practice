@@ -11,4 +11,4 @@ en:
         notice: "%{resource} was successfully destroyed."
         alert: "%{resource} could not be destroyed."
       comment_created:
-        notice: "コメントが投稿されました。"
+        notice: "Comment was successfully posted."

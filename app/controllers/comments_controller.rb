@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :set_comment, only: %i[edit update]
+  def edit
+    @topic = @comment.topic
+  end
+
   def create
     @topic = Topic.find(params[:topic_id])
 
@@ -37,6 +43,30 @@ class CommentsController < ApplicationController
     end
   end
 
+  def update
+    @topic = @comment.topic
+    @comment.assign_attributes(comment_params)
+    @comment.current_version_no += 1
+
+    unless @comment.valid?
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
+    Comment.transaction do
+      @comment.save!
+
+      @comment.histories.create!(
+        topic: @topic,
+        author: current_user,
+        version_no: @comment.current_version_no,
+        content: @comment.content
+      )
+    end
+
+    redirect_to @topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
+  end
+
   private
 
   def comment_params
@@ -47,5 +77,9 @@ class CommentsController < ApplicationController
     @pagination = Pagination::Paginator.new(
       relation: @topic.comments, page: params[:page], per: params[:per]
     ).call
+  end
+
+  def set_comment
+    @comment = Comment.find(params[:id])
   end
 end

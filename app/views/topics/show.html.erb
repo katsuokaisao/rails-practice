@@ -21,10 +21,7 @@
   <h4>コメント</h4>
   <div id="comment-list" class="comment-list">
     <% @pagination.records.to_a.reverse.each do |comment| %>
-      <div class="comment">
-        <p><strong><%= comment.author.nickname %></strong>: <%= comment.content %></p>
-        <p class="comment-meta">作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-      </div>
+      <%= render partial: 'comments/comment', locals: { comment: comment } %>
     <% end %>
   </div>
   <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>

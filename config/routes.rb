@@ -26,9 +26,9 @@ Rails.application.routes.draw do
   }, skip: [:registrations], path: 'moderators', path_names: { sign_in: 'sign_in', sign_out: 'sign_out' }
 
   resources :topics, except: %i[destroy] do
-    resources :comments, only: %i[create edit]
+    resources :comments, only: %i[create edit update]
   end
-  resources :comments, only: %i[update] do
+  resources :comments, only: %i[] do
     resources :histories, controller: 'comment_histories', only: %i[index]
   end
 

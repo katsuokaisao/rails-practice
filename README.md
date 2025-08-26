@@ -16,6 +16,7 @@ Things you may want to cover:
 
 ```bash
 bin/rake db:custom:setup
+bin/rake db:custom:ridgepole_export
 ```
 
 このタスクは以下を順次実行します：
@@ -45,6 +46,12 @@ bin/rake db:custom:ridgepole_dry_run
 
 ```bash
 bin/rake db:custom:ridgepole_apply
+```
+
+### スキーマの出力
+
+```bash
+bin/rake db:custom:ridgepole_export
 ```
 
 ## How to run the test suite

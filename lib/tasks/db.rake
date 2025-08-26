@@ -27,6 +27,11 @@ namespace :db do
       run_ridgepole(env: 'development')
     end
 
+    desc 'Ridgepole export (development)'
+    task ridgepole_export: :environment do
+      run_ridgepole_export
+    end
+
     private
 
     def reset_database(env: 'development')
@@ -42,6 +47,15 @@ namespace :db do
               '-E', env,
               '--apply']
       args << '--dry-run' if dry_run
+      run!(*args)
+    end
+
+    def run_ridgepole_export(env: 'development')
+      args = ['bundle', 'exec', 'ridgepole',
+              '-c', 'config/database.yml',
+              '-E', env,
+              '-o', 'db/schemas/export_schema',
+              '--export']
       run!(*args)
     end
 

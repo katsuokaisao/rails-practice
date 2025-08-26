@@ -16,3 +16,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+import "@hotwired/turbo-rails"
+import "controllers"

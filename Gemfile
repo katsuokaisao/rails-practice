@@ -13,6 +13,8 @@ gem 'rails', '~> 7.1.5', '>= 7.1.5.1'
 gem 'rails-i18n'
 gem 'ridgepole'
 gem 'sprockets-rails'
+gem 'stimulus-rails'
+gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]

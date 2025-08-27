@@ -29,7 +29,9 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create edit update]
   end
   resources :comments, only: %i[] do
-    resources :histories, controller: 'comment_histories', only: %i[index]
+    resources :histories, controller: 'comment_histories', only: %i[index] do
+      get 'compare', on: :collection
+    end
   end
 
   get 'up' => 'rails/health#show', as: :rails_health_check

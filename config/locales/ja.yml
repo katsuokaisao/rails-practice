@@ -12,3 +12,4 @@ ja:
         alert: "%{resource}を削除できませんでした。"
       comment_created:
         notice: "コメントが投稿されました。"
+      out_of_bounds: "範囲外のリクエストです。"

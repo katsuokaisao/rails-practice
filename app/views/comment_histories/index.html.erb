@@ -1,0 +1,22 @@
+<section>
+    <h2>コメント編集履歴</h2>
+    <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
+
+    <div class="history-list">
+        <h3>履歴一覧</h3>
+        <% @pagination.records.each do |history| %>
+            <div class="history">
+                <p>
+                    <strong>Version: <%= history.version_no %></strong>
+                    <strong>作成者: <%= history.author.nickname %></strong>
+                </p>
+                <p><%= history.content %></p>
+                <p class="history-meta">
+                    作成日: <%= history.created_at.strftime('%Y-%m-%d %H:%M') %>
+                </p>
+            </div>
+        <% end %>
+    </div>
+
+    <%= render 'shared/pagination', pagination: @pagination %>
+</section>

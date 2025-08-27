@@ -9,7 +9,7 @@ class TopicsController < ApplicationController
       relation: topics, page: params[:page], per: params[:per]
     ).call
 
-    redirect_to topics_path, alert: t('flash.pagination.out_of_bounds') if @pagination.out_of_bounds
+    redirect_to topics_path, alert: t('flash.actions.out_of_bounds') if @pagination.out_of_bounds
   end
 
   def show
@@ -17,7 +17,7 @@ class TopicsController < ApplicationController
       relation: comments, page: params[:page], per: params[:per]
     ).call
 
-    redirect_to topic_path(@topic), alert: t('flash.pagination.out_of_bounds') if @pagination.out_of_bounds
+    redirect_to topic_path(@topic), alert: t('flash.actions.out_of_bounds') if @pagination.out_of_bounds
   end
 
   def new

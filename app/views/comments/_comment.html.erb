@@ -5,5 +5,7 @@
     <% if comment.author == current_user %>
       <%= link_to t('views.shared.action.edit'), edit_topic_comment_path(comment.topic, comment), class: "edit-link" %>
     <% end %>
+    <%# TODO 認可 and i18n %>
+    <%= link_to '履歴を見る', comment_histories_path(comment), class: "history-link" %>
   </p>
 </div>

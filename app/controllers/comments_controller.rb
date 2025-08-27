@@ -11,7 +11,14 @@ class CommentsController < ApplicationController
     @topic = Topic.find(params[:topic_id])
 
     @comment = @topic.comments.new(comment_params.merge(author: current_user, current_version_no: 1))
-    unless @comment.valid?
+    if @comment.save
+      respond_to do |format|
+        format.html do
+          redirect_to @topic, notice: t('flash.actions.comment_created.notice')
+        end
+        format.turbo_stream
+      end
+    else
       set_pagination
 
       respond_to do |format|
@@ -22,24 +29,7 @@ class CommentsController < ApplicationController
           render :create_error, status: :unprocessable_entity
         end
       end
-      return
-    end
-
-    Comment.transaction do
-      @comment.save!
-      @comment.histories.create!(
-        topic: @topic,
-        author: current_user,
-        version_no: 1,
-        content: @comment.content
-      )
-    end
-
-    respond_to do |format|
-      format.html do
-        redirect_to @topic, notice: t('flash.actions.comment_created.notice')
-      end
-      format.turbo_stream
+      nil
     end
   end
 
@@ -48,20 +38,9 @@ class CommentsController < ApplicationController
     @comment.assign_attributes(comment_params)
     @comment.current_version_no += 1
 
-    unless @comment.valid?
+    unless @comment.save
       render :edit, status: :unprocessable_entity
       return
-    end
-
-    Comment.transaction do
-      @comment.save!
-
-      @comment.histories.create!(
-        topic: @topic,
-        author: current_user,
-        version_no: @comment.current_version_no,
-        content: @comment.content
-      )
     end
 
     redirect_to @topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)

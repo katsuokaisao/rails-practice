@@ -7,4 +7,18 @@ class Comment < ApplicationRecord
 
   validates :content, presence: true
   validates :current_version_no, presence: true
+
+  after_create :create_history
+  after_update :create_history
+
+  private
+
+  def create_history
+    histories.create!(
+      topic: topic,
+      author: author,
+      content: content,
+      version_no: current_version_no
+    )
+  end
 end

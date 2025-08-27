@@ -1,8 +1,5 @@
 <%= turbo_stream.append "comment-list" do %>
-  <div class="comment">
-    <p><strong><%= @comment.author.nickname %></strong>: <%= @comment.content %></p>
-    <p class="comment-meta">作成日: <%= @comment.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-  </div>
+  <%= render partial: "comments/comment", locals: { comment: @comment } %>
 <% end %>
 
 <%= turbo_stream.replace "new-comment-form" do %>

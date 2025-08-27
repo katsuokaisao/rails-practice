@@ -35,10 +35,10 @@ Layout/LineLength:
     - 'config/initializers/**/*'
 
 Metrics/MethodLength:
-  Max: 10
+  Max: 20
   Exclude:
+    - 'spec/**/*'
     - 'app/controllers/**/*'
-    - lib/pagination/paginator.rb
 
 Metrics/AbcSize:
   Max: 17

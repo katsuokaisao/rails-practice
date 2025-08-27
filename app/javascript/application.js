@@ -3,20 +3,23 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-document.addEventListener('turbo:load', function() {
-  const userMenuTrigger = document.querySelector('.user-menu-trigger');
-  const userMenu = document.querySelector('.user-menu');
+// function initDropdown() {
+//   const dropdownTrigger = document.querySelector('.dropdown-trigger');
+//   const dropdownMenu = document.querySelector('.dropdown-menu');
 
-  if (userMenuTrigger && userMenu) {
-    userMenuTrigger.addEventListener('click', function(e) {
-      e.preventDefault();
-      userMenu.classList.toggle('show');
-    });
+//   if (dropdownTrigger && dropdownMenu) {
+//     dropdownTrigger.addEventListener('click', function(e) {
+//       e.preventDefault();
+//       dropdownMenu.classList.toggle('show');
+//     });
 
-    document.addEventListener('click', function(e) {
-      if (!userMenuTrigger.contains(e.target) && !userMenu.contains(e.target)) {
-        userMenu.classList.remove('show');
-      }
-    });
-  }
-});
+//     document.addEventListener('click', function(e) {
+//       if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+//         dropdownMenu.classList.remove('show');
+//       }
+//     });
+//   }
+// }
+
+// document.addEventListener('turbo:load', initDropdown);
+// document.addEventListener('DOMContentLoaded', initDropdown);

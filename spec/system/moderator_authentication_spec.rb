@@ -36,7 +36,7 @@ RSpec.describe 'モデレーター認証', type: :system do
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
-      find('.user-menu-trigger').click
+      find('.dropdown-trigger').click
       click_button 'ログアウト'
 
       expect(page).to have_content('ログアウトしました')

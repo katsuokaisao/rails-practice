@@ -57,7 +57,7 @@ RSpec.describe 'ユーザー認証', type: :system do
       expect(page).to have_content('ログインしました')
       expect(current_path).to eq(root_path)
 
-      find('.user-menu-trigger').click
+      find('.dropdown-trigger').click
       expect(page).to have_button('ログアウト')
       expect(page).not_to have_link('ユーザーログイン')
       expect(page).not_to have_link('ユーザー登録')
@@ -82,7 +82,7 @@ RSpec.describe 'ユーザー認証', type: :system do
       fill_in 'user_password', with: 'password123'
       click_button 'ログイン'
 
-      find('.user-menu-trigger').click
+      find('.dropdown-trigger').click
       click_button 'ログアウト'
       expect(page).to have_content('ログアウトしました')
       expect(current_path).to eq(new_user_session_path)

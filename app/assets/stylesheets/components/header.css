@@ -24,52 +24,5 @@ header {
         height: 100%;
         display: flex;
         align-items: center;
-
-        .user-menu-trigger {
-            border: none;
-            background: none;
-
-            .user-icon {
-                font-size: 36px;
-            }
-        }
-
-        .user-menu {
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            width: 200px;
-
-            &.show {
-                opacity: 1;
-            }
-
-            .dropdown-list {
-                list-style: none;
-                padding: 0;
-
-                .dropdown-item {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 12px 16px;
-                    border-top: 1px solid #eee;
-
-                    a, form {
-                        color: #333;
-                        text-decoration: none;
-                        display: block;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-                    }
-                }
-            }
-        }
     }
 }

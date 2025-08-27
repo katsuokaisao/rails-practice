@@ -53,13 +53,11 @@ class SampleCreator
   end
 
   def create_comment_histories_for_latest_topics_and_comments
-    topics = Topic.order(created_at: :desc).limit(10)
-    topics.each do |topic|
-      comments = topic.comments.order(created_at: :desc).limit(10)
-      comments.each do |comment|
-        5.times do
-          FactoryBot.create(:comment_history, comment: comment)
-        end
+    topic = Topic.order(created_at: :desc).first
+    comments = topic.comments.order(created_at: :desc).limit(5)
+    comments.each do |comment|
+      40.times do |i|
+        FactoryBot.create(:comment_history, comment: comment, version_no: i + 1)
       end
     end
   end

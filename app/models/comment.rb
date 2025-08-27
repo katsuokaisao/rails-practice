@@ -8,17 +8,34 @@ class Comment < ApplicationRecord
   validates :content, presence: true
   validates :current_version_no, presence: true
 
-  after_create :create_history
-  after_update :create_history
+  def self.create_with_history!(topic:, author:, content:)
+    transaction do
+      comment = create!(
+        topic: topic,
+        author: author,
+        content: content,
+        current_version_no: 1
+      )
+      comment.histories.create!(
+        topic: topic,
+        author: author,
+        content: content,
+        version_no: 1
+      )
+      comment
+    end
+  end
 
-  private
-
-  def create_history
-    histories.create!(
-      topic: topic,
-      author: author,
-      content: content,
-      version_no: current_version_no
-    )
+  def update_content!(content)
+    transaction do
+      v = current_version_no + 1
+      update!(content: content, current_version_no: v)
+      histories.create!(
+        topic: topic,
+        author: author,
+        content: content,
+        version_no: v
+      )
+    end
   end
 end

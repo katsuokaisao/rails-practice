@@ -21,6 +21,7 @@
     outline: 0;
     vertical-align: baseline;
     background: transparent;
+    font-size: 1rem;
 }
 
 i,
@@ -61,4 +62,8 @@ a {
     margin-block-end: 20%;
     max-width: 500px;
     width: 100%;
+}
+
+.vertical-middle {
+    vertical-align: middle;
 }

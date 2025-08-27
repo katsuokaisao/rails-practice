@@ -10,8 +10,7 @@ class SampleCreator
     create_moderators
     create_topics
     create_comments
-    attach_100_comments_to_latest_topics
-    create_comment_histories_for_latest_topics_and_comments
+    update_comments
     put_records
   end
 
@@ -33,31 +32,23 @@ class SampleCreator
   end
 
   def create_comments
-    topics = Topic.all.to_a
-    users = User.all.to_a
-    2000.times do
-      FactoryBot.create(:comment, content: Faker::Lorem.paragraphs(number: 3).join("\n\n"), topic: topics.sample,
-                                  author: users.sample)
-    end
-  end
-
-  def attach_100_comments_to_latest_topics
-    users = User.all.to_a
     topics = Topic.order(created_at: :desc).limit(10)
+    users = User.all.to_a
     topics.each do |topic|
       100.times do
-        FactoryBot.create(:comment, content: Faker::Lorem.paragraphs(number: 3).join("\n\n"), topic: topic,
-                                    author: users.sample)
+        Comment.create_with_history!(
+          topic: topic,
+          author: users.sample,
+          content: Faker::Lorem.paragraphs(number: 3).join("\n")
+        )
       end
     end
   end
 
-  def create_comment_histories_for_latest_topics_and_comments
-    topic = Topic.order(created_at: :desc).first
-    comments = topic.comments.order(created_at: :desc).limit(5)
-    comments.each do |comment|
-      40.times do |i|
-        FactoryBot.create(:comment_history, comment: comment, version_no: i + 1)
+  def update_comments
+    Comment.first(100).each do |comment|
+      10.times do
+        comment.update_content!(Faker::Lorem.paragraphs(number: 3).join("\n"))
       end
     end
   end

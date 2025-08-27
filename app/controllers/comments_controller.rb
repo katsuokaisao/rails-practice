@@ -3,6 +3,7 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_comment, only: %i[edit update]
+
   def edit
     @topic = @comment.topic
   end
@@ -10,15 +11,21 @@ class CommentsController < ApplicationController
   def create
     @topic = Topic.find(params[:topic_id])
 
-    @comment = @topic.comments.new(comment_params.merge(author: current_user, current_version_no: 1))
-    if @comment.save
+    begin
+      @comment = Comment.create_with_history!(
+        topic: @topic,
+        author: current_user,
+        content: comment_params[:content]
+      )
+
       respond_to do |format|
         format.html do
           redirect_to @topic, notice: t('flash.actions.comment_created.notice')
         end
         format.turbo_stream
       end
-    else
+    rescue ActiveRecord::RecordInvalid => e
+      @comment = e.record
       set_pagination
 
       respond_to do |format|
@@ -29,21 +36,15 @@ class CommentsController < ApplicationController
           render :create_error, status: :unprocessable_entity
         end
       end
-      nil
     end
   end
 
   def update
-    @topic = @comment.topic
-    @comment.assign_attributes(comment_params)
-    @comment.current_version_no += 1
-
-    unless @comment.save
-      render :edit, status: :unprocessable_entity
-      return
-    end
-
-    redirect_to @topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
+    @comment.update_content!(comment_params[:content])
+    redirect_to @comment.topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
+  rescue ActiveRecord::RecordInvalid => e
+    @comment = e.record
+    render :edit, status: :unprocessable_entity
   end
 
   private

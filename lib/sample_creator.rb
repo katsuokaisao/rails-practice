@@ -11,6 +11,7 @@ class SampleCreator
     create_topics
     create_comments
     update_comments
+    create_reports
     put_records
   end
 
@@ -53,12 +54,32 @@ class SampleCreator
     end
   end
 
+  def create_reports
+    comments = Comment.eager_load(:author).to_a
+    users = User.find_each.to_a
+    100.times do
+      type = %w[comment user].sample
+      case type
+      when 'comment'
+        reporter = users.sample
+        comment = comments.sample
+        next if comment.author == reporter
+
+        FactoryBot.create(:report, :for_comment, reporter: reporter, target_comment: comment)
+      when 'user'
+        reporter, target = users.sample(2)
+        FactoryBot.create(:report, :for_user, reporter: reporter, target_user: target)
+      end
+    end
+  end
+
   def put_records
     puts_users
     puts_moderators
     puts_topics
     puts_comments
     puts_comment_histories
+    puts_reports
   end
 
   def puts_users
@@ -94,6 +115,18 @@ class SampleCreator
         Comment: #{comment_history.comment.content},
         Author: #{comment_history.author.nickname},
         Version: #{comment_history.version_no}
+      MSG
+    end
+  end
+
+  def puts_reports
+    puts 'Reports sample'
+    Report.take(10).each do |report|
+      puts <<~MSG
+        Reporter: #{report.reporter.nickname},
+        Target Type: #{report.target_type},
+        Reason Type: #{report.reason_type},
+        Reason Text: #{report.reason_text}
       MSG
     end
   end

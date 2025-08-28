@@ -45,6 +45,11 @@ Metrics/AbcSize:
   Exclude:
     - 'app/controllers/**/*'
 
+Metrics/ClassLength:
+  Max: 100
+  Exclude:
+    - 'lib/sample_creator.rb'
+
 # Deviseコントローラーでは親クラスのアクションを使用するため除外
 Rails/LexicallyScopedActionFilter:
   Exclude:

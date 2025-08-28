@@ -3,6 +3,7 @@
 class TopicsController < ApplicationController
   before_action :authenticate_user!, only: %i[create update]
   before_action :set_topic, only: %i[show edit update]
+  before_action -> { authorize_action!(@topic) }
 
   def index
     @pagination = Pagination::Paginator.new(

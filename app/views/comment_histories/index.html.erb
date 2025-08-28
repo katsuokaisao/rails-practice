@@ -7,10 +7,10 @@
         <% @pagination.records.each do |history| %>
             <div class="history">
                 <p>
-                    <strong>Version: <%= history.version_no %></strong>
-                    <strong>作成者: <%= history.author.nickname %></strong>
+                    <span class="history-version">Version: <%= history.version_no %></span>
+                    <span class="history-author">作成者: <%= history.author.nickname %></span>
                 </p>
-                <p><%= history.content %></p>
+                <div class="history-content"><%= history.content %></div>
                 <p class="history-meta">
                     作成日: <%= history.created_at.strftime('%Y-%m-%d %H:%M') %>
                 </p>

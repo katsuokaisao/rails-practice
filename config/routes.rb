@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :reports, only: %i[new create]
+  resources :reports, only: %i[index new create]
   resources :close_modal, only: :index
 
   get 'up' => 'rails/health#show', as: :rails_health_check

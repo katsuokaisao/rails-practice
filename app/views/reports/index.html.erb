@@ -1,0 +1,11 @@
+<div class="reports-header">
+  <h2><%= t('views.shared.title.index', resource: Report.model_name.human) %></h2>
+</div>
+
+<div id="reports-tabs">
+  <%= render partial: 'reports/tabs', locals: { current_tab: @current_tab } %>
+</div>
+
+<div id="reports-container">
+  <%= render partial: 'reports/index', locals: { pagination: @pagination, current_tab: @current_tab } %>
+</div>

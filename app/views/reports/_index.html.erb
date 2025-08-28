@@ -1,0 +1,82 @@
+<div class="reports-container">
+  <% if current_tab == 'user' %>
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>通報者</th>
+          <th>通報タイプ</th>
+          <th>通報理由タイプ</th>
+          <th>通報理由テキスト</th>
+          <th>停止対象者</th>
+          <th>通報日時</th>
+          <th>審査者</th>
+          <th>審査日時</th>
+          <th>審査メモ</th>
+          <th>審査結果</th>
+          <th>停止期間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pagination.records.each do |report| %>
+          <tr>
+            <td><%= report.reporter&.nickname %></td>
+            <td><%= t("activerecord.attributes.report.target_types.#{report.target_type}") %></td>
+            <td><%= t("activerecord.attributes.report.reason_types.#{report.reason_type}") %></td>
+            <td><%= truncate(report.reason_text, length: 100) %></td>
+            <td><%= report.target_user&.nickname %></td>
+            <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+            <td><!-- 審査者 --></td>
+            <td><!-- 審査日時 --></td>
+            <td><!-- 審査メモ --></td>
+            <td><!-- 審査結果 --></td>
+            <td><!-- 停止期間 --></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <table class="reports-table">
+      <thead>
+        <tr>
+          <th>通報者</th>
+          <th>通報タイプ</th>
+          <th>通報理由タイプ</th>
+          <th>通報理由テキスト</th>
+          <th><%= Topic.model_name.human %>タイトル</th>
+          <th><%= Comment.model_name.human %>内容</th>
+          <th><%= Comment.model_name.human %>日時</th>
+          <th><%= Comment.model_name.human %>者</th>
+          <th>バージョン番号</th>
+          <th>通報日時</th>
+          <th>審査者</th>
+          <th>審査日時</th>
+          <th>審査メモ</th>
+          <th>審査結果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pagination.records.each do |report| %>
+          <tr>
+            <td><%= report.reporter&.nickname %></td>
+            <td><%= t("activerecord.attributes.report.target_types.#{report.target_type}") %></td>
+            <td><%= t("activerecord.attributes.report.reason_types.#{report.reason_type}") %></td>
+            <td><%= truncate(report.reason_text, length: 50) %></td>
+            <td><%= report.target_comment&.topic&.title %></td>
+            <td><%= truncate(report.target_comment&.content, length: 50) %></td>
+            <td><%= report.target_comment&.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+            <td><%= report.target_comment&.author&.nickname %></td>
+            <td><%= report.target_comment&.current_version_no %></td>
+            <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+            <td><!-- 審査者 --></td>
+            <td><!-- 審査日時 --></td>
+            <td><!-- 審査メモ --></td>
+            <td><!-- 審査結果 --></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<% query_params = params[:target_type].present? ? { target_type: params[:target_type] } : {} %>
+<%= render partial: 'shared/pagination', locals: { pagination: pagination, query_params: query_params } %>

@@ -1,6 +1,33 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
+  def index
+    params[:target_type] ||= 'comment'
+
+    reports = case params[:target_type]
+              when 'comment'
+                Report.eager_load(:reporter, :target_comment, :target_user)
+                      .eager_load(target_comment: %i[topic author])
+              when 'user'
+                Report.eager_load(:reporter, :target_user)
+              end
+    reports = reports.where(target_type: params[:target_type]) if %w[comment user].include?(params[:target_type])
+    reports = reports.order('reports.created_at DESC')
+
+    authorize_action!(reports)
+
+    @pagination = Pagination::Paginator.new(
+      relation: reports, page: params[:page], per: params[:per]
+    ).call
+
+    @current_tab = params[:target_type]
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
   def new
     @topic = Topic.find(report_params[:from_topic_id])
 

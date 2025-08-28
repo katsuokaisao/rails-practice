@@ -16,8 +16,27 @@
         <span class="material-icons">history</span>
         <%= link_to '履歴', comment_histories_path(comment), class: "history-link" %>
       </p>
-      <%# 違法ユーザを報告する %>
-      <%# コメントの非表示を申請する %>
+    <% else %>
+      <p>
+        <span class="material-icons">flag</span>
+        <%= link_to '違法ユーザ', new_report_path(
+          format: :turbo_stream,
+          reportable_type: "user",
+          reportable_id: comment.author.id,
+          from_topic_id: comment.topic.id,
+        )
+        %>
+      </p>
+      <p>
+        <span class="material-icons">flag</span>
+        <%= link_to 'コメントの非表示', new_report_path(
+          format: :turbo_stream,
+          reportable_type: "comment",
+          reportable_id: comment.id,
+          from_topic_id: comment.topic.id,
+        )
+        %>
+      </p>
     <% end %>
   </div>
 </div>

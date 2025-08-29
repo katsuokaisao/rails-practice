@@ -50,6 +50,11 @@ Metrics/ClassLength:
   Exclude:
     - 'lib/sample_creator.rb'
 
+Metrics/CyclomaticComplexity:
+  Max: 7
+  Exclude:
+    - 'app/controllers/decisions_controller.rb'
+
 # Deviseコントローラーでは親クラスのアクションを使用するため除外
 Rails/LexicallyScopedActionFilter:
   Exclude:
@@ -76,3 +81,7 @@ RSpec/NestedGroups:
 
 Style/Documentation:
   Enabled: false
+
+Rails/SkipsModelValidations:
+  AllowedMethods:
+    - update_all

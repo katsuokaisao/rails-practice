@@ -11,6 +11,7 @@ class ReportsController < ApplicationController
               when 'user'
                 Report.eager_load(:reporter, :target_user)
               end
+    reports = reports.where.missing(:decision)
     reports = reports.where(target_type: params[:target_type]) if %w[comment user].include?(params[:target_type])
     reports = reports.order('reports.created_at DESC')
 

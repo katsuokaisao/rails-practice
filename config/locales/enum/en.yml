@@ -1,0 +1,16 @@
+en:
+  enums:
+    decision:
+      decision_type:
+        reject: Reject
+        hide_comment: Hide comment
+        suspend_user: Suspend user
+    report:
+      target_type:
+        comment: Comment
+        user: User
+      reason_type:
+        spam: Spam
+        harassment: Harassment
+        obscene: Obscene
+        other: Other

@@ -12,13 +12,3 @@ ja:
         reason_text: 理由詳細
         created_at: 作成日時
         updated_at: 更新日時
-  enums:
-    report:
-      target_type:
-        comment: コメント
-        user: ユーザー
-      reason_type:
-        spam: スパム
-        harassment: 嫌がらせ
-        obscene: わいせつ
-        other: その他

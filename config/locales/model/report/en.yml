@@ -12,13 +12,3 @@ en:
         reason_text: Reason Details
         created_at: Created At
         updated_at: Updated At
-  enums:
-    report:
-      target_type:
-        comment: Comment
-        user: User
-      reason_type:
-        spam: Spam
-        harassment: Harassment
-        obscene: Obscene
-        other: Other

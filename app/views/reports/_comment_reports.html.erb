@@ -17,7 +17,7 @@
     <% pagination.records.each do |report| %>
         <tr>
         <td><%= report.reporter&.nickname %></td>
-        <td><%= t("activerecord.attributes.report.reason_types.#{report.reason_type}") %></td>
+        <td><%= report.enum_i18n(:reason_type) %></td>
         <td><%= truncate(report.reason_text, length: 50) %></td>
         <td><%= report.target_comment&.topic&.title %></td>
         <td><%= truncate(report.target_comment&.content, length: 50) %></td>

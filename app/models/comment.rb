@@ -6,9 +6,11 @@ class Comment < ApplicationRecord
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
   has_many :reports, class_name: 'Report', foreign_key: 'target_comment_id',
                      dependent: :restrict_with_error, inverse_of: :target_comment
+  belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
 
   validates :content, presence: true
   validates :current_version_no, presence: true
+  validates :hidden_cause, inclusion: { in: %w[user_suspension comment_invisible] }, allow_blank: true
 
   def self.create_with_history!(topic:, author:, content:)
     transaction do
@@ -39,5 +41,17 @@ class Comment < ApplicationRecord
         version_no: v
       )
     end
+  end
+
+  def hide(cause: :comment_report, decision: nil)
+    update!(
+      hidden: true,
+      hidden_cause: cause,
+      hidden_cause_decision: decision
+    )
+  end
+
+  def hidden?
+    hidden
   end
 end

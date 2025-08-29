@@ -1,0 +1,24 @@
+ja:
+  activerecord:
+    models:
+      report: 通報
+    attributes:
+      report:
+        target_type: 対象種別
+        target_user: 通報対象ユーザー
+        target_comment: 通報対象コメント
+        reporter: 通報者
+        reason_type: 理由種別
+        reason_text: 理由詳細
+        created_at: 作成日時
+        updated_at: 更新日時
+  enums:
+    report:
+      target_type:
+        comment: コメント
+        user: ユーザー
+      reason_type:
+        spam: スパム
+        harassment: 嫌がらせ
+        obscene: わいせつ
+        other: その他

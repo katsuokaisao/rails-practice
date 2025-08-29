@@ -12,6 +12,7 @@ class SampleCreator
     create_comments
     update_comments
     create_reports
+    create_decisions
     put_records
   end
 
@@ -73,6 +74,15 @@ class SampleCreator
     end
   end
 
+  def create_decisions
+    reports = Report.order(created_at: :asc).limit(20)
+    moderators = Moderator.all.to_a
+    reports.each do |report|
+      moderator = moderators.sample
+      FactoryBot.create(:decision, report: report, moderator: moderator)
+    end
+  end
+
   def put_records
     puts_users
     puts_moderators
@@ -80,6 +90,7 @@ class SampleCreator
     puts_comments
     puts_comment_histories
     puts_reports
+    puts_decisions
   end
 
   def puts_users
@@ -127,6 +138,18 @@ class SampleCreator
         Target Type: #{report.target_type},
         Reason Type: #{report.reason_type},
         Reason Text: #{report.reason_text}
+      MSG
+    end
+  end
+
+  def puts_decisions
+    puts 'Decisions sample'
+    Decision.take(10).each do |decision|
+      puts <<~MSG
+        Report: #{decision.report.id},
+        Decided By: #{decision.moderator.nickname},
+        Decision Type: #{decision.decision_type},
+        Note: #{decision.note}
       MSG
     end
   end

@@ -1,0 +1,11 @@
+<div class="decisions-container">
+  <% if current_tab == 'user' %>
+    <%= render partial: 'user_decisions', locals: { pagination: pagination } %>
+  <% else %>
+    <%= render partial: 'comment_decisions', locals: { pagination: pagination } %>
+  <% end %>
+</div>
+
+<% query_params = params[:target_type].present? ? { target_type: params[:target_type] } : {} %>
+
+<%= render partial: 'shared/pagination', locals: { pagination: pagination, query_params: query_params } %>

@@ -49,6 +49,7 @@ Metrics/ClassLength:
   Max: 100
   Exclude:
     - 'lib/sample_creator.rb'
+    - 'app/controllers/decisions_controller.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 7

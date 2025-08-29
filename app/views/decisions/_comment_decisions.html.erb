@@ -1,0 +1,30 @@
+<table class="decisions-table">
+  <thead>
+    <tr>
+      <th>通報者</th>
+      <th>通報理由</th>
+      <th><%= Topic.model_name.human %>タイトル</th>
+      <th><%= Comment.model_name.human %>内容</th>
+      <th><%= Comment.model_name.human %>者</th>
+      <th>審査タイプ</th>
+      <th>審査メモ</th>
+      <th>審査者</th>
+      <th>審査日時</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pagination.records.each do |decision| %>
+      <tr>
+        <td><%= decision.report.reporter&.nickname %></td>
+        <td><%= decision.report.enum_i18n(:reason_type) %></td>
+        <td><%= decision.report.target_comment&.topic&.title %></td>
+        <td><%= truncate(decision.report.target_comment&.content, length: 50) %></td>
+        <td><%= decision.report.target_comment&.author&.nickname %></td>
+        <td><%= decision.enum_i18n(:decision_type) %></td>
+        <td><%= truncate(decision.note, length: 50) %></td>
+        <td><%= decision.moderator&.nickname %></td>
+        <td><%= decision.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

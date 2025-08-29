@@ -7,6 +7,13 @@ export default class extends Controller {
     console.debug("Decisions controller connected")
   }
 
+  updateUrl(event) {
+    const targetType = event.currentTarget.dataset.targetType
+    const url = new URL(window.location)
+    url.searchParams.set('target_type', targetType)
+    window.history.pushState({}, '', url)
+  }
+
   toggleFields(event) {
     const selectedValue = event.target.value
 

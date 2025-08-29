@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 class DecisionsController < ApplicationController
+  def index
+    params[:target_type] ||= 'comment'
+
+    decisions = case params[:target_type]
+                when 'comment'
+                  Decision.eager_load(:report, :moderator)
+                          .eager_load(report: %i[reporter target_comment])
+                          .where(reports: { target_type: 'comment' })
+                when 'user'
+                  Decision.eager_load(:report, :moderator)
+                          .eager_load(report: %i[reporter target_user])
+                          .where(reports: { target_type: 'user' })
+                end
+
+    @pagination = Pagination::Paginator.new(
+      relation: decisions, page: params[:page], per: params[:per]
+    ).call
+
+    @current_tab = params[:target_type]
+
+    redirect_to topics_path, alert: t('flash.actions.out_of_bounds') if @pagination.out_of_bounds
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
   def new
     authorize_action!(nil)
 

@@ -1,0 +1,96 @@
+<div id="decision-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>通報審査</h2>
+      <button type="button" class="close-button" data-controller="close-modal">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="report-details">
+        <h3>通報詳細</h3>
+        <table class="report-details-table">
+          <tr>
+            <th>通報ID</th>
+            <td><%= report.id %></td>
+          </tr>
+          <tr>
+            <th>通報者</th>
+            <td><%= report.reporter&.nickname %></td>
+          </tr>
+          <tr>
+            <th>通報タイプ</th>
+            <td><%= t("activerecord.attributes.report.target_types.#{report.target_type}") %></td>
+          </tr>
+          <tr>
+            <th>通報理由</th>
+            <td><%= t("activerecord.attributes.report.reason_types.#{report.reason_type}") %></td>
+          </tr>
+          <tr>
+            <th>通報理由詳細</th>
+            <td><%= report.reason_text %></td>
+          </tr>
+          <% if report.target_type == 'comment' %>
+            <tr>
+              <th><%= Topic.model_name.human %>タイトル</th>
+              <td><%= report.target_comment&.topic&.title %></td>
+            </tr>
+            <tr>
+              <th><%= Comment.model_name.human %>内容</th>
+              <td><%= report.target_comment&.content %></td>
+            </tr>
+            <tr>
+              <th><%= Comment.model_name.human %>者</th>
+              <td><%= report.target_comment&.author&.nickname %></td>
+            </tr>
+          <% elsif report.target_type == 'user' %>
+            <tr>
+              <th>対象ユーザー</th>
+              <td><%= report.target_user&.nickname %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <th>通報日時</th>
+            <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+          </tr>
+        </table>
+      </div>
+
+      <%= form_with model: decision, url: decisions_path, local: false, data: { controller: 'decisions', action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
+        <%= f.hidden_field :report_id, value: report.id %>
+
+        <div class="form-group">
+          <%= f.label :decision_type, '審査種類' %>
+          <%= f.select :decision_type,
+                      options_for_select([
+                        ['却下', 'reject'],
+                        report.target_type == 'comment' ? ['コメント非表示', 'hide_comment'] : nil,
+                        report.target_type == 'user' ? ['ユーザー停止', 'suspend_user'] : nil
+                      ].compact),
+                      { include_blank: '選択してください' },
+                      { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :note, 'メモ' %>
+          <%= f.text_area :note, class: 'form-control' %>
+        </div>
+
+        <div class="form-group suspension-period" style="display: none;" data-decisions-target="suspensionPeriod">
+          <%= f.label :suspension_until, '停止期間' %>
+          <%= f.datetime_field :suspension_until, class: 'form-control' %>
+          <div class="suspension-presets">
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1">1日</button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3">3日</button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="7">1週間</button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="30">1ヶ月</button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit '審査を確定', class: 'btn btn-primary' %>
+          <button type="button" class="btn btn-secondary" data-controller="close-modal">キャンセル</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

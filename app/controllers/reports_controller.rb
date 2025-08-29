@@ -78,8 +78,8 @@ class ReportsController < ApplicationController
 
     if @report.save
       respond_to do |format|
-        format.turbo_stream { redirect_to topic_path(@topic), notice: i18n.t('flash.actions.create.notice') }
-        format.html { redirect_to topic_path(@topic), notice: i18n.t('flash.actions.create.notice') }
+        format.turbo_stream { redirect_to topic_path(@topic), notice: t('flash.actions.create.notice') }
+        format.html { redirect_to topic_path(@topic), notice: t('flash.actions.create.notice') }
       end
     else
       respond_to do |format|

@@ -7,7 +7,7 @@
         <%= link_to num, @pagination.page_path(
           base_path: request.path,
           page_num: num,
-          query_params: query_params
+          query_params: @query_params || {}
         ) %>
       <% end %>
     <% end %>

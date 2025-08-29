@@ -37,10 +37,10 @@ export default class extends Controller {
 
   handleSubmit(event) {
     if (event.detail.success) {
-      document.getElementById('decision-modal').remove()
+      document.getElementById('modal').remove()
     } else if (event.detail.error === 'concurrent_modification') {
       alert('他のモデレーターが既にこの通報を審査しました。ページをリロードしてください。')
-      document.getElementById('decision-modal').remove()
+      document.getElementById('modal').remove()
       window.location.reload()
     }
   }

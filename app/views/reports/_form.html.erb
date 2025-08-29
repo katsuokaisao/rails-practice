@@ -15,17 +15,21 @@
   <%= hidden_field_tag :reportable_type, report.target_type %>
   <%= hidden_field_tag :reportable_id, report.target_comment_id || report.target_user_id %>
 
-  <div>
-    <%= f.label :reason_type, "理由タイプ" %><br>
-    <%= f.select :reason_type, Report.reason_types.keys.map { |k| [k, k] }, prompt: "選択してください", required: true %>
+  <div class="form-group">
+    <%= f.label :reason_type, "理由タイプ" %>
+    <%= f.select :reason_type,
+                Report.reason_types.keys.map { |k| [k, k] },
+                { prompt: "選択してください" },
+                { class: "form-control", required: true } %>
   </div>
 
-  <div style="margin-top: 8px;">
-    <%= f.label :reason_text, "理由（詳細）" %><br>
-    <%= f.text_area :reason_text, rows: 5, required: true %>
+  <div class="form-group">
+    <%= f.label :reason_text, "理由（詳細）" %>
+    <%= f.text_area :reason_text, rows: 5, class: "form-control", required: true %>
   </div>
 
-  <div style="margin-top: 12px;">
-    <%= f.submit "保存", class: "btn btn-primary" %>
+  <div class="form-actions">
+    <%= f.submit "通報を確定", class: "btn btn-primary" %>
+    <%= link_to "キャンセル", close_modal_index_path(format: :turbo_stream), class: "btn btn-secondary" %>
   </div>
 <% end %>

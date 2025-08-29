@@ -11,7 +11,7 @@ export default class extends Controller {
 
   closeModal(event) {
     event.preventDefault()
-    const modal = document.getElementById('decision-modal')
+    const modal = document.getElementById('modal')
     if (modal) {
       modal.remove()
     }

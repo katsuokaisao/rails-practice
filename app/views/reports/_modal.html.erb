@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <h2 id="modal-title">レポート作成</h2>
 
-    <%= render "reports/form", topic: topic, report: report %>
+    <%= render "form", topic: topic, report: report %>
 
     <div class="modal-actions">
       <%= link_to "閉じる", close_modal_index_path(format: :turbo_stream), class: "btn btn-secondary" %>

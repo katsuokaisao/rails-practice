@@ -1,20 +1,22 @@
 <div class="reports-tabs">
   <ul class="tabs-list" data-controller="reports">
     <li class="<%= current_tab == 'comment' ? 'active' : '' %>">
-      <%= link_to "コメント通報", reports_path(target_type: 'comment'),
-          data: {
-            turbo_stream: true,
-            action: "click->reports#updateUrl",
-            target_type: "comment"
-          } %>
+      <%= link_to "コメント通報",
+                  reports_path(target_type: 'comment'),
+                  data: {
+                    turbo_stream: true,
+                    action: "click->reports#updateUrl",
+                    target_type: "comment"
+                  } %>
     </li>
     <li class="<%= current_tab == 'user' ? 'active' : '' %>">
-      <%= link_to "ユーザー通報", reports_path(target_type: 'user'),
-          data: {
-            turbo_stream: true,
-            action: "click->reports#updateUrl",
-            target_type: "user"
-          } %>
+      <%= link_to "ユーザー通報",
+                  reports_path(target_type: 'user'),
+                  data: {
+                    turbo_stream: true,
+                    action: "click->reports#updateUrl",
+                    target_type: "user"
+                  } %>
     </li>
   </ul>
 </div>

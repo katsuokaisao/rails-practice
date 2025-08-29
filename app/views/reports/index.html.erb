@@ -3,9 +3,9 @@
 </div>
 
 <div id="reports-tabs">
-  <%= render partial: 'reports/tabs', locals: { current_tab: @current_tab } %>
+  <%= render partial: 'tabs', locals: { current_tab: @current_tab } %>
 </div>
 
 <div id="reports-container">
-  <%= render partial: 'reports/index', locals: { pagination: @pagination, current_tab: @current_tab } %>
+  <%= render partial: 'index', locals: { pagination: @pagination, current_tab: @current_tab } %>
 </div>

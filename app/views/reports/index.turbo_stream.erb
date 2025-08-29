@@ -1,7 +1,7 @@
 <%= turbo_stream.update "reports-container" do %>
-  <%= render partial: "reports/index", locals: { pagination: @pagination, current_tab: @current_tab } %>
+  <%= render partial: "index", locals: { pagination: @pagination, current_tab: @current_tab } %>
 <% end %>
 
 <%= turbo_stream.update "reports-tabs" do %>
-  <%= render partial: "reports/tabs", locals: { current_tab: @current_tab } %>
+  <%= render partial: "tabs", locals: { current_tab: @current_tab } %>
 <% end %>

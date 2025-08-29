@@ -2,10 +2,10 @@
 
 class DecisionsController < ApplicationController
   def new
+    authorize_action!(nil)
+
     @report = Report.find(params[:report_id])
     @decision = Decision.new(report: @report)
-
-    authorize_action!(@decision)
 
     respond_to do |format|
       format.turbo_stream

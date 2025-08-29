@@ -1,0 +1,21 @@
+ja:
+  activerecord:
+    models:
+      decision: 審査結果
+    attributes:
+      decision:
+        id: ID
+        report: 対象通報
+        report_id: 通報ID
+        decision_type: 審査種別
+        decided_by: 審査担当者
+        note: メモ
+        suspension_until: 停止期限
+        created_at: 作成日時
+        updated_at: 更新日時
+    enums:
+      decision:
+        type:
+          reject: 却下
+          hide_comment: コメントを非表示
+          suspend_user: ユーザーを一時停止

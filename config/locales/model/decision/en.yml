@@ -1,0 +1,21 @@
+en:
+  activerecord:
+    models:
+      decision: Decision
+    attributes:
+      decision:
+        id: ID
+        report: Report
+        report_id: Report ID
+        decision_type: Decision Type
+        decided_by: Decided By
+        note: Note
+        suspension_until: Suspension Until
+        created_at: Created At
+        updated_at: Updated At
+    enums:
+      decision:
+        type:
+          reject: Reject
+          hide_comment: Hide comment
+          suspend_user: Suspend user

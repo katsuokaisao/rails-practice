@@ -30,6 +30,28 @@ class User < ApplicationRecord
                          format: { with: PASSWORD_REGEX }, allow_blank: true
   end
 
+  def suspend!(until_date)
+    update!(
+      suspended: true,
+      suspended_until: until_date
+    )
+  end
+
+  def suspended?
+    suspended && (suspended_until.nil? || suspended_until > Time.current)
+  end
+
+  def suspension_expired?
+    suspended && suspended_until.present? && suspended_until <= Time.current
+  end
+
+  def release_suspension!
+    update!(
+      suspended: false,
+      suspended_until: nil
+    )
+  end
+
   private
 
   def password_update?

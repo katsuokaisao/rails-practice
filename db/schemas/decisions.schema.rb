@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 create_table 'decisions', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
-  t.bigint   'report_id',        null: false
-  t.string   'type',             null: false, comment: "(enum: 'reject' | 'hide_comment' | 'suspend_user')"
+  t.bigint   'report_id', null: false
+  t.string   'decision_type', null: false, comment: "(enum: 'reject' | 'hide_comment' | 'suspend_user')"
   t.bigint   'decided_by',       null: false
   t.text     'note',             null: true
   t.datetime 'suspension_until', null: true

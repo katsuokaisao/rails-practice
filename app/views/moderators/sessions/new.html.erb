@@ -21,6 +21,6 @@
   <% end %>
 
   <div class="actions">
-    <%= f.submit t('views.shared.authentication.login') %>
+    <%= f.submit t('views.shared.authentication.login'), data: { turbo: false } %>
   </div>
 <% end %>

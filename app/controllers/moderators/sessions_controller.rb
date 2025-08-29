@@ -27,9 +27,8 @@ module Moderators
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
 
-    # TODO: 審査一覧画面できたらそこに飛ばす
     def after_sign_in_path_for(_resource)
-      root_path
+      reports_path
     end
 
     def after_sign_out_path_for(_resource)

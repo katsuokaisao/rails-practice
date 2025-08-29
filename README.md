@@ -1,14 +1,15 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
 ## Ruby version
 3.3.7
 
-## Configuration
+## Docker Composeの起動
+```bash
+docker-compose up -d
+```
+
+## アプリケーションのアクセス方法
+http://localhost:49152
 
 ## Database set up
 
@@ -53,7 +54,7 @@ bin/rake db:custom:ridgepole_apply
 bin/rake db:custom:ridgepole_export
 ```
 
-## How to run the test suite
+## テストの実行
 
 ### テスト用データベースのセットアップ
 
@@ -75,5 +76,17 @@ bundle exec rspec
 - **capybara-playwright-driver**: PlaywrightをCapybaraで使用するためのドライバー
 - **Playwright**: 高速で安定したブラウザ自動化ツール
 
+## リンターの実行
+### RuboCop
+```bash
+bundle exec rubocop
+bundle exec rubocop -A
+```
+
+### ERB Lint
+```bash
+bundle exec erb_lint --lint-all
+bundle exec erb_lint --lint-all --autocorrect
+```
 
 ## Services (job queues, cache servers, search engines, etc.)

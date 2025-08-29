@@ -18,6 +18,7 @@ class User < ApplicationRecord
                      dependent: :restrict_with_error, inverse_of: :reporter
   has_many :received_reports, class_name: 'Report', foreign_key: 'target_user_id',
                               dependent: :restrict_with_error, inverse_of: :target_user
+  has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
 
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }

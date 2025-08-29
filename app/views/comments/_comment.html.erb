@@ -2,7 +2,7 @@
   <div class="comment-header">
     <p><strong><%= comment.author.nickname %></strong></p>
   </div>
-  <p class="comment-content"><%= comment.content %></p>
+  <%= display_comment_content(comment, current_user) %>
   <div class="comment-footer">
     <p>
       作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>
@@ -17,24 +17,26 @@
         <%= link_to '履歴', comment_histories_path(comment), class: "history-link" %>
       </p>
     <% else %>
-      <p>
-        <span class="material-icons">flag</span>
-        <%= link_to '違法ユーザ', new_report_path(
-          format: :turbo_stream,
-          reportable_type: "user",
-          reportable_id: comment.author.id,
-          from_topic_id: comment.topic.id,
-        ) %>
-      </p>
-      <p>
-        <span class="material-icons">flag</span>
-        <%= link_to 'コメントの非表示', new_report_path(
-          format: :turbo_stream,
-          reportable_type: "comment",
-          reportable_id: comment.id,
-          from_topic_id: comment.topic.id,
-        ) %>
-      </p>
+      <% unless comment.hidden? %>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to '違法ユーザ', new_report_path(
+            format: :turbo_stream,
+            reportable_type: "user",
+            reportable_id: comment.author.id,
+            from_topic_id: comment.topic.id,
+          ) %>
+        </p>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to 'コメントの非表示', new_report_path(
+            format: :turbo_stream,
+            reportable_type: "comment",
+            reportable_id: comment.id,
+            from_topic_id: comment.topic.id,
+          ) %>
+        </p>
+      <% end %>
     <% end %>
   </div>
 </div>

@@ -109,3 +109,23 @@
     }
 
 }
+
+.hidden-comment-warning {
+    color: #e74c3c;
+    background-color: #fadbd8;
+    padding: 12px;
+    border-radius: 4px;
+    border-left: 4px solid #e74c3c;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.hidden-comment-info {
+    color: #7f8c8d;
+    background-color: #f5f5f5;
+    padding: 12px;
+    border-radius: 4px;
+    border-left: 4px solid #95a5a6;
+    margin: 10px 0;
+    font-style: italic;
+}

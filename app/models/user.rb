@@ -31,26 +31,14 @@ class User < ApplicationRecord
                          format: { with: PASSWORD_REGEX }, allow_blank: true
   end
 
-  def suspend!(until_date)
-    update!(
-      suspended: true,
-      suspended_until: until_date
-    )
+  def suspend!(suspended_until)
+    suspend_user = SuspendUser.find_or_initialize_by(user: self)
+    suspend_user.suspended_until = suspended_until
+    suspend_user.save!
   end
 
   def suspended?
-    suspended && (suspended_until.nil? || suspended_until > Time.current)
-  end
-
-  def suspension_expired?
-    suspended && suspended_until.present? && suspended_until <= Time.current
-  end
-
-  def release_suspension!
-    update!(
-      suspended: false,
-      suspended_until: nil
-    )
+    SuspendUser.exists?(user: self, suspended_until: Time.current..)
   end
 
   private

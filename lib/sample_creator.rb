@@ -7,6 +7,7 @@ class SampleCreator
 
   def create
     create_users
+    create_suspend_users
     create_moderators
     create_topics
     create_comments
@@ -24,6 +25,12 @@ class SampleCreator
 
   def create_users
     FactoryBot.create_list(:user, 10)
+  end
+
+  def create_suspend_users
+    User.last(3).each do |user|
+      FactoryBot.create(:suspend_user, user: user)
+    end
   end
 
   def create_topics
@@ -85,6 +92,7 @@ class SampleCreator
 
   def put_records
     puts_users
+    puts_suspend_users
     puts_moderators
     puts_topics
     puts_comments
@@ -96,6 +104,12 @@ class SampleCreator
   def puts_users
     User.find_each do |user|
       puts "User: #{user.nickname}"
+    end
+  end
+
+  def puts_suspend_users
+    SuspendUser.find_each do |suspend_user|
+      puts "SuspendUser: #{suspend_user.user.nickname}, Suspended Until: #{suspend_user.suspended_until}"
     end
   end
 

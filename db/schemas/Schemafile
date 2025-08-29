@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'decisions.schema'
 require 'comment_histories.schema'
 require 'comments.schema'
+require 'decisions.schema'
 require 'moderators.schema'
 require 'reports.schema'
+require 'suspend_users.schema'
 require 'topics.schema'
 require 'users.schema'

@@ -23,3 +23,6 @@ pre-commit:
     - name: rubocop
       glob: "*.rb"
       run: "bundle exec rubocop --format progress {staged_files}"
+    - name: erblint
+      glob: "*.erb"
+      run: "bundle exec erblint {staged_files}"

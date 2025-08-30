@@ -40,7 +40,7 @@ class Decision < ApplicationRecord
   end
 
   def propagate_to_similar_content_reports!
-    similar_reports = Report.same_comment_as(report.target_comment_id).excluding(report.id)
+    similar_reports = Report.same_comment_as(report.target_comment_id).without_report(report)
 
     similar_reports.each do |similar_report|
       next if similar_report.reviewed?
@@ -55,7 +55,7 @@ class Decision < ApplicationRecord
   end
 
   def propagate_to_similar_user_reports!
-    similar_reports = Report.same_user_as(report.target_user_id).excluding(report.id)
+    similar_reports = Report.same_user_as(report.target_user_id).without_report(report)
 
     similar_reports.each do |similar_report|
       next if similar_report.reviewed?

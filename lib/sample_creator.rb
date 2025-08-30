@@ -86,7 +86,13 @@ class SampleCreator
     moderators = Moderator.all.to_a
     reports.each do |report|
       moderator = moderators.sample
-      FactoryBot.create(:decision, report: report, moderator: moderator)
+      decision = FactoryBot.create(:decision, report: report, moderator: moderator)
+      case decision.decision_type
+      when 'hide_comment'
+        report.target_comment.hide_by_decision!(decision)
+      when 'suspend_user'
+        report.target_user.suspend!(decision.suspension_until)
+      end
     end
   end
 

@@ -1,0 +1,28 @@
+<article class="layout-center">
+  <section class="form-card">
+    <h2><%= t('.title') %></h2>
+
+    <%= form_for(resource, as: resource_name, url: moderator_registration_path, html: { "data-turbo": "false" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <%= f.hidden_field :update_kind, value: "profile" %>
+
+      <div class="field">
+        <%= f.label :nickname %>
+        <%= f.text_field :nickname, autofocus: true, autocomplete: "nickname" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :time_zone %>
+        <%= f.time_zone_select :time_zone,
+                              ActiveSupport::TimeZone.all.sort,
+                              default: Rails.application.config.time_zone,
+                              include_blank: true %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit t('.actions.update') %>
+      </div>
+    <% end %>
+  </section>
+</article>

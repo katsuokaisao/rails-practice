@@ -22,8 +22,18 @@ Rails.application.routes.draw do
   end
 
   devise_for :moderators, controllers: {
-    sessions: 'moderators/sessions'
+    sessions: 'moderators/sessions',
+    registrations: 'moderators/registrations'
   }, skip: [:registrations], path: 'moderators', path_names: { sign_in: 'sign_in', sign_out: 'sign_out' }
+  devise_scope :moderator do
+    resource :registration,
+             only: %i[update],
+             controller: 'moderators/registrations',
+             path: 'moderators',
+             as: :moderator_registration
+    get 'moderators/profile',  to: 'moderators/registrations#profile',  as: :edit_moderator_profile
+    get 'moderators/password', to: 'moderators/registrations#password', as: :edit_moderator_password
+  end
 
   resources :topics, except: %i[destroy] do
     resources :comments, only: %i[create edit update]

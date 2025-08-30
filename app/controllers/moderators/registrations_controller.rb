@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Users
+module Moderators
   class RegistrationsController < Devise::RegistrationsController
     layout 'user'
 
@@ -91,7 +91,11 @@ module Users
         when :password then %i[current_password password password_confirmation]
         else []
         end
-      params.require(:user).permit(*permitted)
+      params.require(:moderator).permit(*permitted)
+    end
+
+    def configure_account_update_params
+      devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone update_kind])
     end
 
     def update_resource(resource, params)
@@ -101,19 +105,15 @@ module Users
       end
     end
 
-    def configure_account_update_params
-      devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone])
-    end
-
     def after_update_path_for(_resource)
       case update_kind
-      when :profile  then edit_user_profile_path
-      when :password then root_path
+      when :profile  then edit_moderator_profile_path
+      when :password then reports_path
       end
     end
 
     def update_kind
-      kind = params.dig(:user, :update_kind)
+      kind = params.dig(:moderator, :update_kind)
       kind.present? ? kind.to_sym : nil
     end
   end

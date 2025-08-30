@@ -17,6 +17,7 @@ class Moderator < ApplicationRecord
 
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }
+  validates :time_zone, presence: true, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
 
   # user sign up: password, password_confirmation
   # user account update: current_password, password, password_confirmation

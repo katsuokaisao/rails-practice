@@ -5,7 +5,7 @@ module Users
     layout 'user'
 
     # before_action :configure_sign_up_params, only: [:create]
-    # before_action :configure_account_update_params, only: [:update]
+    before_action :configure_account_update_params, only: [:update]
     prepend_before_action :authenticate_scope!, only: %i[profile password update destroy]
 
     # GET /resource/sign_up
@@ -84,6 +84,20 @@ module Users
 
     protected
 
+    def account_update_params
+      permitted =
+        case update_kind
+        when :profile  then %i[nickname time_zone]
+        when :password then %i[current_password password password_confirmation]
+        else []
+        end
+      params.require(:user).permit(*permitted)
+    end
+
+    def configure_account_update_params
+      devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone])
+    end
+
     def update_resource(resource, params)
       case update_kind
       when :profile  then resource.update_without_password(params)
@@ -99,8 +113,8 @@ module Users
     end
 
     def update_kind
-      update_kind_params = params.require(:user).permit(:update_kind)
-      update_kind_params[:update_kind].to_sym if update_kind_params[:update_kind].present?
+      kind = params.dig(:user, :update_kind)
+      kind.present? ? kind.to_sym : nil
     end
   end
 end

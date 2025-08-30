@@ -1,8 +1,13 @@
 ja:
   activerecord:
+    attributes:
+      user:
+        time_zone: "タイムゾーン"
     errors:
       models:
         user:
           attributes:
             password:
               invalid: "は半角英数字と記号のみ使用できます"
+            time_zone:
+              inclusion: "は有効なタイムゾーンではありません"

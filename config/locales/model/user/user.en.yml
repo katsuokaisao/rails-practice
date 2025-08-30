@@ -1,8 +1,13 @@
-ja:
+en:
   activerecord:
+    attributes:
+      user:
+        time_zone: "Time Zone"
     errors:
       models:
         user:
           attributes:
             password:
               invalid: "can only contain alphanumeric characters and symbols"
+            time_zone:
+              inclusion: "is not a valid time zone"

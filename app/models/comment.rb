@@ -3,14 +3,14 @@
 class Comment < ApplicationRecord
   belongs_to :topic
   belongs_to :author, class_name: 'User'
+  belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
+
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
   has_many :reports, class_name: 'Report', foreign_key: 'target_comment_id',
                      dependent: :restrict_with_error, inverse_of: :target_comment
-  belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
 
   validates :content, presence: true
   validates :current_version_no, presence: true
-  validates :hidden_cause, inclusion: { in: %w[user_suspension comment_invisible] }, allow_blank: true
 
   def self.create_with_history!(topic:, author:, content:)
     transaction do
@@ -43,15 +43,18 @@ class Comment < ApplicationRecord
     end
   end
 
-  def hide(cause: :comment_report, decision: nil)
+  def hide_by_decision!(decision)
     update!(
       hidden: true,
-      hidden_cause: cause,
       hidden_cause_decision: decision
     )
   end
 
   def hidden?
     hidden
+  end
+
+  def invisible?
+    hidden? || author.suspended?
   end
 end

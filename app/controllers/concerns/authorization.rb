@@ -14,7 +14,7 @@ module Authorization
 
   def policy(record)
     policy_class = find_policy_class
-    policy_class.new(current_actor, record)
+    policy_class.new(current_user, current_moderator, record)
   end
 
   def find_policy_class

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
+  before_action -> { authorize_action!(@report) }
+
   def index
     params[:target_type] ||= 'comment'
 
@@ -14,8 +16,6 @@ class ReportsController < ApplicationController
     reports = reports.where.missing(:decision)
     reports = reports.where(target_type: params[:target_type]) if %w[comment user].include?(params[:target_type])
     reports = reports.order('reports.created_at DESC')
-
-    authorize_action!(reports)
 
     @pagination = Pagination::Paginator.new(
       relation: reports, page: params[:page], per: params[:per]

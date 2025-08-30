@@ -3,6 +3,7 @@
 class CommentHistoriesController < ApplicationController
   before_action :set_comment
   before_action :set_versions
+  before_action -> { authorize_action!(@comment) }
 
   def index
     @pagination = Pagination::Paginator.new(

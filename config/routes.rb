@@ -8,9 +8,9 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }, skip: [:registrations]
   devise_scope :user do
-    # edit を除外
+    # edit, destroy を除外
     resource :registration,
-             only: %i[new create update destroy],
+             only: %i[new create update],
              controller: 'users/registrations',
              path: 'users',
              as: :user_registration,

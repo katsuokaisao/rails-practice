@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class DecisionsController < ApplicationController
+  before_action -> { authorize_action!(@decision) }
+
   def index
     params[:target_type] ||= 'comment'
 
@@ -31,8 +33,6 @@ class DecisionsController < ApplicationController
   end
 
   def new
-    authorize_action!(nil)
-
     @report = Report.find(params[:report_id])
     @decision = Decision.new(report: @report)
 
@@ -50,8 +50,6 @@ class DecisionsController < ApplicationController
       suspension_until: decision_params[:suspension_until],
       moderator: current_moderator
     )
-
-    authorize_action!(@decision)
 
     begin
       @decision.execute!

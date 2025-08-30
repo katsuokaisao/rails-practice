@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_comment, only: %i[edit update]
+  before_action -> { authorize_action!(@comment) }
 
   def edit
     @topic = @comment.topic

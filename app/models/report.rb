@@ -6,6 +6,16 @@ class Report < ApplicationRecord
   belongs_to :target_comment, class_name: 'Comment', optional: true
   has_one :decision, dependent: :restrict_with_error
 
+  scope :same_comment_as, lambda { |target_comment_id|
+    where(target_comment_id: target_comment_id, target_type: 'comment')
+  }
+
+  scope :same_user_as, lambda { |target_user_id|
+    where(target_user_id: target_user_id, target_type: 'user')
+  }
+
+  scope :excluding, ->(id) { where.not(id: id) }
+
   validates :target_type, presence: true, inclusion: { in: %w[comment user] }
   validates :reason_type, presence: true
   validates :reason_text, presence: true

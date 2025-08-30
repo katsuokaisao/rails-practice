@@ -14,6 +14,7 @@ class DecisionsController < ApplicationController
                           .eager_load(report: %i[reporter target_user])
                           .where(reports: { target_type: 'user' })
                 end
+    decisions = decisions.order(created_at: :desc)
 
     @pagination = Pagination::Paginator.new(
       relation: decisions, page: params[:page], per: params[:per]
@@ -53,59 +54,7 @@ class DecisionsController < ApplicationController
     authorize_action!(@decision)
 
     begin
-      ActiveRecord::Base.transaction do
-        @decision.save!
-
-        case @decision.decision_type
-        when 'hide_comment'
-          @report.target_comment.hide(cause: :comment_invisible, decision: @decision)
-        when 'suspend_user'
-          @report.target_user.suspend!(@decision.suspension_until)
-
-          @report.target_user.comments.update_all(
-            hidden: true,
-            hidden_cause: :user_suspended,
-            hidden_cause_decision: @decision
-          )
-        end
-      end
-
-      case @decision.decision_type
-      when 'hide_comment'
-        similar_reports = Report.where(
-          target_comment_id: @report.target_comment_id,
-          target_type: 'comment'
-        ).where.not(id: @report.id)
-
-        similar_reports.each do |similar_report|
-          next if similar_report.reviewed?
-
-          Decision.create!(
-            report: similar_report,
-            decision_type: 'hide_comment',
-            note: "自動作成: 関連する通報 ##{@report.id} の審査結果に基づく",
-            moderator: current_moderator
-          )
-        end
-      when 'suspend_user'
-        similar_reports = Report.where(
-          target_user_id: @report.target_user_id,
-          target_type: 'user'
-        ).where.not(id: @report.id)
-
-        similar_reports.each do |similar_report|
-          next if similar_report.reviewed?
-
-          Decision.create!(
-            report: similar_report,
-            decision_type: 'suspend_user',
-            note: "自動作成: 関連する通報 ##{@report.id} の審査結果に基づく",
-            suspension_until: @decision.suspension_until,
-            moderator: current_moderator
-          )
-        end
-      end
-
+      @decision.execute!
       redirect_to_reports_page
     rescue ActiveRecord::RecordNotUnique
       handle_concurrent_modification

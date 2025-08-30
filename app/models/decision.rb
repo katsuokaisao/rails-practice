@@ -11,7 +11,64 @@ class Decision < ApplicationRecord
   validate :validate_decision_type_with_report_type
   validate :validate_suspension_until
 
+  def execute!
+    ActiveRecord::Base.transaction do
+      save!
+      apply_effect!
+      propagate_to_similar_reports!
+    end
+  end
+
   private
+
+  def apply_effect!
+    case decision_type
+    when 'hide_comment'
+      report.target_comment.hide_by_decision!(self)
+    when 'suspend_user'
+      report.target_user.suspend!(suspension_until)
+    end
+  end
+
+  def propagate_to_similar_reports!
+    case decision_type
+    when 'hide_comment'
+      propagate_to_similar_content_reports!
+    when 'suspend_user'
+      propagate_to_similar_user_reports!
+    end
+  end
+
+  def propagate_to_similar_content_reports!
+    similar_reports = Report.same_comment_as(report.target_comment_id).excluding(report.id)
+
+    similar_reports.each do |similar_report|
+      next if similar_report.reviewed?
+
+      Decision.create!(
+        report: similar_report,
+        decision_type: 'hide_comment',
+        note: "自動作成: 関連する通報 ##{report.id} の審査結果に基づく",
+        moderator: moderator
+      )
+    end
+  end
+
+  def propagate_to_similar_user_reports!
+    similar_reports = Report.same_user_as(report.target_user_id).excluding(report.id)
+
+    similar_reports.each do |similar_report|
+      next if similar_report.reviewed?
+
+      Decision.create!(
+        report: similar_report,
+        decision_type: 'suspend_user',
+        note: "自動作成: 関連する通報 ##{report.id} の審査結果に基づく",
+        suspension_until: suspension_until,
+        moderator: moderator
+      )
+    end
+  end
 
   def validate_decision_type_with_report_type
     return unless report

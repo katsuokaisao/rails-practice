@@ -14,7 +14,7 @@ class Report < ApplicationRecord
     where(target_user_id: target_user_id, target_type: 'user')
   }
 
-  scope :excluding, ->(id) { where.not(id: id) }
+  scope :without_report, ->(report) { where.not(id: report.id) }
 
   validates :target_type, presence: true, inclusion: { in: %w[comment user] }
   validates :reason_type, presence: true

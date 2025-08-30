@@ -2,7 +2,7 @@
   <div class="comment-header">
     <p><strong><%= comment.author.nickname %></strong></p>
   </div>
-  <%= display_comment_content(comment, current_user) %>
+  <%= display_comment_content(comment) %>
   <div class="comment-footer">
     <p>
       作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>

@@ -13,7 +13,7 @@ module ApplicationHelper
     "#{action_name}_action"
   end
 
-  def display_comment_content(comment, current_user)
+  def display_comment_content(comment)
     if comment.hidden?
       if comment.author == current_user
         content_tag(:p, '規約違反の可能性があるため、あなたのコメントは公開画面から非表示になりました。', class: ['hidden-comment-warning'])

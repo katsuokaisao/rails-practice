@@ -3,15 +3,17 @@
 class ApplicationController < ActionController::Base
   include Authorization
 
+  helper_method :only_user_signed_in?
+
   rescue_from Authorization::NotAuthorizedError do
     forbidden
   end
 
-  private
-
-  def current_actor
-    current_moderator || current_user
+  def only_user_signed_in?
+    user_signed_in? && !moderator_signed_in?
   end
+
+  private
 
   def not_found
     render file: Rails.public_path.join('404.html'), status: :not_found, layout: false, content_type: 'text/html'

@@ -48,6 +48,18 @@
             <div class="dropdown-menu" data-dropdown-target="menu">
                 <ul class="dropdown-list">
                     <li class="dropdown-item">
+                        <%= link_to edit_moderator_profile_path do %>
+                            <span class="material-icons">edit</span>
+                            <span class="vertical-middle"><%= t('views.shared.header.profile') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= link_to edit_moderator_password_path do %>
+                            <span class="material-icons">lock</span>
+                            <span class="vertical-middle"><%= t('views.shared.header.password') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
                         <%= button_to destroy_moderator_session_path, method: :delete, class: "logout" do %>
                             <span class="material-icons">logout</span>
                             <%= t('views.shared.header.logout') %>

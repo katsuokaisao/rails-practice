@@ -19,6 +19,7 @@ class User < ApplicationRecord
   has_many :received_reports, class_name: 'Report', foreign_key: 'target_user_id',
                               dependent: :restrict_with_error, inverse_of: :target_user
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
+  has_one :suspend_user, dependent: :restrict_with_error, inverse_of: :user
 
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }
@@ -32,13 +33,13 @@ class User < ApplicationRecord
   end
 
   def suspend!(suspended_until)
-    suspend_user = SuspendUser.find_or_initialize_by(user: self)
-    suspend_user.suspended_until = suspended_until
-    suspend_user.save!
+    record = suspend_user || build_suspend_user
+    record.suspended_until = suspended_until
+    record.save!
   end
 
   def suspended?
-    SuspendUser.exists?(user: self, suspended_until: Time.current..)
+    suspend_user.present? && suspend_user.suspended_until.future?
   end
 
   private

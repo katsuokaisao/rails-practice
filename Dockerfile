@@ -8,7 +8,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     ca-certificates \
     gnupg \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get install -y --no-install-recommends nodejs graphviz \
     && corepack enable \
     && rm -rf /var/lib/apt/lists/*
 

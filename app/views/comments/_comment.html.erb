@@ -7,6 +7,7 @@
     <p>
       作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>
     </p>
+    <div class="comment-actions">
       <% if can_access?('comments', 'edit', comment) %>
         <p>
           <span class="material-icons">edit</span>
@@ -41,5 +42,6 @@
           </p>
         <% end %>
       <% end %>
+    </div>
   </div>
 </div>

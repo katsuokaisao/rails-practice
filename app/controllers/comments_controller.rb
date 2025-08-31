@@ -35,11 +35,16 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment.update_content!(comment_params[:content])
-    redirect_to @comment.topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
-  rescue ActiveRecord::RecordInvalid => e
-    @comment = e.record
-    render :edit, status: :unprocessable_entity
+    @comment.assign_attributes(
+      content: comment_params[:content]
+    )
+    if @comment.valid?
+      @comment.update_content!(comment_params[:content])
+      redirect_to @comment.topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
+    else
+      @topic = @comment.topic
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   private

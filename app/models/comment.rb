@@ -9,8 +9,8 @@ class Comment < ApplicationRecord
   has_many :reports, class_name: 'Report', foreign_key: 'target_comment_id',
                      dependent: :restrict_with_error, inverse_of: :target_comment
 
-  validates :content, presence: true
-  validates :current_version_no, presence: true
+  validates :content, presence: true, length: { maximum: 5000 }
+  validates :current_version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   def self.create_with_history!(topic:, author:, content:)
     transaction do

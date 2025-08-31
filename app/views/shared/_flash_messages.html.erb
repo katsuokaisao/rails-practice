@@ -1,0 +1,16 @@
+<div class="flash-messages">
+  <% flash.each do |type, message| %>
+    <div class="flash-message flash-<%= type %>">
+      <span class="flash-icon material-icons">
+        <% if type == "notice" %>
+          check_circle
+        <% elsif type == "alert" %>
+          error
+        <% elsif type == "warning" %>
+          warning
+        <% end %>
+      </span>
+      <span class="flash-content"><%= message %></span>
+    </div>
+  <% end %>
+</div>

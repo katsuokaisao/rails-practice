@@ -15,11 +15,7 @@
     <main>
       <article class="layout-center">
         <section class="form-card">
-          <div class="flash-messages">
-            <% flash.each do |type, message| %>
-              <div class="flash-<%= type %>"><%= message %></div>
-            <% end %>
-          </div>
+          <%= render 'shared/flash_messages' %>
           <%= yield %>
         </section>
       </article>

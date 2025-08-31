@@ -7,7 +7,7 @@ class CommentHistoriesController < ApplicationController
 
   def index
     @pagination = Pagination::Paginator.new(
-      relation: @comment.histories.order(version_no: :desc), page: params[:page], per: 5
+      relation: @comment.histories.eager_load(:author).order(version_no: :desc), page: params[:page], per: 5
     ).call
     redirect_to topics_path, alert: t('flash.actions.out_of_bounds') if @pagination.out_of_bounds
   end
@@ -15,8 +15,9 @@ class CommentHistoriesController < ApplicationController
   def compare
     @from = params[:from].to_i
     @to = params[:to].to_i
-    @compare_from_history = @comment.histories.eager_load(:author).find_by(version_no: @from)
-    @compare_to_history = @comment.histories.eager_load(:author).find_by(version_no: @to)
+    histories = @comment.histories.eager_load(:author).where(version_no: [@from, @to]).index_by(&:version_no)
+    @compare_from_history = histories[@from]
+    @compare_to_history = histories[@to]
   end
 
   private

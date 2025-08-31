@@ -43,6 +43,12 @@ class User < ApplicationRecord
     suspend_user.present? && suspend_user.suspended_until.future?
   end
 
+  def enforce_release!
+    return unless suspended?
+
+    suspend_user.destroy!
+  end
+
   private
 
   def password_update?

@@ -20,15 +20,15 @@ class SampleCreator
   private
 
   def create_moderators
-    FactoryBot.create_list(:moderator, 3)
+    FactoryBot.create_list(:moderator, 5)
   end
 
   def create_users
-    FactoryBot.create_list(:user, 10)
+    FactoryBot.create_list(:user, 20)
   end
 
   def create_suspend_users
-    User.last(3).each do |user|
+    User.last(5).each do |user|
       FactoryBot.create(:suspend_user, user: user)
     end
   end
@@ -41,10 +41,10 @@ class SampleCreator
   end
 
   def create_comments
-    topics = Topic.order(created_at: :desc).limit(10)
+    topics = Topic.order(created_at: :desc).limit(20)
     users = User.all.to_a
     topics.each do |topic|
-      100.times do
+      300.times do
         Comment.create_with_history!(
           topic: topic,
           author: users.sample,
@@ -64,8 +64,8 @@ class SampleCreator
 
   def create_reports
     comments = Comment.eager_load(:author).to_a
-    users = User.find_each.to_a
-    100.times do
+    users = User.last(5)
+    500.times do
       type = %w[comment user].sample
       case type
       when 'comment'
@@ -82,7 +82,7 @@ class SampleCreator
   end
 
   def create_decisions
-    reports = Report.order(created_at: :asc).limit(20)
+    reports = Report.order(created_at: :asc).limit(200)
     moderators = Moderator.all.to_a
     reports.each do |report|
       moderator = moderators.sample

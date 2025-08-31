@@ -11,6 +11,7 @@ export default class extends Controller {
 
   closeModal(event) {
     event.preventDefault()
+    event.stopPropagation()
     const modal = document.getElementById('modal')
     if (modal) {
       modal.remove()

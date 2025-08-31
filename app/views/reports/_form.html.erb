@@ -22,6 +22,6 @@
 
   <div class="form-actions">
     <%= f.submit "通報を確定", class: "btn btn-primary" %>
-    <%= link_to "キャンセル", close_modal_index_path(format: :turbo_stream), class: "btn btn-secondary" %>
+    <button type="button" class="close-button" data-controller="close-modal">キャンセル</button>
   </div>
 <% end %>

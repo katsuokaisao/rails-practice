@@ -18,12 +18,7 @@ class CommentsController < ApplicationController
         content: comment_params[:content]
       )
 
-      respond_to do |format|
-        format.html do
-          redirect_to @topic, notice: t('flash.actions.comment_created.notice')
-        end
-        format.turbo_stream
-      end
+      redirect_to @topic, notice: t('flash.actions.comment_created.notice')
     rescue ActiveRecord::RecordInvalid => e
       @comment = e.record
       set_pagination

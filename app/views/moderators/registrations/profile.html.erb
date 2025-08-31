@@ -3,7 +3,7 @@
     <h2><%= t('.title') %></h2>
 
     <%= form_for(resource, as: resource_name, url: moderator_registration_path, html: { "data-turbo": "false" }) do |f| %>
-      <%= render "devise/shared/error_messages", resource: resource %>
+      <%= render partial: "shared/form_errors", locals: { model: resource } %>
 
       <%= f.hidden_field :update_kind, value: "profile" %>
 

@@ -1,0 +1,19 @@
+<% if model.errors.any? %>
+  <div class="form-error-messages">
+    <div class="form-error-icon">
+      <span class="material-icons">error</span>
+    </div>
+    <div class="form-error-content">
+      <h3>
+        <%= I18n.t("errors.messages.not_saved",
+                   count: model.errors.count,
+                   resource: model.class.model_name.human.downcase) %>
+      </h3>
+      <ul>
+        <% model.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

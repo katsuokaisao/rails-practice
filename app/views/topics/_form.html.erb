@@ -3,15 +3,11 @@
         <h2><%= t("views.shared.title.#{topic.new_record? ? 'new' : 'edit'}", resource: Topic.model_name.human) %></h2>
 
         <%= form_with model: topic do |f| %>
+          <%= render partial: "shared/form_errors", locals: { model: topic } %>
           <div class="field">
             <%= f.label :title %>
             <%= f.text_field :title %>
           </div>
-          <% topic.errors.each do |error| %>
-            <div class="error-message">
-              <%= error.full_message %>
-            </div>
-          <% end %>
 
           <div class="actions">
             <%= f.submit %>

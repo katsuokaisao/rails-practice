@@ -38,7 +38,6 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'spec/**/*'
-    - 'app/controllers/**/*'
 
 Metrics/AbcSize:
   Max: 17
@@ -49,12 +48,6 @@ Metrics/ClassLength:
   Max: 100
   Exclude:
     - 'lib/sample_creator.rb'
-    - 'app/controllers/decisions_controller.rb'
-
-Metrics/CyclomaticComplexity:
-  Max: 7
-  Exclude:
-    - 'app/controllers/decisions_controller.rb'
 
 # Deviseコントローラーでは親クラスのアクションを使用するため除外
 Rails/LexicallyScopedActionFilter:

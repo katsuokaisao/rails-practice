@@ -6,19 +6,6 @@ class DecisionsController < ApplicationController
   def index
     params[:target_type] ||= 'comment'
 
-    decisions = case params[:target_type]
-                when 'comment'
-                  Decision.eager_load(:report, :moderator)
-                          .eager_load(report: %i[reporter target_comment])
-                          .eager_load(report: { target_comment: %i[topic author] })
-                          .where(reports: { target_type: 'comment' })
-                when 'user'
-                  Decision.eager_load(:report, :moderator)
-                          .eager_load(report: %i[reporter target_user])
-                          .where(reports: { target_type: 'user' })
-                end
-    decisions = decisions.order(created_at: :desc)
-
     @pagination = Pagination::Paginator.new(
       relation: decisions, page: params[:page], per: params[:per]
     ).call
@@ -67,6 +54,21 @@ class DecisionsController < ApplicationController
 
   def decision_params
     params.require(:decision).permit(:report_id, :decision_type, :note, :suspension_until)
+  end
+
+  def decisions
+    decisions = case params[:target_type]
+                when 'comment'
+                  Decision.eager_load(:report, :moderator)
+                          .eager_load(report: %i[reporter target_comment])
+                          .eager_load(report: { target_comment: %i[topic author] })
+                          .where(reports: { target_type: 'comment' })
+                when 'user'
+                  Decision.eager_load(:report, :moderator)
+                          .eager_load(report: %i[reporter target_user])
+                          .where(reports: { target_type: 'user' })
+                end
+    decisions.order(created_at: :desc)
   end
 
   def redirect_to_reports_page

@@ -10,6 +10,7 @@ class DecisionsController < ApplicationController
                 when 'comment'
                   Decision.eager_load(:report, :moderator)
                           .eager_load(report: %i[reporter target_comment])
+                          .eager_load(report: { target_comment: %i[topic author] })
                           .where(reports: { target_type: 'comment' })
                 when 'user'
                   Decision.eager_load(:report, :moderator)

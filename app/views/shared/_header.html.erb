@@ -67,6 +67,17 @@
                     </li>
                 </ul>
             </div>
+        <% else %>
+            <div class="header-nav">
+                <%= link_to new_user_registration_path, class: "nav-button" do %>
+                <span class="material-icons">person_add</span>
+                <%= t('views.shared.authentication.signup') %>
+                <% end %>
+                <%= link_to new_user_session_path, class: "nav-button" do %>
+                <span class="material-icons">login</span>
+                <%= t('views.shared.authentication.login') %>
+                <% end %>
+            </div>
         <% end %>
     </div>
 </header>

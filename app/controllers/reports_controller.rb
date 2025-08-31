@@ -46,13 +46,13 @@ class ReportsController < ApplicationController
 
     if @report.save
       respond_to do |format|
-        format.turbo_stream { redirect_to topic_path(@topic), notice: t('flash.actions.create.notice') }
-        format.html { redirect_to topic_path(@topic), notice: t('flash.actions.create.notice') }
+        format.turbo_stream do
+          redirect_to topic_path(@topic), notice: t('flash.actions.create.notice', resource: Report.model_name.human)
+        end
       end
     else
       respond_to do |format|
         format.turbo_stream { render :new, status: :unprocessable_entity }
-        format.html         { render :new, status: :unprocessable_entity }
       end
     end
   end

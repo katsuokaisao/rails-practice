@@ -6,8 +6,8 @@ create_table 'topics', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.datetime 'created_at', null: false
   t.datetime 'updated_at', null: false
 
-  t.index ['created_at'], name: 'idx_topics_created_at'
   t.index ['author_id'],  name: 'idx_topics_author_id'
+  t.index ['created_at'], name: 'idx_topics_created_at'
 end
 
 add_foreign_key 'topics', 'users', column: 'author_id'

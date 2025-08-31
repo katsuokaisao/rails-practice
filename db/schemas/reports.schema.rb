@@ -10,6 +10,7 @@ create_table 'reports', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.datetime 'created_at',        null: false
   t.datetime 'updated_at',        null: false
 
+  t.index %w[target_type created_at], name: 'idx_reports_target_type_created_at'
   t.index ['target_user_id'], name: 'idx_reports_target_user_id'
   t.index ['target_comment_id'], name: 'idx_reports_target_comment_id'
   t.index ['reporter_id'], name: 'idx_reports_reporter_id'

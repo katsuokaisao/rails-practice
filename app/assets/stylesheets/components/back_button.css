@@ -1,0 +1,15 @@
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  margin: 15px 0 15px 15px;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    color: #555;
+  }
+
+  .material-icons {
+    font-size: 24px;
+  }
+}

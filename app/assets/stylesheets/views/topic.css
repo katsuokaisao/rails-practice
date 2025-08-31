@@ -61,6 +61,7 @@
 
         .form-card {
             width: stretch;
+            min-width: 450px;
             gap: 0px;
             align-items: flex-start;
         }

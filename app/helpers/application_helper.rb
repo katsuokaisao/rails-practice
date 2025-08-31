@@ -24,4 +24,13 @@ module ApplicationHelper
       content_tag(:div, sanitize(comment.content), class: ['comment-content'])
     end
   end
+
+  def can_access?(controller, action, record = nil)
+    policy_class_name = "#{controller.to_s.camelize}Policy"
+
+    policy_class = policy_class_name.constantize
+    policy = policy_class.new(current_user, current_moderator, record)
+
+    policy.public_send("#{action}?")
+  end
 end

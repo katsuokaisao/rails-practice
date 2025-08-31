@@ -2,6 +2,6 @@
 
 class ReportsPolicy < ApplicationPolicy
   def index? = moderator?
-  def new? = user?
-  def create? = user?
+  def new? = unsuspended_user?
+  def create? = unsuspended_user?
 end

@@ -18,12 +18,12 @@ class Report < ApplicationRecord
 
   validates :target_type, presence: true, inclusion: { in: %w[comment user] }
   validates :reason_type, presence: true
-  validates :reason_text, presence: true
+  validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true
   validate :target_presence
-  validates :reason_text, length: { maximum: 2000 }
 
-  enum :reason_type, { spam: 'spam', harassment: 'harassment', obscene: 'obscene', other: 'other' }, prefix: true,
-                                                                                                     validates: true
+  enum :reason_type,
+       { spam: 'spam', harassment: 'harassment', obscene: 'obscene', other: 'other' },
+       prefix: true, validates: true
 
   def reviewed?
     decision.present?

@@ -10,13 +10,15 @@ class Decision < ApplicationRecord
   validates :decision_type, presence: true
   validate :validate_decision_type_with_report_type
   validate :validate_suspension_until
+  validates :note, length: { maximum: 2000 }, allow_blank: true
+  validate :suspension_until_must_be_in_future
 
   def execute!
     ActiveRecord::Base.transaction do
       save!
       apply_effect!
-      propagate_to_similar_reports!
     end
+    propagate_to_similar_reports!
   end
 
   private
@@ -87,5 +89,11 @@ class Decision < ApplicationRecord
     elsif decision_type != 'suspend_user' && suspension_until.present?
       errors.add(:suspension_until, :not_allowed_for_non_suspension)
     end
+  end
+
+  def suspension_until_must_be_in_future
+    return if suspension_until.blank? || suspension_until.future?
+
+    errors.add(:suspension_until, :must_be_in_future)
   end
 end

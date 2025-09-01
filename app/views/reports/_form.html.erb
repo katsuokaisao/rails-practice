@@ -10,7 +10,7 @@
   <div class="form-group">
     <%= f.label :reason_type, "理由タイプ" %>
     <%= f.select :reason_type,
-                Report.reason_types.keys.map { |k| [k, k] },
+                Report.reason_types.keys.map { |k| [t("enums.report.reason_type.#{k}"), k] },
                 { prompt: "選択してください" },
                 { class: "form-control", required: true } %>
   </div>

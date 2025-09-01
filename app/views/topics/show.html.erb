@@ -3,8 +3,15 @@
   <section class="topic-show">
     <h3><%= @topic.title %></h3>
     <div class="topic-details">
-        <p>作成者: <%= @topic.author.nickname %></p>
-        <p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <p>作成者: <%= @topic.author.nickname %></p>
+      <p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+    </div>
+    <div class="edit-actions">
+      <% if can_access?('topics', 'edit', @topic) %>
+        <%= link_to edit_topic_path(@topic) do %>
+          <span class="material-icons">edit</span>
+        <% end %>
+      <% end %>
     </div>
   </section>
   <% if @pagination.records.any? %>

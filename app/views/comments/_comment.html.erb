@@ -21,7 +21,7 @@
         </p>
       <% end %>
       <% unless comment.hidden? %>
-        <% if can_access?('reports', 'new') %>
+        <% if can_access?('reports', 'new', comment) %>
           <p>
             <span class="material-icons">flag</span>
             <%= link_to '違法ユーザ', new_report_path(

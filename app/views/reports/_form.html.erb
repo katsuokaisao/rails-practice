@@ -1,7 +1,7 @@
 <%= form_with model: report,
               url: reports_path,
               method: :post do |f| %>
-  <%= render partial: "shared/form_errors", locals: { model: report } %>
+  <div id="report-form-errors"></div>
 
   <%= hidden_field_tag :from_topic_id, params[:from_topic_id] %>
   <%= hidden_field_tag :reportable_type, report.target_type %>

@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "report-form-errors" do %>
+  <div id="report-form-errors">
+    <%= render partial: "shared/form_errors", locals: { model: @report } %>
+  </div>
+<% end %>

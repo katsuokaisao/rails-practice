@@ -1,0 +1,5 @@
+<%= turbo_stream.replace "decision-form-errors" do %>
+  <div id="decision-form-errors">
+    <%= render partial: "shared/form_errors", locals: { model: @decision } %>
+  </div>
+<% end %>

@@ -87,7 +87,7 @@ class DecisionsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream do
-        render :new, status: :unprocessable_entity
+        render :create_error, status: :unprocessable_entity
       end
     end
   end

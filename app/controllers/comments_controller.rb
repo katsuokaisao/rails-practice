@@ -40,7 +40,8 @@ class CommentsController < ApplicationController
     )
     if @comment.valid?
       @comment.update_content!(comment_params[:content])
-      redirect_to @comment.topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
+      redirect_to comment_histories_path(@comment),
+                  notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
     else
       @topic = @comment.topic
       render :edit, status: :unprocessable_entity

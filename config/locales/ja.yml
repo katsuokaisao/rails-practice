@@ -18,3 +18,4 @@ ja:
     errors:
       messages:
         html_not_allowed: "HTMLタグは使用できません"
+        must_be_in_future: "は未来の日付にしてください"

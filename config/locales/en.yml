@@ -18,3 +18,4 @@ en:
     errors:
       messages:
         html_not_allowed: "HTML tags are not allowed"
+        must_be_in_future: "must be a future date"

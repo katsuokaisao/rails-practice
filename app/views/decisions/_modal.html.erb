@@ -19,11 +19,11 @@
           </tr>
           <tr>
             <th>通報タイプ</th>
-            <td><%= t("activerecord.attributes.report.target_types.#{report.target_type}") %></td>
+            <td><%= report.enum_i18n("target_type") %></td>
           </tr>
           <tr>
             <th>通報理由</th>
-            <td><%= t("activerecord.attributes.report.reason_types.#{report.reason_type}") %></td>
+            <td><%= report.enum_i18n("reason_type") %></td>
           </tr>
           <tr>
             <th>通報理由詳細</th>

@@ -21,7 +21,7 @@ module ApplicationHelper
         content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info'])
       end
     else
-      content_tag(:div, sanitize(comment.content), class: ['comment-content'])
+      content_tag(:div, simple_format(sanitize(comment.content)), class: ['comment-content'])
     end
   end
 

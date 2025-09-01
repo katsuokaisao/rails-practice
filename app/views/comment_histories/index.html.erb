@@ -1,5 +1,5 @@
-<%= render 'shared/back_button', url: topic_path(@comment.topic) %>
 <section>
+    <%= render 'shared/back_button', url: topic_path(@comment.topic) %>
     <h2>コメント編集履歴</h2>
     <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
 

@@ -1,21 +1,18 @@
 <article class="layout-center">
-    <section class="form-card">
-        <h2><%= t("views.shared.title.#{topic.new_record? ? 'new' : 'edit'}", resource: Topic.model_name.human) %></h2>
+  <section class="form-card">
+    <%= render 'shared/back_button', url: topics_path %>
+    <h2><%= t("views.shared.title.#{topic.new_record? ? 'new' : 'edit'}", resource: Topic.model_name.human) %></h2>
 
-        <%= form_with model: topic do |f| %>
-          <%= render partial: "shared/form_errors", locals: { model: topic } %>
-          <div class="field">
-            <%= f.label :title %>
-            <%= f.text_field :title %>
-          </div>
+    <%= form_with model: topic do |f| %>
+      <%= render partial: "shared/form_errors", locals: { model: topic } %>
+      <div class="field">
+        <%= f.label :title %>
+        <%= f.text_field :title %>
+      </div>
 
-          <div class="actions">
-            <%= f.submit %>
-          </div>
-        <% end %>
-
-        <div>
-          <%= render 'shared/back_button', url: topics_path %>
-        </div>
-    </section>
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <% end %>
+  </section>
 </article>

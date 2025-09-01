@@ -1,5 +1,5 @@
-<%= render 'shared/back_button', url: comment_histories_path(@comment) %>
 <section class="compare-view">
+  <%= render 'shared/back_button', url: comment_histories_path(@comment) %>
   <h2>コメント編集履歴の比較</h2>
   <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
 

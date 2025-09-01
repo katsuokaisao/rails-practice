@@ -1,5 +1,5 @@
-<%= render 'shared/back_button', url: topic_path(@topic) %>
 <section class="form-card">
+  <%= render 'shared/back_button', url: topic_path(@topic) %>
   <h3><%= t('views.shared.title.edit', resource: Comment.model_name.human) %></h3>
 
   <%= form_with(model: [@topic, @comment], local: true) do |f| %>

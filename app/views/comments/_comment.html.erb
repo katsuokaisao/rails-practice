@@ -20,7 +20,7 @@
           <%= link_to '履歴', comment_histories_path(comment), class: "history-link" %>
         </p>
       <% end %>
-      <% unless comment.hidden? || comment.author.suspended? %>
+      <% unless comment.invisible? %>
         <% if can_access?('reports', 'new', comment) %>
           <p>
             <span class="material-icons">flag</span>

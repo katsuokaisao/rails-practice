@@ -15,6 +15,12 @@ class CommentHistoriesController < ApplicationController
   def compare
     @from = params[:from].to_i
     @to = params[:to].to_i
+
+    if @from == @to
+      redirect_to comment_histories_path(@comment), alert: t('.same_version_error')
+      return
+    end
+
     histories = @comment.histories.eager_load(:author).where(version_no: [@from, @to]).index_by(&:version_no)
     @compare_from_history = histories[@from]
     @compare_to_history = histories[@to]

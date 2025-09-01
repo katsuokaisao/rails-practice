@@ -2,8 +2,7 @@
 
 module Users
   class RegistrationsController < Devise::RegistrationsController
-    layout 'user', except: %i[profile password update]
-    layout 'application', only: %i[profile password update]
+    layout :layout_name
 
     # before_action :configure_sign_up_params, only: [:create]
     before_action :configure_account_update_params, only: [:update]
@@ -21,12 +20,12 @@ module Users
 
     # GET /resource/profile
     def profile
-      render :profile, layout: 'application'
+      render :profile
     end
 
     # GET /resource/password
     def password
-      render :password, layout: 'application'
+      render :password
     end
 
     # PUT /resource
@@ -106,6 +105,17 @@ module Users
       devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone])
     end
 
+    def after_sign_up_path_for(_resource)
+      root_path
+    end
+
+    private
+
+    def update_kind
+      kind = params.dig(:user, :update_kind)
+      kind.present? ? kind.to_sym : nil
+    end
+
     def after_update_path_for(_resource)
       case update_kind
       when :profile  then edit_user_profile_path
@@ -113,13 +123,11 @@ module Users
       end
     end
 
-    def update_kind
-      kind = params.dig(:user, :update_kind)
-      kind.present? ? kind.to_sym : nil
-    end
-
-    def after_sign_up_path_for(_resource)
-      root_path
+    def layout_name
+      case action_name
+      when 'new', 'create' then 'user'
+      when 'profile', 'password', 'update' then 'application'
+      end
     end
   end
 end

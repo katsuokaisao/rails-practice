@@ -13,6 +13,7 @@ en:
       comment_created:
         notice: "Comment was successfully posted."
       out_of_bounds: "Out of bounds request."
+      conflict: "Another user has modified this resource at the same time."
   activerecord:
     errors:
       messages:

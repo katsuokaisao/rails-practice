@@ -57,6 +57,7 @@
 
       <%= form_with model: decision, url: decisions_path, local: false, data: { controller: 'decisions', action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
         <%= f.hidden_field :report_id, value: report.id %>
+        <%= render partial: "shared/form_errors", locals: { model: decision } %>
 
         <div class="form-group">
           <%= f.label :decision_type, '審査種類' %>

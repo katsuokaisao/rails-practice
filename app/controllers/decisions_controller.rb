@@ -72,19 +72,14 @@ class DecisionsController < ApplicationController
   end
 
   def redirect_to_reports_page
-    respond_to do |format|
-      format.turbo_stream do
-        redirect_to reports_path(target_type: @report.target_type)
-      end
-    end
+    flash[:notice] = t('flash.actions.create.notice', resource: Decision.model_name.human)
+    redirect_to reports_path(target_type: @report.target_type)
   end
 
   def handle_concurrent_modification
-    respond_to do |format|
-      format.turbo_stream do
-        render json: { error: 'concurrent_modification' }, status: :conflict
-      end
-    end
+    flash[:alert] = t('flash.actions.create.alert', resource: Decision.model_name.human)
+    flash[:alert] << " #{t('flash.actions.conflict')}"
+    redirect_to reports_path(target_type: @report.target_type)
   end
 
   def handle_invalid_record(exception)

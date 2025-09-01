@@ -60,6 +60,6 @@ class TopicsController < ApplicationController
   end
 
   def comments
-    @topic.comments.eager_load(:author).order(created_at: :desc)
+    @topic.comments.eager_load(author: :suspend_user).order(created_at: :desc)
   end
 end

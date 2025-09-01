@@ -1,3 +1,7 @@
+<%= turbo_stream.update "flash-messages" do %>
+  <%= render 'shared/flash_messages' %>
+<% end %>
+
 <%= turbo_stream.update "reports-container" do %>
   <%= render partial: "index", locals: { pagination: @pagination, current_tab: @current_tab } %>
 <% end %>

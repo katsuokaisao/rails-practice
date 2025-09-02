@@ -51,7 +51,9 @@ RSpec.describe 'トピック', type: :system do
     scenario 'ログインユーザーが新規トピックを作成し、編集できる' do
       login_as(user)
       visit topics_path
+      expect(page).to have_content('お題 一覧')
       click_link 'お題を投稿する'
+      expect(page).to have_content('お題 新規作成')
       fill_in 'タイトル', with: '新しいトピック'
       click_button '登録する'
       expect(page).to have_content('お題が作成されました。')
@@ -67,6 +69,7 @@ RSpec.describe 'トピック', type: :system do
       visit topic_path(topic)
       expect(page).to have_link('edit')
       click_link 'edit'
+      expect(page).to have_content('お題 編集')
       fill_in 'タイトル', with: '編集されたトピック'
       click_button '更新する'
       expect(page).to have_content('お題が更新されました。')

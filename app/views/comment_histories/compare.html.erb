@@ -5,13 +5,13 @@
 
   <div class="compare-header">
     <div class="version-from">
-      <h3>Version <%= @from %></h3>
+      <h3>Version: <%= @from %></h3>
       <p><span class="history-author">作成者: <%= @compare_from_history.author.nickname %></span></p>
       <p class="history-meta">作成日: <%= @compare_from_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
       <div class="history-content"><%= @compare_from_history.content %></div>
     </div>
     <div class="version-to">
-      <h3>Version <%= @to %></h3>
+      <h3>Version: <%= @to %></h3>
       <p><span class="history-author">作成者: <%= @compare_to_history.author.nickname %></span></p>
       <p class="history-meta">作成日: <%= @compare_to_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
       <div class="history-content"><%= @compare_to_history.content %></div>

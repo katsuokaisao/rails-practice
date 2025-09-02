@@ -1,3 +1,6 @@
+<% if !user_signed_in? && !moderator_signed_in? %>
+  <%= render 'shared/back_button', url: root_path %>
+<% end %>
 <h2><%= t('views.shared.authentication.signup') %></h2>
 
 <%= form_for(resource, as: resource_name, url: user_registration_path) do |f| %>

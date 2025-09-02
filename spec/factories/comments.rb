@@ -12,5 +12,9 @@ FactoryBot.define do
     after(:create) do |comment|
       create(:comment_history, comment: comment)
     end
+
+    trait :short_content do
+      content { Faker::Lorem.paragraphs(number: 1).join }
+    end
   end
 end

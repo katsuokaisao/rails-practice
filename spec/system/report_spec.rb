@@ -182,4 +182,69 @@ RSpec.describe 'レポート', type: :system do
     expect(page).not_to have_content('通報の申請')
     expect(page).to have_content('テストトピック')
   end
+
+  scenario '非表示コメントが公開画面に表示されないことの確認' do
+    comment = create(:comment, topic: topic, author: user, content: 'テスト用の非表示コメント')
+    create(:report, :for_comment, target_comment: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+
+    login_as(moderator, scope: :moderator)
+    visit reports_path
+    expect(page).to have_content('嫌がらせコメントです')
+    click_link '審査'
+    expect(page).to have_content('通報審査')
+    select 'コメント非表示', from: '審査種類'
+    fill_in 'メモ', with: 'テスト用に非表示'
+    click_button '審査を確定'
+    expect(page).to have_content('審査結果が作成されました。')
+    logout
+
+    login_as(other_user)
+    visit topic_path(topic)
+
+    expect(page).not_to have_content('テスト用の非表示コメント')
+    expect(page).to have_content('このコメントは非表示です。')
+    logout
+
+    login_as(user)
+    visit topic_path(topic)
+    expect(page).not_to have_content('テスト用の非表示コメント')
+    expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
+  end
+
+  scenario '非表示コメントを編集しても公開画面には表示されないことの確認' do
+    comment = create(:comment, topic: topic, author: other_user, content: 'テスト用の非表示コメント')
+    create(:report, :for_comment, target_comment: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+
+    login_as(moderator, scope: :moderator)
+    visit reports_path
+    expect(page).to have_content('嫌がらせコメントです')
+
+    click_link '審査'
+    expect(page).to have_content('通報審査')
+
+    select 'コメント非表示', from: '審査種類'
+    fill_in 'メモ', with: 'テスト用に非表示'
+    click_button '審査を確定'
+    expect(page).to have_content('審査結果が作成されました。')
+    logout
+
+    login_as(other_user)
+    visit topic_path(topic)
+    expect(page).not_to have_content('テスト用の非表示コメント')
+    expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
+
+    click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
+    expect(page).to have_content('コメント 編集')
+    fill_in 'コメント内容', with: '変更後のコメント'
+    click_button '更新する'
+    expect(page).to have_content('コメントが更新されました。')
+    expect(page).to have_content('コメント編集履歴')
+    expect(page).to have_content('変更後のコメント')
+
+    visit topic_path(topic)
+    expect(page).not_to have_content('コメント 編集')
+    expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
+
+    logout
+  end
 end

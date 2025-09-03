@@ -2,7 +2,6 @@
 
 FactoryBot.define do
   factory :decision do
-    association :report
     association :moderator
 
     decision_type do
@@ -24,6 +23,10 @@ FactoryBot.define do
       end
     end
 
+    after(:build) do |decision|
+      decision.report = build(:report, :for_comment) if decision.report.nil?
+    end
+
     trait :reject do
       decision_type { 'reject' }
     end
@@ -32,7 +35,7 @@ FactoryBot.define do
       decision_type { 'hide_comment' }
 
       after(:build) do |decision|
-        decision.report = build(:report, :for_comment) if decision.report.target_type != 'comment'
+        decision.report = create(:report, :for_comment)
       end
     end
 
@@ -41,7 +44,7 @@ FactoryBot.define do
       suspension_until { [7, 14, 30, 90].sample.days.from_now }
 
       after(:build) do |decision|
-        decision.report = build(:report, :for_user) if decision.report.target_type != 'user'
+        decision.report = create(:report, :for_user)
       end
     end
   end

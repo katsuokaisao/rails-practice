@@ -3,6 +3,7 @@
     <tr>
       <th>通報者</th>
       <th>通報理由</th>
+      <th>通報理由テキスト</th>
       <th><%= Topic.model_name.human %>タイトル</th>
       <th><%= Comment.model_name.human %>内容</th>
       <th><%= Comment.model_name.human %>者</th>
@@ -17,12 +18,13 @@
       <tr>
         <td><%= decision.report.reporter&.nickname %></td>
         <td><%= decision.report.enum_i18n(:reason_type) %></td>
-        <td><%= decision.report.target_comment&.topic&.title %></td>
-        <td><%= truncate(decision.report.target_comment&.content, length: 50) %></td>
-        <td><%= decision.report.target_comment&.author&.nickname %></td>
+        <td><%= decision.report.reason_text %></td>
+        <td><%= decision.report.target_comment.topic.title %></td>
+        <td><%= truncate(decision.report.target_comment.content, length: 50) %></td>
+        <td><%= decision.report.target_comment.author.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= truncate(decision.note, length: 50) %></td>
-        <td><%= decision.moderator&.nickname %></td>
+        <td><%= decision.moderator.nickname %></td>
         <td><%= decision.created_at.strftime('%Y-%m-%d %H:%M') %></td>
       </tr>
     <% end %>

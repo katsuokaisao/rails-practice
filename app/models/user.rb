@@ -43,6 +43,12 @@ class User < ApplicationRecord
     suspend_user.present? && suspend_user.suspended_until.future?
   end
 
+  def suspended_until_date
+    return unless suspended?
+
+    suspend_user.suspended_until.to_date
+  end
+
   def enforce_release!
     return unless suspended?
 

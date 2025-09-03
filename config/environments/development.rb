@@ -76,4 +76,7 @@ Rails.application.configure do
     Bullet.rails_logger  = true
     Bullet.add_footer    = true
   end
+
+  config.middleware.delete Rack::Attack if Rails.env.test?
+  ENV['REDIS_URL'] ||= 'redis://redis:6379/1'
 end

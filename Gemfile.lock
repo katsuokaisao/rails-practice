@@ -227,6 +227,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.0)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -276,6 +278,7 @@ GEM
     rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
+    redis (4.6.0)
     regexp_parser (2.11.2)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -399,9 +402,11 @@ DEPENDENCIES
   importmap-rails
   mysql2 (~> 0.5)
   puma (>= 5.0)
+  rack-attack
   rails (~> 7.1.5, >= 7.1.5.1)
   rails-erd
   rails-i18n
+  redis (~> 4.6.0)
   ridgepole
   rspec-rails
   rubocop

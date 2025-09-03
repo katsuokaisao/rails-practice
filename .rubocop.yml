@@ -73,6 +73,17 @@ RSpec/MultipleExpectations:
 RSpec/NestedGroups:
   Max: 5
 
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+  Exclude:
+    - 'spec/system/**/*'
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 

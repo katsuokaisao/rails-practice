@@ -39,6 +39,7 @@ group :test do
   gem 'capybara'
   gem 'capybara-playwright-driver'
   gem 'rspec-rails'
+  gem 'simplecov', require: false
 end
 
 group :development do

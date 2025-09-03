@@ -122,6 +122,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
     diffy (3.4.4)
+    docile (1.4.1)
     drb (2.2.3)
     erb (5.0.2)
     erb_lint (0.9.0)
@@ -331,6 +332,12 @@ GEM
       rexml
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.13.2)
+    simplecov_json_formatter (0.1.4)
     smart_properties (1.17.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
@@ -406,6 +413,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  simplecov
   sprockets-rails
   stimulus-rails
   turbo-rails

@@ -14,14 +14,18 @@ module ApplicationHelper
   end
 
   def display_comment_content(comment)
-    if comment.invisible?
-      if comment.author == current_user
-        content_tag(:p, '規約違反の可能性があるため、あなたのコメントは公開画面から非表示になりました。', class: ['hidden-comment-warning'])
-      else
-        content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info'])
-      end
+    unless comment.invisible?
+      return content_tag(:div, simple_format(sanitize(comment.content)),
+                         class: ['comment-content'])
+    end
+
+    return content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info']) if comment.author != current_user
+
+    if comment.author.suspended?
+      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date}です。",
+                  class: ['hidden-comment-warning'])
     else
-      content_tag(:div, simple_format(sanitize(comment.content)), class: ['comment-content'])
+      content_tag(:p, '規約違反の可能性があるため、あなたのコメントは非表示になりました。', class: ['hidden-comment-warning'])
     end
   end
 

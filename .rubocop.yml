@@ -84,6 +84,9 @@ RSpec/ExampleLength:
 RSpec/LetSetup:
   Enabled: false
 
+RSpec/AnyInstance:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 

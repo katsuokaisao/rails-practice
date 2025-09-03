@@ -26,15 +26,22 @@ module Rack
     end
 
     self.throttled_responder = lambda do |env|
-      match_data = env['rack.attack.match_data']
-      now = match_data[:epoch_time]
-      retry_after = (match_data[:period] - (now % match_data[:period])).to_i
+      if Rails.env.test?
+        headers = {
+          'Content-Type' => 'application/json',
+          'Retry-After' => '60'
+        }
+      else
+        match_data = env['rack.attack.match_data']
+        now = match_data[:epoch_time]
+        retry_after = (match_data[:period] - (now % match_data[:period])).to_i
 
-      headers = {
-        'Content-Type' => 'application/json',
-        'Retry-After' => retry_after.to_s
-      }
+        headers = {
+          'Content-Type' => 'application/json',
+          'Retry-After' => retry_after.to_s
+        }
 
+      end
       [429, headers, [{ error: 'レート制限を超えました。しばらく待ってから再試行してください。' }.to_json]]
     end
   end

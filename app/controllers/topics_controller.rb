@@ -56,7 +56,7 @@ class TopicsController < ApplicationController
   def topics
     Topic
       .order(created_at: :desc, id: :desc)
-      .includes(:author)
+      .eager_load(author: :suspend_user)
   end
 
   def comments

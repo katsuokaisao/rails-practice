@@ -26,3 +26,6 @@ pre-commit:
     - name: erblint
       glob: "*.erb"
       run: "bundle exec erblint {staged_files}"
+    - name: rspec
+      glob: "spec/**/*_spec.rb"
+      run: "docker-compose exec rails bundle exec rspec {staged_files}"

@@ -6,6 +6,7 @@ RSpec.describe 'コメント', type: :system do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
   let!(:suspended_user) { create(:user, :suspended) }
+  let!(:moderator) { create(:moderator) }
   let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
   let!(:suspended_user_topic) { create(:topic, author: suspended_user, title: '停止ユーザーのトピック') }
   let!(:comment) { create(:comment, topic: topic, author: user, content: 'テストコメント') }
@@ -55,6 +56,7 @@ RSpec.describe 'コメント', type: :system do
   scenario 'コメント投稿時の入力バリデーションが機能する' do
     login_as(user)
     visit topic_path(topic)
+    expect(page).to have_content('コメントを投稿する')
 
     fill_in 'コメント', with: ''
     click_button 'コメントする'
@@ -106,5 +108,115 @@ RSpec.describe 'コメント', type: :system do
     create(:comment, topic: topic, author: user, content: "#{'a' * 4998}👉＠")
     visit topic_path(topic)
     expect(page).to have_content("#{'a' * 4998}👉＠")
+  end
+
+  scenario 'コメントを複数回編集した後も公開画面では常に最新版のみが表示されることの確認' do
+    login_as(user)
+    visit topic_path(topic)
+    expect(page).to have_content('テストコメント')
+
+    click_link '編集', href: edit_topic_comment_path(topic, comment)
+    expect(page).to have_content('コメント 編集')
+    fill_in 'コメント', with: '1回目の編集'
+    click_button '更新する'
+    visit topic_path(topic)
+    expect(page).to have_content('1回目の編集')
+
+    visit edit_topic_comment_path(topic, comment)
+    fill_in 'コメント', with: '2回目の編集'
+    click_button '更新する'
+    visit topic_path(topic)
+    expect(page).not_to have_content('1回目の編集')
+    expect(page).to have_content('2回目の編集')
+
+    visit edit_topic_comment_path(topic, comment)
+    fill_in 'コメント', with: '3回目の編集（最新版）'
+    click_button '更新する'
+    visit topic_path(topic)
+    expect(page).to have_content('3回目の編集（最新版）')
+    expect(page).not_to have_content('1回目の編集')
+    expect(page).not_to have_content('2回目の編集')
+
+    visit comment_histories_path(comment)
+    expect(page).to have_content('コメント編集履歴')
+    expect(page).to have_content('1回目の編集')
+    expect(page).to have_content('2回目の編集')
+    expect(page).to have_content('3回目の編集（最新版）')
+  end
+
+  scenario 'ユーザー停止が解除された後のコメント表示状態の確認' do
+    create(:report, :for_user, target_user: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    login_as(moderator, scope: :moderator)
+    visit reports_path
+
+    expect(page).to have_content('通報 一覧')
+    click_link 'ユーザー通報'
+    expect(page).to have_css('li.active > a', text: 'ユーザー通報')
+    expect(page).to have_content('通報 一覧')
+
+    click_link '審査'
+    expect(page).to have_content('通報審査')
+
+    select 'ユーザー停止', from: '審査種類'
+    fill_in 'メモ', with: 'テスト用に停止'
+    click_button '1日'
+    click_button '審査を確定'
+    expect(page).to have_content('審査結果が作成されました。')
+    logout
+
+    login_as(user)
+    visit topic_path(topic)
+    expect(page).not_to have_content('レポート対象コメント')
+    expect(page).to have_content('規約違反の可能性があるため、アカウントが停止されています。')
+
+    user.enforce_release!
+
+    visit topic_path(topic)
+    expect(page).to have_content('テストコメント')
+  end
+
+  scenario '停止中ユーザーの非表示コメントの状態確認（二重制約の確認）' do
+    create(:report, :for_comment, target_comment: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+
+    login_as(moderator, scope: :moderator)
+    visit reports_path
+
+    click_link '審査'
+    expect(page).to have_content('通報審査')
+
+    select 'コメント非表示', from: '審査種類'
+    fill_in 'メモ', with: 'テスト用に非表示'
+    click_button '審査を確定'
+    expect(page).to have_content('審査結果が作成されました。')
+
+    create(:report, :for_user, target_user: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+
+    visit reports_path
+    click_link 'ユーザー通報'
+
+    expect(page).to have_css('li.active > a', text: 'ユーザー通報')
+    click_link '審査'
+    expect(page).to have_content('通報審査')
+
+    select 'ユーザー停止', from: '審査種類'
+    fill_in 'メモ', with: 'テスト用に停止'
+    click_button '1日'
+    click_button '審査を確定'
+    expect(page).to have_content('審査結果が作成されました。')
+
+    logout
+    login_as(other_user)
+
+    # アカウント停止中かつコメント非表示のため、コメントの内容が非表示になっていることを確認
+    visit topic_path(topic)
+    expect(page).not_to have_content('レポート対象コメント')
+    expect(page).to have_content('このコメントは非表示です。')
+
+    user.enforce_release!
+    expect(user.reload).not_to be_suspended
+
+    # アカウントの停止が解除されたが、コメント非表示は継続されていることを確認
+    visit topic_path(topic)
+    expect(page).to have_content('このコメントは非表示です。')
   end
 end

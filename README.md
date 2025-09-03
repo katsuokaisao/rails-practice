@@ -89,7 +89,10 @@ bundle exec erb_lint --lint-all
 bundle exec erb_lint --lint-all --autocorrect
 ```
 
-## Services (job queues, cache servers, search engines, etc.)
+## アセットパイプラインのビルド
+```bash
+bin/rails assets:precompile
+```
 
 ## 用語集
 

@@ -4,13 +4,12 @@ source 'https://rubygems.org'
 
 ruby '3.3.7'
 
-gem 'actionmailer', '~> 7.1'
 gem 'bootsnap', require: false
 gem 'devise'
 gem 'mysql2', '~> 0.5'
 gem 'puma', '>= 5.0'
 gem 'rack-attack'
-gem 'rails', '~> 7.1.5', '>= 7.1.5.1'
+gem 'rails', '~> 7.2.0'
 gem 'rails-i18n'
 gem 'redis', '~> 4.6.0'
 gem 'ridgepole'

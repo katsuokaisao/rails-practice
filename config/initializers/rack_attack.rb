@@ -25,7 +25,7 @@ module Rack
       user_id if user_id && req.path.match?(/topics|comments|reports/) && (req.post? || req.put? || req.patch?)
     end
 
-    self.throttled_response = lambda do |env|
+    self.throttled_responder = lambda do |env|
       match_data = env['rack.attack.match_data']
       now = match_data[:epoch_time]
       retry_after = (match_data[:period] - (now % match_data[:period])).to_i

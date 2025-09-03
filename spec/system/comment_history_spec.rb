@@ -58,7 +58,7 @@ RSpec.describe 'コメント履歴', type: :system do
   end
 
   scenario 'コメント履歴の比較機能が正しく動作する' do
-    login_user(user)
+    login_as(user)
     visit comment_histories_path(comment)
     select '1', from: 'From:'
     select '2', from: 'To:'
@@ -69,7 +69,7 @@ RSpec.describe 'コメント履歴', type: :system do
   end
 
   scenario '同じバージョンを比較しようとするとエラーになる' do
-    login_user(user)
+    login_as(user)
     visit comment_histories_path(comment)
     select '1', from: 'From:'
     select '1', from: 'To:'

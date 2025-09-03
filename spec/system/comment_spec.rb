@@ -219,4 +219,18 @@ RSpec.describe 'コメント', type: :system do
     visit topic_path(topic)
     expect(page).to have_content('このコメントは非表示です。')
   end
+
+  scenario 'コメント数が正しく表示されることの確認' do
+    visit topic_path(topic)
+    expect(page).to have_content('コメント数: 0件')
+
+    Comment.create_with_history!(
+      topic: topic,
+      author: user,
+      content: 'テストコメント'
+    )
+
+    visit topic_path(topic)
+    expect(page).to have_content('コメント数: 1件')
+  end
 end

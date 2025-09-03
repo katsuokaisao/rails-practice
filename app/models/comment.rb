@@ -26,6 +26,7 @@ class Comment < ApplicationRecord
         content: content,
         version_no: 1
       )
+      topic.increment_total_comment!
       comment
     end
   end

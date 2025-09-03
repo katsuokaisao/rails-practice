@@ -37,7 +37,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     let(:params) { { topic: { title: 'テストトピック', content: 'テスト内容' } } }
 
     before do
-      sign_in user
+      login_as(user)
     end
 
     it '制限回数内のリクエストは成功すること' do
@@ -66,7 +66,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     let(:params) { { comment: { content: 'テストコメント', topic_id: topic.id } } }
 
     before do
-      sign_in user
+      login_as(user)
     end
 
     it '制限回数内のリクエストは成功すること' do
@@ -104,7 +104,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     end
 
     before do
-      sign_in user
+      login_as(user)
     end
 
     it '制限回数内のリクエストは成功すること' do

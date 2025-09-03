@@ -91,7 +91,7 @@ module Users
         when :password then %i[current_password password password_confirmation]
         else []
         end
-      params.require(:user).permit(*permitted)
+      params.expect(user: [*permitted])
     end
 
     def update_resource(resource, params)

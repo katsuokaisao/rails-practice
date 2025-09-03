@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
 
   def render_unprocessable_entity
     render file: Rails.public_path.join('422.html'),
-           status: :unprocessable_entity, layout: false, content_type: 'text/html'
+           status: :unprocessable_content, layout: false, content_type: 'text/html'
   end
 
   def render_internal_server_error

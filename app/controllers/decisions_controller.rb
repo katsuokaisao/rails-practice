@@ -53,7 +53,7 @@ class DecisionsController < ApplicationController
   private
 
   def decision_params
-    params.require(:decision).permit(:report_id, :decision_type, :note, :suspension_until)
+    params.expect(decision: %i[report_id decision_type note suspension_until])
   end
 
   def decisions
@@ -87,7 +87,7 @@ class DecisionsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream do
-        render :create_error, status: :unprocessable_entity
+        render :create_error, status: :unprocessable_content
       end
     end
   end

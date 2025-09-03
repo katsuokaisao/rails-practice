@@ -25,10 +25,10 @@ class CommentsController < ApplicationController
 
       respond_to do |format|
         format.html do
-          render topic_path(@topic), status: :unprocessable_entity
+          render topic_path(@topic), status: :unprocessable_content
         end
         format.turbo_stream do
-          render :create_error, status: :unprocessable_entity
+          render :create_error, status: :unprocessable_content
         end
       end
     end
@@ -44,14 +44,14 @@ class CommentsController < ApplicationController
                   notice: t('flash.actions.update.notice', resource: Comment.model_name.human)
     else
       @topic = @comment.topic
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
   private
 
   def comment_params
-    params.require(:comment).permit(:content)
+    params.expect(comment: [:content])
   end
 
   def set_pagination

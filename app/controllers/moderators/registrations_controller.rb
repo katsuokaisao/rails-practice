@@ -92,7 +92,7 @@ module Moderators
         when :password then %i[current_password password password_confirmation]
         else []
         end
-      params.require(:moderator).permit(*permitted)
+      params.expect(moderator: [*permitted])
     end
 
     def configure_account_update_params

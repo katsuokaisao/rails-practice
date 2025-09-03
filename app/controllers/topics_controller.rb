@@ -31,7 +31,7 @@ class TopicsController < ApplicationController
     if @topic.save
       redirect_to @topic, notice: t('flash.actions.create.notice', resource: Topic.model_name.human)
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -39,7 +39,7 @@ class TopicsController < ApplicationController
     if @topic.update(topic_params)
       redirect_to @topic, notice: t('flash.actions.update.notice', resource: Topic.model_name.human)
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
@@ -50,7 +50,7 @@ class TopicsController < ApplicationController
   end
 
   def topic_params
-    params.require(:topic).permit(:title)
+    params.expect(topic: [:title])
   end
 
   def topics

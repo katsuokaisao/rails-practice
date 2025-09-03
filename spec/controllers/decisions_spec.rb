@@ -14,7 +14,7 @@ RSpec.describe 'Decisions', type: :request do
     # リクエストレベルの重複であって、DBレベルの重複テストではないことに注意
     context '複数モデレーターが同時に同じ通報を処理した場合' do
       it '先に処理した決定のみが有効になること' do
-        sign_in moderator
+        login_as(moderator, scope: :moderator)
 
         post '/decisions', params: {
           decision: {
@@ -27,9 +27,9 @@ RSpec.describe 'Decisions', type: :request do
         expect(response).to redirect_to(reports_path(target_type: report.target_type))
         expect(flash[:notice]).to eq(I18n.t('flash.actions.create.notice', resource: Decision.model_name.human))
 
-        sign_out moderator
+        logout moderator
 
-        sign_in other_moderator
+        login_as other_moderator, scope: :moderator
 
         post '/decisions', params: {
           decision: {
@@ -39,7 +39,7 @@ RSpec.describe 'Decisions', type: :request do
           }
         }, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
 
         expect(Decision.where(report_id: report.id).count).to eq(1)
         expect(Decision.find_by(report_id: report.id).note).to eq('最初のモデレーターによる決定')

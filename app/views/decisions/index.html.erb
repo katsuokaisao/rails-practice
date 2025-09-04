@@ -6,6 +6,8 @@
   <%= render partial: 'tabs', locals: { current_tab: @current_tab } %>
 </div>
 
-<div id="decisions-container">
-  <%= render partial: 'index', locals: { pagination: @pagination, current_tab: @current_tab } %>
-</div>
+<%= turbo_frame_tag "decisions-content" do %>
+  <div id="decisions-container">
+    <%= render partial: 'index', locals: { pagination: @pagination, current_tab: @current_tab } %>
+  </div>
+<% end %>

@@ -13,11 +13,6 @@ class DecisionsController < ApplicationController
     @current_tab = params[:target_type]
 
     redirect_to topics_path, alert: t('flash.actions.out_of_bounds') if @pagination.out_of_bounds
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
   end
 
   def new

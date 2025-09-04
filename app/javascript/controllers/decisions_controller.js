@@ -11,7 +11,7 @@ export default class extends Controller {
     const targetType = event.currentTarget.dataset.targetType
     const url = new URL(window.location)
     url.searchParams.set('target_type', targetType)
-    window.history.pushState({}, '', url)
+    window.location.href = url.toString()
   }
 
   toggleFields(event) {

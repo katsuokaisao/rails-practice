@@ -8,6 +8,8 @@ class Topic < ApplicationRecord
   validates :title, length: { minimum: 1, maximum: 120 }, no_html: true
 
   def increment_total_comment!
-    increment(:total_comment, 1).save!
+    with_lock do
+      increment(:total_comment, 1).save!
+    end
   end
 end

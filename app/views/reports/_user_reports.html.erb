@@ -14,7 +14,7 @@
         <tr>
         <td><%= report.reporter&.nickname %></td>
         <td><%= report.enum_i18n(:reason_type) %></td>
-        <td><%= truncate(report.reason_text, length: 100) %></td>
+        <td><%= truncate(report.reason_text, length: 1000) %></td>
         <td><%= report.target_user&.nickname %></td>
         <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
         <td>

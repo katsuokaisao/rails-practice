@@ -4,7 +4,7 @@ require 'fileutils'
 
 namespace :clear do
   desc 'Remove coverage/ directory'
-  task :coverage do
+  task coverage: :environment do
     path = Rails.root.join('coverage')
     if path.exist?
       FileUtils.rm_rf(path)
@@ -13,7 +13,7 @@ namespace :clear do
   end
 
   desc 'Remove Capybara screenshots (tmp/capybara)'
-  task :screenshots do
+  task screenshots: :environment do
     path = Rails.root.join('tmp/capybara')
     if path.exist?
       FileUtils.rm_rf(path)
@@ -22,7 +22,7 @@ namespace :clear do
   end
 
   desc 'Remove miniprofiler (tmp/miniprofiler)'
-  task :miniprofiler do
+  task miniprofiler: :environment do
     path = Rails.root.join('tmp/miniprofiler')
     if path.exist?
       FileUtils.rm_rf(path)
@@ -31,7 +31,7 @@ namespace :clear do
   end
 
   desc 'Clear tmp, log, coverage, screenshots (all in one)'
-  task all: [] do
+  task all: :environment do
     Rake::Task['tmp:clear'].invoke
     Rake::Task['tmp:cache:clear'].invoke
     Rake::Task['log:clear'].invoke

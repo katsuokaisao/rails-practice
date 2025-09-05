@@ -21,9 +21,9 @@
         <td><%= decision.report.target_user.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= decision.note %></td>
-        <td><%= decision.suspension_until&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= l(decision.suspension_until, format: :default) %></td>
         <td><%= decision.moderator.nickname %></td>
-        <td><%= decision.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= l(decision.created_at, format: :default) %></td>
       </tr>
     <% end %>
   </tbody>

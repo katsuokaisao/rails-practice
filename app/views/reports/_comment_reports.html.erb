@@ -21,10 +21,10 @@
         <td><%= truncate(report.reason_text, length: 1000) %></td>
         <td><%= report.target_comment&.topic&.title %></td>
         <td><%= truncate(report.target_comment&.content, length: 1000) %></td>
-        <td><%= report.target_comment&.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= l(report.target_comment&.created_at, format: :default) %></td>
         <td><%= report.target_comment&.author&.nickname %></td>
         <td><%= report.target_comment&.current_version_no %></td>
-        <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
+        <td><%= l(report.created_at, format: :default) %></td>
         <td>
             <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary' %>
         </td>

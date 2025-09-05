@@ -15,7 +15,7 @@
                 </p>
                 <div class="history-content"><%= history.content %></div>
                 <p class="history-meta">
-                    <%= t('created_at') %> <%= history.created_at.strftime('%Y-%m-%d %H:%M') %>
+                    <%= t('created_at') %> <%= l(history.created_at, format: :default) %>
                 </p>
             </div>
         <% end %>

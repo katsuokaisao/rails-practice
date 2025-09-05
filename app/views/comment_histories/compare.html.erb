@@ -7,13 +7,13 @@
     <div class="version-from">
       <h3><%= t('version') %> <%= @from %></h3>
       <p><span class="history-author"><%= t('author') %> <%= @compare_from_history.author.nickname %></span></p>
-      <p class="history-meta"><%= t('created_at') %> <%= @compare_from_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <p class="history-meta"><%= t('created_at') %> <%= l(@compare_from_history.created_at, format: :default) %></p>
       <div class="history-content"><%= @compare_from_history.content %></div>
     </div>
     <div class="version-to">
       <h3><%= t('version') %> <%= @to %></h3>
       <p><span class="history-author"><%= t('author') %> <%= @compare_to_history.author.nickname %></span></p>
-      <p class="history-meta"><%= t('created_at') %> <%= @compare_to_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <p class="history-meta"><%= t('created_at') %> <%= l(@compare_to_history.created_at, format: :default) %></p>
       <div class="history-content"><%= @compare_to_history.content %></div>
     </div>
   </div>

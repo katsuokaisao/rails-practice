@@ -5,7 +5,7 @@
   <%= display_comment_content(comment) %>
   <div class="comment-footer">
     <p>
-      <%= t('created_at') %> <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>
+      <%= t('created_at') %> <%= l(comment.created_at, format: :default) %>
     </p>
     <div class="comment-actions">
       <% if can_access?('comments', 'edit', comment) %>

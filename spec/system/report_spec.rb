@@ -79,7 +79,7 @@ RSpec.describe 'レポート', type: :system do
       expect(page).to have_content('嫌がらせ')
       expect(page).to have_content(comment_report.reason_text)
       expect(page).to have_content(comment_report.target_comment.topic.title)
-      expect(page).to have_content(comment_report.target_comment.created_at.strftime('%Y-%m-%d %H:%M'))
+      expect(page).to have_content(comment_report.target_comment.created_at.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_content(comment_report.target_comment.current_version_no)
       expect(page).to have_content(comment_report.target_comment.author.nickname)
       expect(page).to have_link('審査')
@@ -100,7 +100,7 @@ RSpec.describe 'レポート', type: :system do
       expect(page).to have_content('スパム')
       expect(page).to have_content(user_report.reason_text)
       expect(page).to have_content(user_report.target_user.nickname)
-      expect(page).to have_content(user_report.created_at.strftime('%Y-%m-%d %H:%M'))
+      expect(page).to have_content(user_report.created_at.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_link('審査')
     end
   end

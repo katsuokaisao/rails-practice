@@ -43,7 +43,7 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(comment_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(comment_report_decision.note)
       expect(page).to have_content(comment_report_decision.moderator.nickname)
-      expect(page).to have_content(comment_report_decision.created_at.strftime('%Y-%m-%d %H:%M'))
+      expect(page).to have_content(comment_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
 
     click_link 'ユーザー通報審査'
@@ -55,9 +55,9 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(user_report_decision.report.target_user.nickname)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
-      expect(page).to have_content(user_report_decision.suspension_until.strftime('%Y-%m-%d %H:%M'))
+      expect(page).to have_content(user_report_decision.suspension_until.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_content(user_report_decision.moderator.nickname)
-      expect(page).to have_content(user_report_decision.created_at.strftime('%Y-%m-%d %H:%M'))
+      expect(page).to have_content(user_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
   end
 

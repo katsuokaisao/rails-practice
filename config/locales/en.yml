@@ -1,5 +1,20 @@
 ---
 en:
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      long: "%b %-d, %Y"
+      short: "%-m/%-d"
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      long: "%b %-d, %Y %H:%M:%S"
+      short: "%-m/%-d %H:%M"
+  datetime:
+    formats:
+      default: "%Y-%m-%d %H:%M"
+      long: "%b %-d, %Y %H:%M:%S"
+      short: "%-m/%-d %H:%M"
   action:
     cancel: Cancel
     close: Close

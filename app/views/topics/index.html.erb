@@ -1,10 +1,10 @@
 <article>
   <div class="topic-header">
-    <h2><%= t('views.shared.title.index', resource: Topic.model_name.human) %></h2>
+    <h2><%= t('title.index', resource: Topic.model_name.human) %></h2>
     <div class="topic-actions">
       <% if can_access?('topics', 'new') %>
         <%= link_to new_topic_path do %>
-          <%= t('views.topics.action.new', resource: Topic.model_name.human) %>
+          <%= t('.action.new', resource: Topic.model_name.human) %>
         <% end %>
       <% end %>
     </div>
@@ -17,9 +17,9 @@
             <h3><%= topic.title %></h3>
           <% end %>
           <div class="topic-details">
-            <p>作成者: <%= topic.author.nickname %></p>
-            <p>作成日: <%= topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-            <p>コメント数: <%= topic.total_comment %>件</p>
+            <p><%= t('author') %> <%= topic.author.nickname %></p>
+            <p><%= t('created_at') %> <%= topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+            <p><%= t('comment_count') %> <%= topic.total_comment %><%= t('.count_suffix') %></p>
           </div>
         </div>
         <% if can_access?('topics', 'edit', topic) %>

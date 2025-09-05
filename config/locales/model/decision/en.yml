@@ -1,16 +1,16 @@
+---
 en:
   activerecord:
-    models:
-      decision: Decision
     attributes:
       decision:
+        created_at: Created At
+        decided_by: Decided By
+        decision_type: Decision Type
         id: ID
+        note: Note
         report: Report
         report_id: Report ID
-        decision_type: Decision Type
-        decided_by: Decided By
-        note: Note
         suspension_until: Suspension Until
-        created_at: Created At
         updated_at: Updated At
-
+    models:
+      decision: Decision

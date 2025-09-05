@@ -1,21 +1,48 @@
+---
 ja:
-  flash:
-    actions:
-      create:
-        notice: "%{resource}が作成されました。"
-        alert: "%{resource}を作成できませんでした。"
-      update:
-        notice: "%{resource}が更新されました。"
-        alert: "%{resource}を更新できませんでした。"
-      destroy:
-        notice: "%{resource}が削除されました。"
-        alert: "%{resource}を削除できませんでした。"
-      comment_created:
-        notice: "コメントが投稿されました。"
-      out_of_bounds: "範囲外のリクエストです。"
-      conflict: "同時に別のユーザーがこのリソースを変更しました。"
+  action:
+    cancel: キャンセル
+    close: 閉じる
+    compare: 選択したバージョンを比較
+    select: 選択
+    settle: 確定
   activerecord:
     errors:
       messages:
-        html_not_allowed: "HTMLタグは使用できません"
-        must_be_in_future: "は未来の日付にしてください"
+        html_not_allowed: HTMLタグは使用できません
+        must_be_in_future: は未来の日付にしてください
+  application_title: 掲示板アプリ
+  authentication:
+    login: ログイン
+    moderator_login: モデレータログイン
+    signup: 新規登録
+  author: '作成者:'
+  comment_count: 'コメント数:'
+  created_at: '作成日:'
+  edit: 編集
+  flash:
+    actions:
+      comment_created:
+        notice: コメントが投稿されました。
+      conflict: 同時に別のユーザーがこのリソースを変更しました。
+      create:
+        alert: "%{resource}を作成できませんでした。"
+        notice: "%{resource}が作成されました。"
+      destroy:
+        alert: "%{resource}を削除できませんでした。"
+        notice: "%{resource}が削除されました。"
+      out_of_bounds: 範囲外のリクエストです。
+      update:
+        alert: "%{resource}を更新できませんでした。"
+        notice: "%{resource}が更新されました。"
+  header:
+    logout: ログアウト
+    password: パスワード
+    profile: プロフィール
+  history: 履歴
+  title:
+    edit: "%{resource} 編集"
+    index: "%{resource} 一覧"
+    new: "%{resource} 新規作成"
+    show: "%{resource} 詳細"
+  version: 'バージョン:'

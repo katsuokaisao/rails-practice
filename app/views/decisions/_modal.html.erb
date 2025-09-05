@@ -1,55 +1,55 @@
 <div id="modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2>通報審査</h2>
+      <h2><%= t('.title') %></h2>
       <button type="button" class="close-button close-button-icon" data-controller="close-modal">×</button>
     </div>
 
     <div class="modal-body">
       <div class="report-details">
-        <h3>通報詳細</h3>
+        <h3><%= t('.report_detail') %></h3>
         <table class="report-details-table">
           <tr>
-            <th>通報ID</th>
+            <th><%= t('activerecord.attributes.decision.report_id') %></th>
             <td><%= report.id %></td>
           </tr>
           <tr>
-            <th>通報者</th>
+            <th><%= t('.reporter_nickname') %></th>
             <td><%= report.reporter&.nickname %></td>
           </tr>
           <tr>
-            <th>通報タイプ</th>
+            <th><%= t('activerecord.attributes.report.target_type') %></th>
             <td><%= report.enum_i18n("target_type") %></td>
           </tr>
           <tr>
-            <th>通報理由</th>
+            <th><%= t('activerecord.attributes.report.reason_type') %></th>
             <td><%= report.enum_i18n("reason_type") %></td>
           </tr>
           <tr>
-            <th>通報理由詳細</th>
+            <th><%= t('activerecord.attributes.report.reason_text') %></th>
             <td><%= report.reason_text %></td>
           </tr>
           <% if report.target_type == 'comment' %>
             <tr>
-              <th><%= Topic.model_name.human %>タイトル</th>
+              <th><%= t('activerecord.attributes.topic.title') %></th>
               <td><%= report.target_comment&.topic&.title %></td>
             </tr>
             <tr>
-              <th><%= Comment.model_name.human %>内容</th>
+              <th><%= t('activerecord.attributes.comment.content') %></th>
               <td><%= report.target_comment&.content %></td>
             </tr>
             <tr>
-              <th><%= Comment.model_name.human %>者</th>
+              <th><%= t('.comment_author_nickname') %></th>
               <td><%= report.target_comment&.author&.nickname %></td>
             </tr>
           <% elsif report.target_type == 'user' %>
             <tr>
-              <th>対象ユーザー</th>
+              <th><%= t('.target_user_nickname') %></th>
               <td><%= report.target_user&.nickname %></td>
             </tr>
           <% end %>
           <tr>
-            <th>通報日時</th>
+            <th><%= t('.reported_at') %></th>
             <td><%= report.created_at.strftime('%Y-%m-%d %H:%M') %></td>
           </tr>
         </table>
@@ -61,36 +61,36 @@
         <div id="decision-form-errors"></div>
 
         <div class="form-group">
-          <%= f.label :decision_type, '審査種類' %>
+          <%= f.label :decision_type %>
           <%= f.select :decision_type,
                       options_for_select([
-                        ['却下', 'reject'],
-                        report.target_type == 'comment' ? ['コメント非表示', 'hide_comment'] : nil,
-                        report.target_type == 'user' ? ['ユーザー停止', 'suspend_user'] : nil
+                        [t('.reject'), 'reject'],
+                        report.target_type == 'comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
+                        report.target_type == 'user' ? [t('.suspend_user'), 'suspend_user'] : nil
                       ].compact),
-                      { include_blank: '選択してください' },
+                      { include_blank: t("action.select") },
                       { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>
         </div>
 
         <div class="form-group">
-          <%= f.label :note, 'メモ' %>
+          <%= f.label :note %>
           <%= f.text_area :note, class: 'form-control' %>
         </div>
 
         <div class="form-group suspension-period" style="display: none;" data-decisions-target="suspensionPeriod">
-          <%= f.label :suspension_until, '停止期間' %>
+          <%= f.label :suspension_until %>
           <%= f.datetime_field :suspension_until, class: 'form-control' %>
           <div class="suspension-presets">
-            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1">1日</button>
-            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3">3日</button>
-            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="7">1週間</button>
-            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="30">1ヶ月</button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1"><%= t('.1_day') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3"><%= t('.3_days') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="7"><%= t('.1_week') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="30"><%= t('.1_month') %></button>
           </div>
         </div>
 
         <div class="form-actions">
-          <%= f.submit '審査を確定', class: 'btn btn-primary' %>
-          <button type="button" class="btn btn-secondary" data-controller="close-modal">キャンセル</button>
+          <%= f.submit t('action.settle'), class: 'btn btn-primary' %>
+          <button type="button" class="btn btn-secondary" data-controller="close-modal"><%= t('action.cancel') %></button>
         </div>
       <% end %>
     </div>

@@ -1,0 +1,13 @@
+---
+ja:
+  comment_histories:
+    compare:
+      same_version_error: 同じバージョンを選択してください
+      title: コメント編集履歴の比較
+    compare_form:
+      from: 'From:'
+      selection_hint: "※比較するには2つのバージョンを選択してください"
+      to: 'To:'
+    index:
+      history_list: 履歴一覧
+      title: コメント編集履歴

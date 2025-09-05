@@ -1,0 +1,11 @@
+---
+ja:
+  topics:
+    index:
+      action:
+        new: お題を投稿する
+      count_suffix: 件
+    show:
+      comment: コメント
+      create: コメントを投稿する
+      new_comment: コメントを投稿する

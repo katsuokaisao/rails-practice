@@ -1,0 +1,9 @@
+---
+ja:
+  devise:
+    links:
+      didn_t_receive_unlock_instructions: アカウントロック解除の案内メールが届きませんでしたか？
+    minimum_password_length: "（%{count}文字以上）"
+    registrations:
+      messages:
+        current_password_help: 変更を確認するために現在のパスワードが必要です

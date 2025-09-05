@@ -8,20 +8,20 @@
   <%= hidden_field_tag :reportable_id, report.target_comment_id || report.target_user_id %>
 
   <div class="form-group">
-    <%= f.label :reason_type, "理由タイプ" %>
+    <%= f.label :reason_type %>
     <%= f.select :reason_type,
                 Report.reason_types.keys.map { |k| [t("enums.report.reason_type.#{k}"), k] },
-                { prompt: "選択してください" },
+                { prompt: t('action.select') },
                 { class: "form-control", required: true } %>
   </div>
 
   <div class="form-group">
-    <%= f.label :reason_text, "理由（詳細）" %>
+    <%= f.label :reason_text %>
     <%= f.text_area :reason_text, rows: 5, class: "form-control", required: true %>
   </div>
 
   <div class="form-actions">
-    <%= f.submit "通報を確定", class: "btn btn-primary" %>
-    <button type="button" class="close-button" data-controller="close-modal">キャンセル</button>
+    <%= f.submit t('action.settle'), class: "btn btn-primary" %>
+    <button type="button" class="close-button" data-controller="close-modal"><%= t('action.close') %></button>
   </div>
 <% end %>

@@ -1,4 +1,4 @@
-<h2><%= t('views.shared.authentication.moderator_login') %></h2>
+<h2><%= t('authentication.moderator_login') %></h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <%= render partial: "shared/form_errors", locals: { model: resource } %>
@@ -21,6 +21,6 @@
   <% end %>
 
   <div class="actions">
-    <%= f.submit t('views.shared.authentication.login'), data: { turbo: false } %>
+    <%= f.submit t('authentication.login'), data: { turbo: false } %>
   </div>
 <% end %>

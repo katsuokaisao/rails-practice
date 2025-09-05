@@ -1,33 +1,7 @@
-# Additional translations at https://github.com/tigrish/devise-i18n/blob/master/rails/locales/ja.yml
-
+---
 ja:
   activerecord:
     attributes:
-      user:
-        confirmation_sent_at: パスワード確認送信時刻
-        confirmation_token: パスワード確認用トークン
-        confirmed_at: パスワード確認時刻
-        created_at: 作成日
-        current_password: 現在のパスワード
-        current_sign_in_at: 現在のログイン時刻
-        current_sign_in_ip: 現在のログインIPアドレス
-        email: Eメール
-        encrypted_password: 暗号化パスワード
-        failed_attempts: 失敗したログイン試行回数
-        last_sign_in_at: 最終ログイン時刻
-        last_sign_in_ip: 最終ログインIPアドレス
-        locked_at: ロック時刻
-        nickname: ニックネーム
-        password: パスワード
-        password_confirmation: パスワード（確認用）
-        remember_created_at: ログイン記憶時刻
-        remember_me: ログインを記憶する
-        reset_password_sent_at: パスワードリセット送信時刻
-        reset_password_token: パスワードリセット用トークン
-        sign_in_count: ログイン回数
-        unconfirmed_email: 未確認Eメール
-        unlock_token: ロック解除用トークン
-        updated_at: 更新日
       moderator:
         confirmation_sent_at: パスワード確認送信時刻
         confirmation_token: パスワード確認用トークン
@@ -53,9 +27,34 @@ ja:
         unconfirmed_email: 未確認Eメール
         unlock_token: ロック解除用トークン
         updated_at: 更新日
+      user:
+        confirmation_sent_at: パスワード確認送信時刻
+        confirmation_token: パスワード確認用トークン
+        confirmed_at: パスワード確認時刻
+        created_at: 作成日
+        current_password: 現在のパスワード
+        current_sign_in_at: 現在のログイン時刻
+        current_sign_in_ip: 現在のログインIPアドレス
+        email: Eメール
+        encrypted_password: 暗号化パスワード
+        failed_attempts: 失敗したログイン試行回数
+        last_sign_in_at: 最終ログイン時刻
+        last_sign_in_ip: 最終ログインIPアドレス
+        locked_at: ロック時刻
+        nickname: ニックネーム
+        password: パスワード
+        password_confirmation: パスワード（確認用）
+        remember_created_at: ログイン記憶時刻
+        remember_me: ログインを記憶する
+        reset_password_sent_at: パスワードリセット送信時刻
+        reset_password_token: パスワードリセット用トークン
+        sign_in_count: ログイン回数
+        unconfirmed_email: 未確認Eメール
+        unlock_token: ロック解除用トークン
+        updated_at: 更新日
     models:
-      user: ユーザー
       moderator: モデレーター
+      user: ユーザー
   devise:
     confirmations:
       confirmed: メールアドレスが確認できました。
@@ -123,13 +122,13 @@ ja:
       edit:
         are_you_sure: 本当によろしいですか？
         cancel_my_account: アカウント削除
+        characters_minimum: 文字以上
         currently_waiting_confirmation_for_email: "%{email} の確認待ち"
         leave_blank_if_you_don_t_want_to_change_it: 空欄のままなら変更しません
         title: "%{resource}編集"
         unhappy: 気に入りません
         update: 更新
         we_need_your_current_password_to_confirm_your_changes: 変更を反映するには現在のパスワードを入力してください
-        characters_minimum: "文字以上"
       new:
         sign_up: アカウント登録
       signed_up: アカウント登録が完了しました。

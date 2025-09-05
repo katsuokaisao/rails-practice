@@ -1,0 +1,11 @@
+---
+en:
+  topics:
+    index:
+      action:
+        new: Create New Topic
+      count_suffix: ''
+    show:
+      comment: Comments
+      create: Post Comment
+      new_comment: Post a Comment

@@ -1,0 +1,20 @@
+---
+ja:
+  decisions:
+    modal:
+      1_day: 1日
+      1_month: 1ヶ月
+      1_week: 1週間
+      3_days: 3日
+      comment_author_nickname: コメント投稿者
+      hide_comment: コメントを非表示
+      reject: 却下
+      report_detail: 通報詳細
+      reported_at: 通報日時
+      reporter_nickname: 通報者
+      suspend_user: ユーザを停止
+      target_user_nickname: 対象ユーザー
+      title: 審査
+    tabs:
+      comment_decisions_title: コメント通報審査
+      user_decisions_title: ユーザー通報審査

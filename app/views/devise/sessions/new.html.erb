@@ -2,7 +2,7 @@
   <%= render 'shared/back_button', url: root_path %>
 <% end %>
 
-<h2><%= t('views.shared.authentication.login') %></h2>
+<h2><%= t('authentication.login') %></h2>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <%= render partial: "shared/form_errors", locals: { model: resource } %>
@@ -25,7 +25,7 @@
   <% end %>
 
   <div class="actions">
-    <%= f.submit t('views.shared.authentication.login') %>
+    <%= f.submit t('authentication.login') %>
   </div>
 <% end %>
 

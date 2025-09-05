@@ -1,21 +1,48 @@
+---
 en:
-  flash:
-    actions:
-      create:
-        notice: "%{resource} was successfully created."
-        alert: "%{resource} could not be created."
-      update:
-        notice: "%{resource} was successfully updated."
-        alert: "%{resource} could not be updated."
-      destroy:
-        notice: "%{resource} was successfully destroyed."
-        alert: "%{resource} could not be destroyed."
-      comment_created:
-        notice: "Comment was successfully posted."
-      out_of_bounds: "Out of bounds request."
-      conflict: "Another user has modified this resource at the same time."
+  action:
+    cancel: Cancel
+    close: Close
+    compare: Compare Selected Versions
+    select: Select
+    settle: Confirm
   activerecord:
     errors:
       messages:
-        html_not_allowed: "HTML tags are not allowed"
-        must_be_in_future: "must be a future date"
+        html_not_allowed: HTML tags are not allowed
+        must_be_in_future: must be a future date
+  application_title: Forum App
+  authentication:
+    login: Login
+    moderator_login: Moderator Login
+    signup: Sign Up
+  author: 'Author:'
+  comment_count: 'Comments:'
+  created_at: 'Created at:'
+  edit: Edit
+  flash:
+    actions:
+      comment_created:
+        notice: Comment was successfully posted.
+      conflict: Another user has modified this resource at the same time.
+      create:
+        alert: "%{resource} could not be created."
+        notice: "%{resource} was successfully created."
+      destroy:
+        alert: "%{resource} could not be destroyed."
+        notice: "%{resource} was successfully destroyed."
+      out_of_bounds: Out of bounds request.
+      update:
+        alert: "%{resource} could not be updated."
+        notice: "%{resource} was successfully updated."
+  header:
+    logout: Logout
+    password: Password
+    profile: Profile
+  history: History
+  title:
+    edit: Edit %{resource}
+    index: "%{resource} List"
+    new: Create New %{resource}
+    show: "%{resource} Details"
+  version: 'Version:'

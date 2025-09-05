@@ -3,9 +3,9 @@
   <section class="topic-show">
     <h3><%= @topic.title %></h3>
     <div class="topic-details">
-      <p>作成者: <%= @topic.author.nickname %></p>
-      <p>作成日: <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
-      <p>コメント数: <%= @topic.total_comment %>件</p>
+      <p><%= t('author') %> <%= @topic.author.nickname %></p>
+      <p><%= t('created_at') %> <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <p><%= t('comment_count') %> <%= @topic.total_comment %>件</p>
     </div>
     <div class="edit-actions">
       <% if can_access?('topics', 'edit', @topic) %>
@@ -17,7 +17,7 @@
   </section>
   <% if @pagination.records.any? %>
     <section class="topic-comments">
-      <h4>コメント</h4>
+      <h4><%= t('.comment') %></h4>
       <div id="comment-list" class="comment-list">
         <% @pagination.records.to_a.reverse.each do |comment| %>
           <%= render partial: 'comments/comment', locals: { comment: comment } %>
@@ -28,15 +28,15 @@
   <% end %>
   <% if can_access?('comments', 'create') %>
     <section class="form-card">
-      <h3>コメントを投稿する</h3>
+      <h3><%= t('.new_comment') %></h3>
       <div id="topic-comment-messages"></div>
       <%= form_with(model: [@topic, Comment.new], local: false, id: "new-comment-form") do |f| %>
         <div class="field">
-          <%= f.label :content, "コメント内容" %>
+          <%= f.label :content %>
           <%= f.text_area :content, rows: 3 %>
         </div>
         <div class="actions">
-          <%= f.submit "コメントする" %>
+          <%= f.submit t('.create') %>
         </div>
       <% end %>
     </section>

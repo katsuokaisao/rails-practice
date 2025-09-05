@@ -1,0 +1,13 @@
+---
+en:
+  comment_histories:
+    compare:
+      same_version_error: Please select different versions
+      title: Comparison of Comment Edit History
+    compare_form:
+      from: 'From:'
+      selection_hint: "※Please select two versions to compare"
+      to: 'To:'
+    index:
+      history_list: History List
+      title: Comment Edit History

@@ -1,16 +1,17 @@
 <table class="decisions-table">
   <thead>
     <tr>
-      <th>通報者</th>
-      <th>通報理由</th>
-      <th>通報理由テキスト</th>
-      <th><%= Topic.model_name.human %>タイトル</th>
-      <th><%= Comment.model_name.human %>内容</th>
-      <th><%= Comment.model_name.human %>者</th>
-      <th>審査タイプ</th>
-      <th>審査メモ</th>
-      <th>審査者</th>
-      <th>審査日時</th>
+      <th><%= t('activerecord.attributes.report.reporter') %></th>
+      <th><%= t('activerecord.attributes.report.reason_type') %></th>
+      <th><%= t('activerecord.attributes.report.reason_text') %></th>
+      <th><%= t('activerecord.attributes.topic.title') %></th>
+      <th><%= t('activerecord.attributes.comment.content') %></th>
+      <th><%= t('activerecord.attributes.comment.author') %></th>
+      <th><%= t('activerecord.attributes.comment.created_at') %></th>
+      <th><%= t('activerecord.attributes.decision.decision_type') %></th>
+      <th><%= t('activerecord.attributes.decision.note') %></th>
+      <th><%= t('activerecord.attributes.decision.decided_by') %></th>
+      <th><%= t('activerecord.attributes.decision.created_at') %></th>
     </tr>
   </thead>
   <tbody>

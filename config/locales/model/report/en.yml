@@ -1,14 +1,15 @@
+---
 en:
   activerecord:
-    models:
-      report: Report
     attributes:
       report:
+        created_at: Created At
+        reason_text: Reason Details
+        reason_type: Reason Type
+        reporter: Reporter
+        target_comment: Target Comment
         target_type: Target Type
         target_user: Target User
-        target_comment: Target Comment
-        reporter: Reporter
-        reason_type: Reason Type
-        reason_text: Reason Details
-        created_at: Created At
         updated_at: Updated At
+    models:
+      report: Report

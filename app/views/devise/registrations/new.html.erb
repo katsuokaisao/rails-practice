@@ -1,7 +1,7 @@
 <% if !user_signed_in? && !moderator_signed_in? %>
   <%= render 'shared/back_button', url: root_path %>
 <% end %>
-<h2><%= t('views.shared.authentication.signup') %></h2>
+<h2><%= t('authentication.signup') %></h2>
 
 <%= form_for(resource, as: resource_name, url: user_registration_path) do |f| %>
   <%= render partial: "shared/form_errors", locals: { model: resource } %>
@@ -14,7 +14,7 @@
   <div class="field">
     <%= f.label :password %>
     <% if @minimum_password_length %>
-    <em>(<%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %>)</em>
+    <em>(<%= t('devise.minimum_password_length', count: @minimum_password_length) %>)</em>
     <% end %>
     <%= f.password_field :password, autocomplete: "new-password" %>
   </div>
@@ -25,7 +25,7 @@
   </div>
 
   <div class="actions">
-    <%= f.submit t('views.shared.authentication.signup') %>
+    <%= f.submit t('authentication.signup') %>
   </div>
 <% end %>
 

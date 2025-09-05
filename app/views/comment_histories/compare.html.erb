@@ -1,19 +1,19 @@
 <section class="compare-view">
   <%= render 'shared/back_button', url: comment_histories_path(@comment) %>
-  <h2>コメント編集履歴の比較</h2>
+  <h2><%= t('.title') %></h2>
   <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
 
   <div class="compare-header">
     <div class="version-from">
-      <h3>Version: <%= @from %></h3>
-      <p><span class="history-author">作成者: <%= @compare_from_history.author.nickname %></span></p>
-      <p class="history-meta">作成日: <%= @compare_from_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <h3><%= t('version') %> <%= @from %></h3>
+      <p><span class="history-author"><%= t('author') %> <%= @compare_from_history.author.nickname %></span></p>
+      <p class="history-meta"><%= t('created_at') %> <%= @compare_from_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
       <div class="history-content"><%= @compare_from_history.content %></div>
     </div>
     <div class="version-to">
-      <h3>Version: <%= @to %></h3>
-      <p><span class="history-author">作成者: <%= @compare_to_history.author.nickname %></span></p>
-      <p class="history-meta">作成日: <%= @compare_to_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
+      <h3><%= t('version') %> <%= @to %></h3>
+      <p><span class="history-author"><%= t('author') %> <%= @compare_to_history.author.nickname %></span></p>
+      <p class="history-meta"><%= t('created_at') %> <%= @compare_to_history.created_at.strftime('%Y-%m-%d %H:%M') %></p>
       <div class="history-content"><%= @compare_to_history.content %></div>
     </div>
   </div>

@@ -1,0 +1,14 @@
+---
+en:
+  moderators:
+    registrations:
+      password:
+        actions:
+          update: Update Password
+        messages:
+          characters_minimum: characters minimum
+        title: Change Password
+      profile:
+        actions:
+          update: Update Profile
+        title: Edit Profile

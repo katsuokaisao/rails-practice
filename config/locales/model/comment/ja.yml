@@ -1,18 +1,19 @@
+---
 ja:
   activerecord:
-    models:
-      comment: コメント
     attributes:
       comment:
-        id: ID
-        topic: お題
-        topic_id: お題ID
         author: 作成者
         author_id: 作成者ID
         content: コメント内容
+        created_at: 作成日時
         current_version_no: 現在のバージョン番号
         hidden: 非表示フラグ
-        hidden_reason_type: 非表示理由種別
         hidden_reason_text: 非表示理由詳細
-        created_at: 作成日時
+        hidden_reason_type: 非表示理由種別
+        id: ID
+        topic: お題
+        topic_id: お題ID
         updated_at: 更新日時
+    models:
+      comment: コメント

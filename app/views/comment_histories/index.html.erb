@@ -1,21 +1,21 @@
 <section>
     <%= render 'shared/back_button', url: topic_path(@comment.topic) %>
-    <h2>コメント編集履歴</h2>
+    <h2><%= t('.title') %></h2>
     <% if @pagination.records.length > 1 %>
         <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
     <% end %>
 
     <div class="history-list">
-        <h3>履歴一覧</h3>
+        <h3><%= t('.history_list') %></h3>
         <% @pagination.records.each do |history| %>
             <div class="history">
                 <p>
-                    <span class="history-version">Version: <%= history.version_no %></span>
-                    <span class="history-author">作成者: <%= history.author.nickname %></span>
+                    <span class="history-version"><%= t('version') %> <%= history.version_no %></span>
+                    <span class="history-author"><%= t('author') %> <%= history.author.nickname %></span>
                 </p>
                 <div class="history-content"><%= history.content %></div>
                 <p class="history-meta">
-                    作成日: <%= history.created_at.strftime('%Y-%m-%d %H:%M') %>
+                    <%= t('created_at') %> <%= history.created_at.strftime('%Y-%m-%d %H:%M') %>
                 </p>
             </div>
         <% end %>

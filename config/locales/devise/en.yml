@@ -1,0 +1,9 @@
+---
+en:
+  devise:
+    links:
+      didn_t_receive_unlock_instructions: Didn't receive unlock instructions?
+    minimum_password_length: "%{count} characters minimum"
+    registrations:
+      messages:
+        current_password_help: We need your current password to confirm your changes

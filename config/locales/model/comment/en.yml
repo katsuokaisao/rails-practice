@@ -1,18 +1,19 @@
+---
 en:
   activerecord:
-    models:
-      comment: Comment
     attributes:
       comment:
-        id: ID
-        topic: Topic
-        topic_id: Topic ID
         author: Author
         author_id: Author ID
         content: Content
+        created_at: Created At
         current_version_no: Current Version No
         hidden: Hidden
-        hidden_reason_type: Hidden Reason Type
         hidden_reason_text: Hidden Reason Text
-        created_at: Created At
+        hidden_reason_type: Hidden Reason Type
+        id: ID
+        topic: Topic
+        topic_id: Topic ID
         updated_at: Updated At
+    models:
+      comment: Comment

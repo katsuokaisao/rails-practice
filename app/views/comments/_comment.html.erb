@@ -5,26 +5,26 @@
   <%= display_comment_content(comment) %>
   <div class="comment-footer">
     <p>
-      作成日: <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>
+      <%= t('created_at') %> <%= comment.created_at.strftime('%Y-%m-%d %H:%M') %>
     </p>
     <div class="comment-actions">
       <% if can_access?('comments', 'edit', comment) %>
         <p>
           <span class="material-icons">edit</span>
-          <%= link_to '編集', edit_topic_comment_path(comment.topic, comment), class: "edit-link" %>
+          <%= link_to t('edit'), edit_topic_comment_path(comment.topic, comment), class: "edit-link" %>
         </p>
       <% end %>
       <% if can_access?('comment_histories', 'index', comment) %>
         <p>
           <span class="material-icons">history</span>
-          <%= link_to '履歴', comment_histories_path(comment), class: "history-link" %>
+          <%= link_to t('history'), comment_histories_path(comment), class: "history-link" %>
         </p>
       <% end %>
       <% unless comment.invisible? %>
         <% if can_access?('reports', 'new', comment) %>
           <p>
             <span class="material-icons">flag</span>
-            <%= link_to '違法ユーザ', new_report_path(
+            <%= link_to t('.report_user'), new_report_path(
               format: :turbo_stream,
               reportable_type: "user",
               reportable_id: comment.author.id,
@@ -33,7 +33,7 @@
           </p>
           <p>
             <span class="material-icons">flag</span>
-            <%= link_to 'コメントの非表示', new_report_path(
+            <%= link_to t('.hide_comment'), new_report_path(
               format: :turbo_stream,
               reportable_type: "comment",
               reportable_id: comment.id,

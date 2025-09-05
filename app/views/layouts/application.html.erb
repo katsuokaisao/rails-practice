@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= t('views.shared.application_title') %></title>
+    <title><%= t('application_title') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet" %>
     <%= stylesheet_link_tag "application" %>
-    <!-- TODO: コントローラごとにスタイルを追加。manifest.jsもlink_treeからlink_directoryに変更 -->
     <%= javascript_importmap_tags %>
   </head>
 

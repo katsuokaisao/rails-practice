@@ -4,6 +4,7 @@ en:
     index:
       action:
         new: Create New Topic
+    item:
       count_suffix: ''
     show:
       comment: Comments

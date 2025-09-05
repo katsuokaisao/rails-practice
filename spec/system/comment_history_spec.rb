@@ -31,9 +31,9 @@ RSpec.describe 'コメント履歴', type: :system do
     expect(page).to have_content('初回コメント')
     expect(page).to have_content('2回目の編集')
     expect(page).to have_content('3回目の編集')
-    expect(page).to have_content('Version: 1')
-    expect(page).to have_content('Version: 2')
-    expect(page).to have_content('Version: 3')
+    expect(page).to have_content('バージョン: 1')
+    expect(page).to have_content('バージョン: 2')
+    expect(page).to have_content('バージョン: 3')
   end
 
   scenario 'ログインユーザーは他のユーザーのコメント履歴を閲覧できない' do
@@ -49,12 +49,12 @@ RSpec.describe 'コメント履歴', type: :system do
     visit comment_histories_path(comment)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('初回コメント')
-    expect(page).to have_content('Version: 1')
+    expect(page).to have_content('バージョン: 1')
 
     visit comment_histories_path(other_comment)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('他のユーザーのコメント')
-    expect(page).to have_content('Version: 1')
+    expect(page).to have_content('バージョン: 1')
   end
 
   scenario 'コメント履歴の比較機能が正しく動作する' do
@@ -64,8 +64,8 @@ RSpec.describe 'コメント履歴', type: :system do
     select '2', from: 'To:'
     click_button '選択したバージョンを比較'
     expect(page).to have_content('コメント編集履歴の比較')
-    expect(page).to have_content('Version: 1')
-    expect(page).to have_content('Version: 2')
+    expect(page).to have_content('バージョン: 1')
+    expect(page).to have_content('バージョン: 2')
   end
 
   scenario '同じバージョンを比較しようとするとエラーになる' do

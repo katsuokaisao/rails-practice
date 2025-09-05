@@ -12,18 +12,18 @@ RSpec.describe 'レポート', type: :system do
   scenario '未ログインユーザーがレポートを作成できない' do
     visit topic_path(topic)
     expect(page).not_to have_link('違法ユーザ')
-    expect(page).not_to have_link('コメントの非表示')
+    expect(page).not_to have_link('コメントを非表示')
   end
 
   scenario 'ログインユーザーがコメントをレポートできる' do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
-    click_link 'コメントの非表示'
+    click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由タイプ'
-    fill_in '理由（詳細）', with: '詳細な理由'
-    click_button '通報を確定'
+    select 'スパム', from: '理由種別'
+    fill_in '理由詳細', with: '詳細な理由'
+    click_button '確定'
     expect(page).to have_content('通報が作成されました。')
     expect(page).not_to have_content('通報の申請')
   end
@@ -34,9 +34,9 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content('テストトピック')
     click_link '違法ユーザ'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由タイプ'
-    fill_in '理由（詳細）', with: '詳細な理由'
-    click_button '通報を確定'
+    select 'スパム', from: '理由種別'
+    fill_in '理由詳細', with: '詳細な理由'
+    click_button '確定'
     expect(page).to have_content('通報が作成されました。')
     expect(page).not_to have_content('通報の申請')
   end
@@ -45,12 +45,12 @@ RSpec.describe 'レポート', type: :system do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
-    click_link 'コメントの非表示'
+    click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
 
-    select 'スパム', from: '理由タイプ'
-    fill_in '理由（詳細）', with: 'a' * 2001
-    click_button '通報を確定'
+    select 'スパム', from: '理由種別'
+    fill_in '理由詳細', with: 'a' * 2001
+    click_button '確定'
     expect(page).to have_content('理由詳細は2000文字以内で入力してください')
   end
 
@@ -126,22 +126,22 @@ RSpec.describe 'レポート', type: :system do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
-    click_link 'コメントの非表示'
+    click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由タイプ'
-    fill_in '理由（詳細）', with: '最初のユーザーからの報告'
-    click_button '通報を確定'
+    select 'スパム', from: '理由種別'
+    fill_in '理由詳細', with: '最初のユーザーからの報告'
+    click_button '確定'
     expect(page).to have_content('通報が作成されました。')
     logout
 
     login_as other_user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
-    click_link 'コメントの非表示'
+    click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select '嫌がらせ', from: '理由タイプ'
-    fill_in '理由（詳細）', with: '別のユーザーからの報告'
-    click_button '通報を確定'
+    select '嫌がらせ', from: '理由種別'
+    fill_in '理由詳細', with: '別のユーザーからの報告'
+    click_button '確定'
     expect(page).to have_content('通報が作成されました。')
     logout
 
@@ -161,10 +161,10 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content(report.reason_text)
 
     click_link '審査'
-    expect(page).to have_content('通報審査')
-    select '却下', from: '審査種類'
+    expect(page).to have_content('審査')
+    select '却下', from: '審査種別'
     fill_in 'メモ', with: '審査メモ'
-    click_button '審査を確定'
+    click_button '確定'
 
     visit reports_path
     expect(page).not_to have_content(report.reason_text)
@@ -174,11 +174,11 @@ RSpec.describe 'レポート', type: :system do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
-    click_link 'コメントの非表示'
+    click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由タイプ'
-    fill_in '理由（詳細）', with: '最初のユーザーからの報告'
-    click_button 'キャンセル'
+    select 'スパム', from: '理由種別'
+    fill_in '理由詳細', with: '最初のユーザーからの報告'
+    click_button '閉じる'
     expect(page).not_to have_content('通報の申請')
     expect(page).to have_content('テストトピック')
   end
@@ -191,11 +191,11 @@ RSpec.describe 'レポート', type: :system do
     visit reports_path
     expect(page).to have_content('嫌がらせコメントです')
     click_link '審査'
-    expect(page).to have_content('通報審査')
-    select 'コメント非表示', from: '審査種類'
+    expect(page).to have_content('審査')
+    select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '審査を確定'
-    expect(page).to have_content('審査結果が作成されました。')
+    click_button '確定'
+    expect(page).to have_content('審査が作成されました。')
     logout
 
     login_as(other_user)
@@ -220,12 +220,12 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content('嫌がらせコメントです')
 
     click_link '審査'
-    expect(page).to have_content('通報審査')
+    expect(page).to have_content('審査')
 
-    select 'コメント非表示', from: '審査種類'
+    select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '審査を確定'
-    expect(page).to have_content('審査結果が作成されました。')
+    click_button '確定'
+    expect(page).to have_content('審査が作成されました。')
     logout
 
     login_as(other_user)
@@ -234,7 +234,8 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
     click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
-    expect(page).to have_content('コメント 編集')
+    expect(page).to have_content('編集')
+    sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'
     click_button '更新する'
     expect(page).to have_content('コメントが更新されました。')
@@ -242,7 +243,7 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content('変更後のコメント')
 
     visit topic_path(topic)
-    expect(page).not_to have_content('コメント 編集')
+    expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
     logout

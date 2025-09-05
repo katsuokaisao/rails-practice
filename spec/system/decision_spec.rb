@@ -31,7 +31,7 @@ RSpec.describe '審査', type: :system do
   scenario 'モデレーターが決定一覧を閲覧できる' do
     login_as(moderator, scope: :moderator)
     visit decisions_path
-    expect(page).to have_content('審査結果 一覧')
+    expect(page).to have_content('審査 一覧')
 
     expect(page).to have_css('li.active a', text: 'コメント通報審査')
     within('.decisions-container') do
@@ -66,7 +66,7 @@ RSpec.describe '審査', type: :system do
 
     login_as(moderator, scope: :moderator)
     visit decisions_path
-    expect(page).to have_content('審査結果 一覧')
+    expect(page).to have_content('審査 一覧')
 
     within('.pagination') do
       click_link '2'

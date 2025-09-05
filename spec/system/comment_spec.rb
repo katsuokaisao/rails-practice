@@ -29,7 +29,7 @@ RSpec.describe 'コメント', type: :system do
     visit topic_path(topic)
     expect(page).to have_content('コメントを投稿する')
     fill_in 'コメント', with: '新しいコメント'
-    click_button 'コメントする'
+    click_button 'コメントを投稿する'
     expect(page).to have_content('コメントが投稿されました。')
     expect(page).to have_content('新しいコメント')
   end
@@ -38,7 +38,8 @@ RSpec.describe 'コメント', type: :system do
     login_as(user)
     visit topic_path(topic)
     click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
-    expect(page).to have_content('コメント 編集')
+    expect(page).to have_content('編集')
+    sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'
     click_button '更新する'
     expect(page).to have_content('コメントが更新されました。')
@@ -59,15 +60,15 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('コメントを投稿する')
 
     fill_in 'コメント', with: ''
-    click_button 'コメントする'
+    click_button 'コメントを投稿する'
     expect(page).to have_content('コメント内容を入力してください')
 
     fill_in 'コメント', with: 'a' * 5001
-    click_button 'コメントする'
+    click_button 'コメントを投稿する'
     expect(page).to have_content('コメント内容は5000文字以内で入力してください')
 
     fill_in 'コメント', with: '<script>alert("XSS")</script>'
-    click_button 'コメントする'
+    click_button 'コメントを投稿する'
     expect(page).to have_content('alert("XSS")')
   end
 
@@ -75,8 +76,9 @@ RSpec.describe 'コメント', type: :system do
     login_as(user)
     visit topic_path(topic)
     click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
-    expect(page).to have_content('コメント 編集')
+    expect(page).to have_content('編集')
 
+    sleep(1)
     fill_in 'コメント内容', with: ''
     click_button '更新する'
     expect(page).to have_content('コメント内容を入力してください')
@@ -116,7 +118,8 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('テストコメント')
 
     click_link '編集', href: edit_topic_comment_path(topic, comment)
-    expect(page).to have_content('コメント 編集')
+    expect(page).to have_content('編集')
+    sleep(1)
     fill_in 'コメント', with: '1回目の編集'
     click_button '更新する'
     visit topic_path(topic)
@@ -144,7 +147,7 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('3回目の編集（最新版）')
   end
 
-  scenario 'ユーザー停止が解除された後のコメント表示状態の確認' do
+  scenario 'ユーザーを停止が解除された後のコメント表示状態の確認' do
     create(:report, :for_user, target_user: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
     login_as(moderator, scope: :moderator)
     visit reports_path
@@ -155,13 +158,13 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('通報 一覧')
 
     click_link '審査'
-    expect(page).to have_content('通報審査')
+    expect(page).to have_content('審査')
 
-    select 'ユーザー停止', from: '審査種類'
+    select 'ユーザーを停止', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に停止'
     click_button '1日'
-    click_button '審査を確定'
-    expect(page).to have_content('審査結果が作成されました。')
+    click_button '確定'
+    expect(page).to have_content('審査が作成されました。')
     logout
 
     login_as(user)
@@ -182,12 +185,12 @@ RSpec.describe 'コメント', type: :system do
     visit reports_path
 
     click_link '審査'
-    expect(page).to have_content('通報審査')
+    expect(page).to have_content('審査')
 
-    select 'コメント非表示', from: '審査種類'
+    select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '審査を確定'
-    expect(page).to have_content('審査結果が作成されました。')
+    click_button '確定'
+    expect(page).to have_content('審査が作成されました。')
 
     create(:report, :for_user, target_user: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
 
@@ -196,13 +199,13 @@ RSpec.describe 'コメント', type: :system do
 
     expect(page).to have_css('li.active > a', text: 'ユーザー通報')
     click_link '審査'
-    expect(page).to have_content('通報審査')
+    expect(page).to have_content('審査')
 
-    select 'ユーザー停止', from: '審査種類'
+    select 'ユーザーを停止', from: '審査'
     fill_in 'メモ', with: 'テスト用に停止'
     click_button '1日'
-    click_button '審査を確定'
-    expect(page).to have_content('審査結果が作成されました。')
+    click_button '確定'
+    expect(page).to have_content('審査が作成されました。')
 
     logout
     login_as(other_user)

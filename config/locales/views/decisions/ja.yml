@@ -12,7 +12,7 @@ ja:
       report_detail: 通報詳細
       reported_at: 通報日時
       reporter_nickname: 通報者
-      suspend_user: ユーザを停止
+      suspend_user: ユーザーを停止
       target_user_nickname: 対象ユーザー
       title: 審査
     tabs:

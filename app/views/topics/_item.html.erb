@@ -9,11 +9,5 @@
         <p><%= t('comment_count') %> <%= topic.total_comment %><%= t('.count_suffix') %></p>
         </div>
     </div>
-    <% if can_access?('topics', 'edit', topic) %>
-        <div class="edit-actions">
-        <%= link_to edit_topic_path(topic) do %>
-            <span class="material-icons">edit</span>
-        <% end %>
-        </div>
-    <% end %>
+    <%= render partial: 'edit_action', locals: { topic: topic } %>
 </li>

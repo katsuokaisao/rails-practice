@@ -7,13 +7,7 @@
       <p><%= t('created_at') %> <%= @topic.created_at.strftime('%Y-%m-%d %H:%M') %></p>
       <p><%= t('comment_count') %> <%= @topic.total_comment %>件</p>
     </div>
-    <div class="edit-actions">
-      <% if can_access?('topics', 'edit', @topic) %>
-        <%= link_to edit_topic_path(@topic) do %>
-          <span class="material-icons">edit</span>
-        <% end %>
-      <% end %>
-    </div>
+    <%= render partial: 'edit_action', locals: { topic: @topic } %>
   </section>
   <% if @pagination.records.any? %>
     <section class="topic-comments">

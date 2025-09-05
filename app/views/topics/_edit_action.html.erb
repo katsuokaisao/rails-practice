@@ -1,0 +1,7 @@
+<% if can_access?('topics', 'edit', topic) %>
+    <div class="edit-actions">
+    <%= link_to edit_topic_path(topic) do %>
+        <span class="material-icons">edit</span>
+    <% end %>
+    </div>
+<% end %>

@@ -16,14 +16,14 @@
     <tbody>
     <% pagination.records.each do |report| %>
         <tr>
-        <td><%= report.reporter&.nickname %></td>
+        <td><%= report.reporter.nickname %></td>
         <td><%= report.enum_i18n(:reason_type) %></td>
         <td><%= truncate(report.reason_text, length: 1000) %></td>
-        <td><%= report.target_comment&.topic&.title %></td>
-        <td><%= truncate(report.target_comment&.content, length: 1000) %></td>
-        <td><%= l(report.target_comment&.created_at, format: :default) %></td>
-        <td><%= report.target_comment&.author&.nickname %></td>
-        <td><%= report.target_comment&.current_version_no %></td>
+        <td><%= report.target_comment.topic.title %></td>
+        <td><%= truncate(report.target_comment.content, length: 1000) %></td>
+        <td><%= l(report.target_comment.created_at, format: :default) %></td>
+        <td><%= report.target_comment.author.nickname %></td>
+        <td><%= report.target_comment.current_version_no %></td>
         <td><%= l(report.created_at, format: :default) %></td>
         <td>
             <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary' %>

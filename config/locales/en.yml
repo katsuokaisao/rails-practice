@@ -19,7 +19,7 @@ en:
     cancel: Cancel
     close: Close
     compare: Compare Selected Versions
-    select: Select
+    select: Please, select
     settle: Confirm
   activerecord:
     errors:

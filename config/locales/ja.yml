@@ -21,7 +21,7 @@ ja:
     cancel: キャンセル
     close: 閉じる
     compare: 選択したバージョンを比較
-    select: 選択
+    select: 選択してください
     settle: 確定
   activerecord:
     errors:

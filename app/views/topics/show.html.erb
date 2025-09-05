@@ -5,7 +5,7 @@
     <div class="topic-details">
       <p><%= t('author') %> <%= @topic.author.nickname %></p>
       <p><%= t('created_at') %> <%= l(@topic.created_at, format: :default) %></p>
-      <p><%= t('comment_count') %> <%= @topic.total_comment %>件</p>
+      <p><%= t('comment_count') %> <%= @topic.total_comment %><%= t('.count_suffix') %></p>
     </div>
     <%= render partial: 'edit_action', locals: { topic: @topic } %>
   </section>

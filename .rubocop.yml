@@ -87,6 +87,9 @@ RSpec/LetSetup:
 RSpec/AnyInstance:
   Enabled: false
 
+RSpec/ChangeByZero:
+  Enabled: false
+
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 

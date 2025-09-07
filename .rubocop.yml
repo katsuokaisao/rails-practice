@@ -87,6 +87,9 @@ RSpec/LetSetup:
 RSpec/AnyInstance:
   Enabled: false
 
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 

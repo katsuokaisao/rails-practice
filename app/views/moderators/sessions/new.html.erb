@@ -1,6 +1,6 @@
 <h2><%= t('authentication.moderator_login') %></h2>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+<%= form_with(model: resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <%= render partial: "shared/form_errors", locals: { model: resource } %>
 
   <div class="field">

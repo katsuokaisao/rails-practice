@@ -3,7 +3,7 @@
     <%= render 'shared/back_button', url: topics_path %>
     <h2><%= t('.title') %></h2>
 
-    <%= form_for(resource, as: resource_name, url: user_registration_path, html: { "data-turbo": "false" }) do |f| %>
+    <%= form_with(model: resource, as: resource_name, url: user_registration_path, html: { "data-turbo": "false" }) do |f| %>
       <%= render partial: "shared/form_errors", locals: { model: resource } %>
 
       <%= f.hidden_field :update_kind, value: "profile" %>

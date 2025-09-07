@@ -3,7 +3,7 @@
 <% end %>
 <h2><%= t('authentication.signup') %></h2>
 
-<%= form_for(resource, as: resource_name, url: user_registration_path) do |f| %>
+<%= form_with(model: resource, as: resource_name, url: user_registration_path) do |f| %>
   <%= render partial: "shared/form_errors", locals: { model: resource } %>
 
   <div class="field">

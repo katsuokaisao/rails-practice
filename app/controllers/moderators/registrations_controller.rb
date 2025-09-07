@@ -20,14 +20,10 @@ module Moderators
     # end
 
     # GET /resource/profile
-    def profile
-      render :profile, layout: 'application'
-    end
+    def profile; end
 
     # GET /resource/password
-    def password
-      render :password, layout: 'application'
-    end
+    def password; end
 
     # PUT /resource
     def update

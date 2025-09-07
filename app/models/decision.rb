@@ -1,5 +1,27 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: decisions
+#
+#  id                                                                :bigint           not null, primary key
+#  decided_by                                                        :bigint           not null
+#  decision_type((enum: 'reject' | 'hide_comment' | 'suspend_user')) :string(255)      not null
+#  note                                                              :text(65535)
+#  suspension_until                                                  :datetime
+#  created_at                                                        :datetime         not null
+#  report_id                                                         :bigint           not null
+#
+# Indexes
+#
+#  idx_decisions_decided_by  (decided_by)
+#  idx_decisions_report_id   (report_id) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (decided_by => moderators.id)
+#  fk_rails_...  (report_id => reports.id)
+#
 class Decision < ApplicationRecord
   belongs_to :report
   belongs_to :moderator, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions

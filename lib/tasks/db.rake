@@ -8,6 +8,7 @@ namespace :db do
     task setup: :environment do
       reset_database(env: 'development')
       run_ridgepole(env: 'development')
+      run_annotaterb
       seed!(env: 'development')
     end
 
@@ -56,6 +57,11 @@ namespace :db do
               '-E', env,
               '-o', 'db/schemas/export_schema',
               '--export']
+      run!(*args)
+    end
+
+    def run_annotaterb
+      args = %w[bundle exec annotaterb models]
       run!(*args)
     end
 

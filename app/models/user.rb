@@ -4,6 +4,21 @@
 #
 # 会員ユーザに該当する。
 # 掲示板にお題を投稿したり、お題に対してコメントを投稿したりできる。
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :bigint           not null, primary key
+#  encrypted_password :string(255)      not null
+#  nickname           :string(255)      not null
+#  time_zone          :string(255)      default("Tokyo"), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+# Indexes
+#
+#  idx_users_nickname  (nickname) UNIQUE
+#
 class User < ApplicationRecord
   NICKNAME_MIN_LENGTH = 1
   NICKNAME_MAX_LENGTH = 50

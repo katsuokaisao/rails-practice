@@ -17,18 +17,18 @@ RSpec.describe '審査', type: :system do
   let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, moderator: moderator) }
   let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, moderator: moderator) }
 
-  scenario '未ログインユーザーが決定一覧を閲覧できない' do
+  scenario '未ログインユーザーが審査一覧を閲覧できない' do
     visit decisions_path
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
-  scenario '一般ユーザーが決定一覧を閲覧できない' do
+  scenario '一般ユーザーが審査一覧を閲覧できない' do
     login_as(user)
     visit decisions_path
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
-  scenario 'モデレーターが決定一覧を閲覧できる' do
+  scenario 'モデレーターが審査一覧を閲覧できる' do
     login_as(moderator, scope: :moderator)
     visit decisions_path
     expect(page).to have_content('審査 一覧')

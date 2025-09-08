@@ -88,7 +88,7 @@ RSpec.describe 'Rack::Attack', type: :request do
     end
   end
 
-  describe 'レポート作成のレートリミット' do
+  describe '通報作成のレートリミット' do
     let(:reports_path) { '/reports' }
     let(:user) { create(:user) }
     let(:comment) { create(:comment) }

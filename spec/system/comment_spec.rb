@@ -169,7 +169,7 @@ RSpec.describe 'コメント', type: :system do
 
     login_as(user)
     visit topic_path(topic)
-    expect(page).not_to have_content('レポート対象コメント')
+    expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('規約違反の可能性があるため、アカウントが停止されています。')
 
     user.enforce_release_suspension!
@@ -212,7 +212,7 @@ RSpec.describe 'コメント', type: :system do
 
     # アカウント停止中かつコメント非表示のため、コメントの内容が非表示になっていることを確認
     visit topic_path(topic)
-    expect(page).not_to have_content('レポート対象コメント')
+    expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('このコメントは非表示です。')
 
     user.enforce_release_suspension!

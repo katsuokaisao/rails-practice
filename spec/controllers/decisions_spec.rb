@@ -13,14 +13,14 @@ RSpec.describe 'Decisions', type: :request do
 
     # リクエストレベルの重複であって、DBレベルの重複テストではないことに注意
     context '複数モデレーターが同時に同じ通報を処理した場合' do
-      it '先に処理した決定のみが有効になること' do
+      it '先に処理した審査のみが有効になること' do
         login_as(moderator, scope: :moderator)
 
         post '/decisions', params: {
           decision: {
             report_id: report.id,
             decision_type: 'hide_comment',
-            note: '最初のモデレーターによる決定'
+            note: '最初のモデレーターによる審査'
           }
         }, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
@@ -35,14 +35,14 @@ RSpec.describe 'Decisions', type: :request do
           decision: {
             report_id: report.id,
             decision_type: 'reject',
-            note: '2番目のモデレーターによる決定'
+            note: '2番目のモデレーターによる審査'
           }
         }, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
         expect(response).to have_http_status(:unprocessable_content)
 
         expect(Decision.where(report_id: report.id).count).to eq(1)
-        expect(Decision.find_by(report_id: report.id).note).to eq('最初のモデレーターによる決定')
+        expect(Decision.find_by(report_id: report.id).note).to eq('最初のモデレーターによる審査')
       end
     end
   end

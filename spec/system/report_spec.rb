@@ -2,20 +2,20 @@
 
 require 'rails_helper'
 
-RSpec.describe 'レポート', type: :system do
+RSpec.describe '通報', type: :system do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
   let!(:moderator) { create(:moderator) }
   let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
-  let!(:comment) { create(:comment, topic: topic, content: 'レポート対象コメント') }
+  let!(:comment) { create(:comment, topic: topic, content: '通報対象コメント') }
 
-  scenario '未ログインユーザーがレポートを作成できない' do
+  scenario '未ログインユーザーが通報を作成できない' do
     visit topic_path(topic)
     expect(page).not_to have_link('違法ユーザ')
     expect(page).not_to have_link('コメントを非表示')
   end
 
-  scenario 'ログインユーザーがコメントをレポートできる' do
+  scenario 'ログインユーザーがコメントを通報できる' do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
@@ -28,7 +28,7 @@ RSpec.describe 'レポート', type: :system do
     expect(page).not_to have_content('通報の申請')
   end
 
-  scenario 'ログインユーザーがユーザーをレポートできる' do
+  scenario 'ログインユーザーがユーザーを通報できる' do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
@@ -41,7 +41,7 @@ RSpec.describe 'レポート', type: :system do
     expect(page).not_to have_content('通報の申請')
   end
 
-  scenario 'レポート作成時の入力バリデーションが機能する' do
+  scenario '通報作成時の入力バリデーションが機能する' do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')
@@ -54,18 +54,18 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content('理由詳細は2000文字以内で入力してください')
   end
 
-  scenario '未ログインユーザーがレポート一覧を閲覧できない' do
+  scenario '未ログインユーザーが通報一覧を閲覧できない' do
     visit reports_path
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
-  scenario '一般ユーザーがレポート一覧を閲覧できない' do
+  scenario '一般ユーザーが通報一覧を閲覧できない' do
     login_as user
     visit reports_path
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
-  scenario 'モデレーターがレポート一覧を閲覧できる' do
+  scenario 'モデレーターが通報一覧を閲覧できる' do
     comment_report = create(:report, :for_comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
@@ -86,7 +86,7 @@ RSpec.describe 'レポート', type: :system do
     end
   end
 
-  scenario 'レポートのタブ切り替えが機能する' do
+  scenario '通報のタブ切り替えが機能する' do
     user_report = create(:report, :for_user, reason_type: 'spam', reason_text: 'スパムユーザーです')
 
     login_as(moderator, scope: :moderator)
@@ -105,7 +105,7 @@ RSpec.describe 'レポート', type: :system do
     end
   end
 
-  scenario 'レポートのページネーションが機能する' do
+  scenario '通報のページネーションが機能する' do
     create_list(:report, 21, :for_comment)
     comment_report = Report.order(created_at: :desc).last
 
@@ -153,7 +153,7 @@ RSpec.describe 'レポート', type: :system do
     expect(page).to have_content(other_user.nickname)
   end
 
-  scenario '既に決定済みのレポートがレポート一覧に表示されない' do
+  scenario '既に審査済みの通報が通報一覧に表示されない' do
     report = create(:report, :for_comment)
 
     login_as(moderator, scope: :moderator)
@@ -170,7 +170,7 @@ RSpec.describe 'レポート', type: :system do
     expect(page).not_to have_content(report.reason_text)
   end
 
-  scenario 'レポートモーダルのキャンセルボタンが機能する' do
+  scenario '通報モーダルのキャンセルボタンが機能する' do
     login_as user
     visit topic_path(topic)
     expect(page).to have_content('テストトピック')

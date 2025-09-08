@@ -13,7 +13,7 @@ module ApplicationHelper
     "#{action_name}_action"
   end
 
-  def display_comment_content(comment)
+  def render_comment_content(comment)
     unless comment.invisible?
       return content_tag(:div, simple_format(sanitize(comment.content)),
                          class: ['comment-content'])

@@ -2,7 +2,7 @@
   <div class="comment-header">
     <p><strong><%= comment.author.nickname %></strong></p>
   </div>
-  <%= display_comment_content(comment) %>
+  <%= render_comment_content(comment) %>
   <div class="comment-footer">
     <p>
       <%= t('created_at') %> <%= l(comment.created_at, format: :default) %>

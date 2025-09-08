@@ -36,6 +36,8 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_one :suspend_user, dependent: :restrict_with_error, inverse_of: :user
 
+  before_validation :normalize_nickname
+
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }
   validates :time_zone, presence: true, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
@@ -50,8 +52,10 @@ class User < ApplicationRecord
 
   def suspend!(suspended_until)
     record = suspend_user || build_suspend_user
-    record.suspended_until = suspended_until
-    record.save!
+    record.with_lock do
+      record.suspended_until = suspended_until
+      record.save!
+    end
   end
 
   def suspended?
@@ -64,7 +68,7 @@ class User < ApplicationRecord
     suspend_user.suspended_until.to_date
   end
 
-  def enforce_release!
+  def enforce_release_suspension!
     return unless suspended?
 
     suspend_user.destroy!
@@ -74,5 +78,11 @@ class User < ApplicationRecord
 
   def password_update?
     !new_record? && (password.present? || password_confirmation.present?)
+  end
+
+  def normalize_nickname
+    return if nickname.nil?
+
+    self.nickname = nickname.strip.squish
   end
 end

@@ -50,7 +50,7 @@ class Report < ApplicationRecord
 
   enum :reason_type,
        { spam: 'spam', harassment: 'harassment', obscene: 'obscene', other: 'other' },
-       prefix: true, validates: true
+       prefix: true, validate: true
 
   def reviewed?
     decision.present?

@@ -3,7 +3,7 @@
               method: :post do |f| %>
   <div id="report-form-errors"></div>
 
-  <%= hidden_field_tag :from_topic_id, params[:from_topic_id] %>
+  <%= hidden_field_tag :from_topic_id, topic.id %>
   <%= hidden_field_tag :reportable_type, report.target_type %>
   <%= hidden_field_tag :reportable_id, report.target_comment_id || report.target_user_id %>
 

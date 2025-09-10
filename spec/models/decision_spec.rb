@@ -32,7 +32,7 @@ RSpec.describe Decision, type: :model do
       context 'ユーザ通報の場合' do
         let(:report) { create(:report, :for_user) }
         let(:decision) do
-          build(:decision, report: report, moderator: moderator, decision_type: 'reject')
+          build(:decision, report: report, decider: moderator, decision_type: 'reject')
         end
 
         it 'レコードが保存され、ユーザーが一時停止されていないこと' do
@@ -55,7 +55,7 @@ RSpec.describe Decision, type: :model do
             similar_decision = similar_report.reload.decision
             expect(similar_decision).to be_present
             expect(similar_decision.decision_type).to eq('reject')
-            expect(similar_decision.moderator).to eq(moderator)
+            expect(similar_decision.decider).to eq(moderator)
           end
         end
       end
@@ -63,7 +63,7 @@ RSpec.describe Decision, type: :model do
       context 'コメント通報の場合' do
         let(:report) { create(:report, :for_comment) }
         let(:decision) do
-          build(:decision, report: report, moderator: moderator, decision_type: 'reject')
+          build(:decision, report: report, decider: moderator, decision_type: 'reject')
         end
 
         it 'レコードが保存され、コメントが非表示になっていないこと' do
@@ -86,7 +86,7 @@ RSpec.describe Decision, type: :model do
             similar_decision = similar_report.reload.decision
             expect(similar_decision).to be_present
             expect(similar_decision.decision_type).to eq('reject')
-            expect(similar_decision.moderator).to eq(moderator)
+            expect(similar_decision.decider).to eq(moderator)
           end
         end
       end
@@ -95,7 +95,7 @@ RSpec.describe Decision, type: :model do
     context 'コメントを非表示にする場合' do
       let(:report) { create(:report, :for_comment) }
       let(:decision) do
-        build(:decision, report: report, moderator: moderator, decision_type: 'hide_comment')
+        build(:decision, report: report, decider: moderator, decision_type: 'hide_comment')
       end
 
       it 'レコードが保存され、コメントが非表示になること' do
@@ -122,7 +122,7 @@ RSpec.describe Decision, type: :model do
           similar_decision = similar_report.reload.decision
           expect(similar_decision).to be_present
           expect(similar_decision.decision_type).to eq('hide_comment')
-          expect(similar_decision.moderator).to eq(moderator)
+          expect(similar_decision.decider).to eq(moderator)
         end
       end
     end
@@ -132,7 +132,7 @@ RSpec.describe Decision, type: :model do
       let(:decision) do
         build(:decision,
               report: report,
-              moderator: moderator,
+              decider: moderator,
               decision_type: 'suspend_user',
               suspension_until: nil)
       end
@@ -167,7 +167,7 @@ RSpec.describe Decision, type: :model do
           similar_decision = similar_report.reload.decision
           expect(similar_decision).to be_present
           expect(similar_decision.decision_type).to eq('suspend_user')
-          expect(similar_decision.moderator).to eq(moderator)
+          expect(similar_decision.decider).to eq(moderator)
           expect(similar_decision.suspension_until).to be_within(1.second).of(suspension_until)
         end
       end
@@ -176,7 +176,7 @@ RSpec.describe Decision, type: :model do
     context 'トランザクション' do
       let(:report) { create(:report, :for_comment) }
       let(:decision) do
-        build(:decision, report: report, moderator: moderator, decision_type: 'hide_comment')
+        build(:decision, report: report, decider: moderator, decision_type: 'hide_comment')
       end
 
       context 'save! が失敗した場合' do

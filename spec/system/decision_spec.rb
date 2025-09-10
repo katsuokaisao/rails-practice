@@ -14,8 +14,8 @@ RSpec.describe '審査', type: :system do
   let!(:user_report) do
     create(:report, target_type: 'user', target_user: reported_user, reporter: user, reason_type: 'harassment')
   end
-  let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, moderator: moderator) }
-  let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, moderator: moderator) }
+  let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, decider: moderator) }
+  let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, decider: moderator) }
 
   scenario '未ログインユーザーが審査一覧を閲覧できない' do
     visit decisions_path
@@ -42,7 +42,7 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(comment_report_decision.report.target_comment.author.nickname)
       expect(page).to have_content(comment_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(comment_report_decision.note)
-      expect(page).to have_content(comment_report_decision.moderator.nickname)
+      expect(page).to have_content(comment_report_decision.decider.nickname)
       expect(page).to have_content(comment_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
 
@@ -56,13 +56,13 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
       expect(page).to have_content(user_report_decision.suspension_until.strftime('%Y/%m/%d %H:%M'))
-      expect(page).to have_content(user_report_decision.moderator.nickname)
+      expect(page).to have_content(user_report_decision.decider.nickname)
       expect(page).to have_content(user_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
   end
 
   scenario '審査のページネーションが機能する' do
-    create_list(:decision, 21, :hide_comment, moderator: moderator)
+    create_list(:decision, 21, :hide_comment, decider: moderator)
 
     login_as(moderator, scope: :moderator)
     visit decisions_path

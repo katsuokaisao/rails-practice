@@ -22,7 +22,7 @@
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= decision.note %></td>
         <td><%= decision.suspension_until.present? ? l(decision.suspension_until, format: :default) : '-' %></td>
-        <td><%= decision.moderator.nickname %></td>
+        <td><%= decision.decider.nickname %></td>
         <td><%= l(decision.created_at, format: :default) %></td>
       </tr>
     <% end %>

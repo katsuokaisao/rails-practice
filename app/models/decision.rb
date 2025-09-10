@@ -24,7 +24,7 @@
 #
 class Decision < ApplicationRecord
   belongs_to :report
-  belongs_to :moderator, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
+  belongs_to :decider, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
   enum :decision_type, { reject: 'reject', hide_comment: 'hide_comment', suspend_user: 'suspend_user' },
        prefix: true, validate: true
 
@@ -83,7 +83,7 @@ class Decision < ApplicationRecord
         report: similar_report,
         decision_type: decision_type,
         note: auto_note,
-        moderator: moderator,
+        decider: decider,
         suspension_until: decision_type_suspend_user? ? suspension_until : nil
       )
     end

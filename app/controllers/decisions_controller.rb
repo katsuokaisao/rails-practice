@@ -56,12 +56,12 @@ class DecisionsController < ApplicationController
   def decisions
     decisions = case target_type
                 when 'comment'
-                  Decision.eager_load(:report, :moderator)
+                  Decision.eager_load(:report, :decider)
                           .eager_load(report: %i[reporter target_comment])
                           .eager_load(report: { target_comment: %i[topic author] })
                           .where(reports: { target_type: target_type })
                 when 'user'
-                  Decision.eager_load(:report, :moderator)
+                  Decision.eager_load(:report, :decider)
                           .eager_load(report: %i[reporter target_user])
                           .where(reports: { target_type: target_type })
                 end

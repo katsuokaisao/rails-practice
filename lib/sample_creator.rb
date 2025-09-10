@@ -167,7 +167,7 @@ class SampleCreator
     Decision.take(10).each do |decision|
       puts <<~MSG
         Report: #{decision.report.id},
-        Decided By: #{decision.moderator.nickname},
+        Decided By: #{decision.decider.nickname},
         Decision Type: #{decision.decision_type},
         Note: #{decision.note}
       MSG

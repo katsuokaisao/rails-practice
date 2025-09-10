@@ -24,7 +24,7 @@
 #
 FactoryBot.define do
   factory :decision do
-    association :moderator
+    association :decider, factory: :moderator
 
     decision_type do
       case report.target_type

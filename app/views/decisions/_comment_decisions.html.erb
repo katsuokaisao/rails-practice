@@ -25,7 +25,7 @@
         <td><%= decision.report.target_comment.author.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= truncate(decision.note, length: 50) %></td>
-        <td><%= decision.moderator.nickname %></td>
+        <td><%= decision.decider.nickname %></td>
         <td><%= l(decision.created_at, format: :default) %></td>
       </tr>
     <% end %>

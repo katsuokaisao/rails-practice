@@ -28,7 +28,7 @@ class Moderator < ApplicationRecord
 
   devise :database_authenticatable, :registerable
 
-  has_many :decisions, foreign_key: 'decided_by', inverse_of: :moderator, dependent: :nullify
+  has_many :decisions, foreign_key: 'decided_by', inverse_of: :decider, dependent: :nullify
 
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }

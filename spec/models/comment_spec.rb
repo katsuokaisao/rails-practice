@@ -78,21 +78,6 @@ RSpec.describe Comment, type: :model do
          .and change(CommentHistory, :count).by(0)
          .and change { topic.reload.total_comment }.by(0)
       end
-
-      it 'お題の総コメント数更新に失敗した場合、全体がロールバックされる' do
-        allow_any_instance_of(Topic).to receive(:increment_total_comment!).and_raise(StandardError.new('トピック更新エラー'))
-
-        expect do
-          described_class.create_with_history!(
-            topic: topic,
-            author: author,
-            content: content
-          )
-        end.to raise_error(StandardError, 'トピック更新エラー')
-        .and change(described_class, :count).by(0)
-        .and change(CommentHistory, :count).by(0)
-        .and change { topic.reload.total_comment }.by(0)
-      end
     end
 
     context '同時書き込み' do

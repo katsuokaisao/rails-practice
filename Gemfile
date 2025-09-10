@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 ruby '3.3.7'
 
 gem 'bootsnap', require: false
+gem 'counter_culture', '~> 3.2'
 gem 'devise'
 gem 'mysql2', '~> 0.5'
 gem 'puma', '>= 5.0'

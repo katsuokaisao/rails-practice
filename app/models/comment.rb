@@ -29,6 +29,8 @@ class Comment < ApplicationRecord
   belongs_to :author, class_name: 'User'
   belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
 
+  counter_culture :topic, column_name: 'total_comment'
+
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
   has_many :reports, class_name: 'Report', foreign_key: 'target_comment_id',
                      dependent: :restrict_with_error, inverse_of: :target_comment
@@ -50,7 +52,6 @@ class Comment < ApplicationRecord
         content: content,
         version_no: 1
       )
-      topic.increment_total_comment!
       comment
     end
   end

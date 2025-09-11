@@ -78,10 +78,10 @@ RSpec.describe '通報', type: :system do
       expect(page).to have_content(comment_report.reporter.nickname)
       expect(page).to have_content('嫌がらせ')
       expect(page).to have_content(comment_report.reason_text)
-      expect(page).to have_content(comment_report.target_comment.topic.title)
-      expect(page).to have_content(comment_report.target_comment.created_at.strftime('%Y/%m/%d %H:%M'))
-      expect(page).to have_content(comment_report.target_comment.current_version_no)
-      expect(page).to have_content(comment_report.target_comment.author.nickname)
+      expect(page).to have_content(comment_report.target.topic.title)
+      expect(page).to have_content(comment_report.target.created_at.strftime('%Y/%m/%d %H:%M'))
+      expect(page).to have_content(comment_report.target.current_version_no)
+      expect(page).to have_content(comment_report.target.author.nickname)
       expect(page).to have_link('審査')
     end
   end
@@ -99,7 +99,7 @@ RSpec.describe '通報', type: :system do
       expect(page).to have_content(user_report.reporter.nickname)
       expect(page).to have_content('スパム')
       expect(page).to have_content(user_report.reason_text)
-      expect(page).to have_content(user_report.target_user.nickname)
+      expect(page).to have_content(user_report.target.nickname)
       expect(page).to have_content(user_report.created_at.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_link('審査')
     end
@@ -185,7 +185,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '非表示コメントが公開画面に表示されないことの確認' do
     comment = create(:comment, topic: topic, author: user, content: 'テスト用の非表示コメント')
-    create(:report, :for_comment, target_comment: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment, target: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit reports_path
@@ -213,7 +213,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '非表示コメントを編集しても公開画面には表示されないことの確認' do
     comment = create(:comment, topic: topic, author: other_user, content: 'テスト用の非表示コメント')
-    create(:report, :for_comment, target_comment: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment, target: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit reports_path

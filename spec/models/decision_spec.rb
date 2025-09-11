@@ -41,11 +41,11 @@ RSpec.describe Decision, type: :model do
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
-          expect(report.reload.target_user).not_to be_suspended
+          expect(report.reload.target).not_to be_suspended
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, target_user: report.target_user, target_type: 'user') }
+          let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
 
           it '類似の通報に同じ審査結果が適用されること' do
             expect do
@@ -72,11 +72,11 @@ RSpec.describe Decision, type: :model do
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
-          expect(report.reload.target_comment).not_to be_hidden
+          expect(report.reload.target).not_to be_hidden
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, target_comment: report.target_comment, target_type: 'comment') }
+          let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
 
           it '類似の通報に同じ審査結果が適用されること' do
             expect do
@@ -99,7 +99,7 @@ RSpec.describe Decision, type: :model do
       end
 
       it 'レコードが保存され、コメントが非表示になること' do
-        comment = report.target_comment
+        comment = report.target
         expect(comment).not_to be_hidden
 
         expect do
@@ -112,7 +112,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, target_comment: report.target_comment, target_type: 'comment') }
+        let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
 
         it '類似の通報に同じ決定が適用されること' do
           expect do
@@ -141,7 +141,7 @@ RSpec.describe Decision, type: :model do
         suspension_until = 7.days.from_now
         decision.suspension_until = suspension_until
 
-        user = report.target_user
+        user = report.target
         expect(user).not_to be_suspended
 
         expect do
@@ -155,7 +155,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, target_user: report.target_user, target_type: 'user') }
+        let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
 
         it '類似の通報に同じ決定が適用されること' do
           suspension_until = 7.days.from_now
@@ -185,7 +185,7 @@ RSpec.describe Decision, type: :model do
         end
 
         it '全体がロールバックされること' do
-          comment = report.target_comment
+          comment = report.target
           expect(comment).not_to be_hidden
 
           expect do
@@ -196,13 +196,13 @@ RSpec.describe Decision, type: :model do
         end
       end
 
-      context 'apply_effect! が失敗した場合' do
+      context 'apply_decision! が失敗した場合' do
         before do
-          allow(decision).to receive(:apply_effect!).and_raise(StandardError.new('効果適用エラー'))
+          allow(decision).to receive(:apply_decision!).and_raise(StandardError.new('効果適用エラー'))
         end
 
         it '全体がロールバックされること' do
-          comment = report.target_comment
+          comment = report.target
           expect(comment).not_to be_hidden
 
           expect do
@@ -213,15 +213,15 @@ RSpec.describe Decision, type: :model do
         end
       end
 
-      context 'propagate_to_similar_reports! が失敗した場合' do
-        let!(:similar_report) { create(:report, target_comment: report.target_comment, target_type: 'comment') }
+      context 'apply_decision_for_similar_reports! が失敗した場合' do
+        let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
 
         before do
-          allow(decision).to receive(:propagate_to_similar_reports!).and_raise(StandardError.new('伝播エラー'))
+          allow(decision).to receive(:apply_decision_for_similar_reports!).and_raise(StandardError.new('伝播エラー'))
         end
 
         it 'トランザクション内の処理はコミットされること' do
-          comment = report.target_comment
+          comment = report.target
           expect(comment).not_to be_hidden
 
           expect do

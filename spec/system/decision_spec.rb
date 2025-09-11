@@ -9,10 +9,10 @@ RSpec.describe '審査', type: :system do
   let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, author: reported_user, content: '報告対象コメント') }
   let!(:comment_report) do
-    create(:report, target_type: 'comment', target_comment: comment, reporter: user, reason_type: 'spam')
+    create(:report, target_type: 'comment', target: comment, reporter: user, reason_type: 'spam')
   end
   let!(:user_report) do
-    create(:report, target_type: 'user', target_user: reported_user, reporter: user, reason_type: 'harassment')
+    create(:report, target_type: 'user', target: reported_user, reporter: user, reason_type: 'harassment')
   end
   let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, decider: moderator) }
   let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, decider: moderator) }
@@ -38,8 +38,8 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(comment_report_decision.report.reporter.nickname)
       expect(page).to have_content(comment_report_decision.report.enum_i18n(:reason_type))
       expect(page).to have_content(comment_report_decision.report.reason_text)
-      expect(page).to have_content(comment_report_decision.report.target_comment.topic.title)
-      expect(page).to have_content(comment_report_decision.report.target_comment.author.nickname)
+      expect(page).to have_content(comment_report_decision.report.target.topic.title)
+      expect(page).to have_content(comment_report_decision.report.target.author.nickname)
       expect(page).to have_content(comment_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(comment_report_decision.note)
       expect(page).to have_content(comment_report_decision.decider.nickname)
@@ -52,7 +52,7 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(user_report_decision.report.reporter.nickname)
       expect(page).to have_content(user_report_decision.report.enum_i18n(:reason_type))
       expect(page).to have_content(user_report_decision.report.reason_text)
-      expect(page).to have_content(user_report_decision.report.target_user.nickname)
+      expect(page).to have_content(user_report_decision.report.target.nickname)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
       expect(page).to have_content(user_report_decision.suspension_until.strftime('%Y/%m/%d %H:%M'))

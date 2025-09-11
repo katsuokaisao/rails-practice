@@ -47,15 +47,13 @@ RSpec.describe Decision, type: :model do
         context '類似の通報がある場合' do
           let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
 
-          it '類似の通報に同じ審査結果が適用されること' do
+          it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
               decision.execute!
-            end.to change(described_class, :count).by(2)
+            end.to change(described_class, :count).by(1)
 
             similar_decision = similar_report.reload.decision
-            expect(similar_decision).to be_present
-            expect(similar_decision.decision_type).to eq('reject')
-            expect(similar_decision.decider).to eq(moderator)
+            expect(similar_decision).to be_nil
           end
         end
       end
@@ -78,15 +76,13 @@ RSpec.describe Decision, type: :model do
         context '類似の通報がある場合' do
           let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
 
-          it '類似の通報に同じ審査結果が適用されること' do
+          it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
               decision.execute!
-            end.to change(described_class, :count).by(2)
+            end.to change(described_class, :count).by(1)
 
             similar_decision = similar_report.reload.decision
-            expect(similar_decision).to be_present
-            expect(similar_decision.decision_type).to eq('reject')
-            expect(similar_decision.decider).to eq(moderator)
+            expect(similar_decision).to be_nil
           end
         end
       end

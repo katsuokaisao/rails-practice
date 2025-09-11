@@ -42,7 +42,7 @@ class Decision < ApplicationRecord
       save!
       apply_decision! unless decision_type_reject?
     end
-    apply_decision_for_similar_reports!
+    apply_decision_for_similar_reports! unless decision_type_reject?
   end
 
   def report_type

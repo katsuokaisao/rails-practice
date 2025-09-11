@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["suspensionPeriod"]
+  static targets = ["suspensionPeriod", "suspensionUntilInput", "modal"]
 
   connect() {
     console.debug("Decisions controller connected")
@@ -32,16 +32,12 @@ export default class extends Controller {
 
     const formattedDate = date.toISOString().slice(0, 16)
 
-    this.element.querySelector('input[name="decision[suspension_until]"]').value = formattedDate
+    this.suspensionUntilInputTarget.value = formattedDate
   }
 
   handleSubmit(event) {
     if (event.detail.success) {
-      document.getElementById('modal').remove()
-    } else if (event.detail.error === 'concurrent_modification') {
-      alert('他のモデレーターが既にこの通報を審査しました。ページをリロードしてください。')
-      document.getElementById('modal').remove()
-      window.location.reload()
+      this.modalTarget.remove()
     }
   }
 }

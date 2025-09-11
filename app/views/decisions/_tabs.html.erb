@@ -2,19 +2,11 @@
   <ul class="tabs-list" data-controller="decisions">
     <li class="<%= current_tab == 'comment' ? 'active' : '' %>">
       <%= link_to t('.comment_decisions_title'),
-                  decisions_path(target_type: 'comment'),
-                  data: {
-                    action: "click->decisions#updateUrl",
-                    target_type: "comment"
-                  } %>
+                  decisions_path(target_type: 'comment') %>
     </li>
     <li class="<%= current_tab == 'user' ? 'active' : '' %>">
       <%= link_to t('.user_decisions_title'),
-                  decisions_path(target_type: 'user'),
-                  data: {
-                    action: "click->decisions#updateUrl",
-                    target_type: "user",
-                  } %>
+                  decisions_path(target_type: 'user') %>
     </li>
   </ul>
 </div>

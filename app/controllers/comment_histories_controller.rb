@@ -22,6 +22,9 @@ class CommentHistoriesController < ApplicationController
     end
 
     histories = @comment.histories.eager_load(:author).where(version_no: [@from, @to]).index_by(&:version_no)
+
+    redirect_to comment_histories_path(@comment), alert: t('flash.actions.out_of_bounds') if histories.size < 2
+
     @compare_from_history = histories[@from]
     @compare_to_history = histories[@to]
   end

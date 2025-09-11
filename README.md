@@ -130,7 +130,19 @@ bundle exec i18n-tasks find some.key
 ```
 - 指定したキーがどのファイルにあるかを確認できます。
 
+## annotaterb の使用方法
 
+### 概要
+
+`annotaterb` は **モデルファイルやスペックファイルにスキーマ情報のコメント（Schema Information）を自動付与するツール** です。
+
+### よく使うコマンド
+
+#### すべてのモデル/スペックにスキーマ情報を付与
+
+```bash
+bundle exec annotaterb models
+```
 
 ## アセットパイプラインのビルド
 ```bash

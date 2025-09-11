@@ -14,7 +14,7 @@ RSpec.describe 'コメント', type: :system do
 
   scenario '未ログインユーザーがコメントを投稿できない' do
     visit topic_path(topic)
-    expect(page).not_to have_content('コメントを投稿する')
+    expect(page).not_to have_content('投稿する')
   end
 
   scenario '未ログインユーザーはコメントを編集できない' do
@@ -29,7 +29,7 @@ RSpec.describe 'コメント', type: :system do
     visit topic_path(topic)
     expect(page).to have_content('コメントを投稿する')
     fill_in 'コメント', with: '新しいコメント'
-    click_button 'コメントを投稿する'
+    click_button '投稿する'
     expect(page).to have_content('コメントが投稿されました。')
     expect(page).to have_content('新しいコメント')
   end
@@ -60,15 +60,15 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('コメントを投稿する')
 
     fill_in 'コメント', with: ''
-    click_button 'コメントを投稿する'
+    click_button '投稿する'
     expect(page).to have_content('コメント内容を入力してください')
 
     fill_in 'コメント', with: 'a' * 5001
-    click_button 'コメントを投稿する'
+    click_button '投稿する'
     expect(page).to have_content('コメント内容は5000文字以内で入力してください')
 
     fill_in 'コメント', with: '<script>alert("XSS")</script>'
-    click_button 'コメントを投稿する'
+    click_button '投稿する'
     expect(page).to have_content('alert("XSS")')
   end
 

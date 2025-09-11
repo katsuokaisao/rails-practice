@@ -74,7 +74,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.build(
       target_type: report_params[:reportable_type]
     )
-    case report_params[:reportable_type]
+    case report_params[:reportable_type].downcase
     when 'comment'
       @comment = Comment.find(report_params[:reportable_id])
       @report.target = @comment

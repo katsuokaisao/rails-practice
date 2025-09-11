@@ -1,8 +1,8 @@
-<div id="modal" class="modal">
+<div class="modal" data-controller="close-modal">
   <div class="modal-content">
     <div class="modal-header">
       <h2><%= t('.title') %></h2>
-      <button type="button" class="close-button close-button-icon" data-controller="close-modal">×</button>
+      <button type="button" class="close-button close-button-icon" data-close-modal-target="closeButton">×</button>
     </div>
 
     <div class="modal-body">

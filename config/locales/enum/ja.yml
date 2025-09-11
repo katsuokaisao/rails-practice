@@ -13,5 +13,5 @@ ja:
         other: その他
         spam: スパム
       target_type:
-        comment: コメント
-        user: ユーザー
+        Comment: コメント
+        User: ユーザー

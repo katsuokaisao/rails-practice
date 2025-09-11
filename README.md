@@ -8,8 +8,17 @@
 docker-compose up -d
 ```
 
-## アプリケーションのアクセス方法
-http://localhost:49152
+## ログイン情報
+
+### 会員ユーザー
+- URL: http://localhost:49152/users/sign_in
+- ニックネーム: test1, test2, ... (20人分)
+- パスワード: password（全員共通）
+
+### モデレーター
+- URL: http://localhost:49152/moderators/sign_in
+- ニックネーム: moderator1, moderator2, ... (5人分)
+- パスワード: password（全員共通）
 
 ## Database set up
 

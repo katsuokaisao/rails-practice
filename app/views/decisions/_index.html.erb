@@ -6,6 +6,4 @@
   <% end %>
 </div>
 
-<% query_params = { target_type: params[:target_type] } %>
-
-<%= render partial: 'shared/pagination', locals: { pagination: pagination, query_params: query_params } %>
+<%= render partial: 'shared/pagination', locals: { pagination: pagination, query_params: { target_type: params[:target_type] } } %>

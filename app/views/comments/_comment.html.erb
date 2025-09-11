@@ -20,27 +20,25 @@
           <%= link_to t('history'), comment_histories_path(comment), class: "history-link" %>
         </p>
       <% end %>
-      <% unless comment.invisible? %>
-        <% if can_access?('reports', 'new', comment) %>
-          <p>
-            <span class="material-icons">flag</span>
-            <%= link_to t('.report_user'), new_report_path(
-              format: :turbo_stream,
-              reportable_type: "user",
-              reportable_id: comment.author.id,
-              from_topic_id: comment.topic.id,
-            ) %>
-          </p>
-          <p>
-            <span class="material-icons">flag</span>
-            <%= link_to t('.hide_comment'), new_report_path(
-              format: :turbo_stream,
-              reportable_type: "comment",
-              reportable_id: comment.id,
-              from_topic_id: comment.topic.id,
-            ) %>
-          </p>
-        <% end %>
+      <% if !comment.invisible? && can_access?('reports', 'new', comment) %>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.report_user'), new_report_path(
+            format: :turbo_stream,
+            reportable_type: "user",
+            reportable_id: comment.author.id,
+            from_topic_id: comment.topic.id,
+          ) %>
+        </p>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.hide_comment'), new_report_path(
+            format: :turbo_stream,
+            reportable_type: "comment",
+            reportable_id: comment.id,
+            from_topic_id: comment.topic.id,
+          ) %>
+        </p>
       <% end %>
     </div>
   </div>

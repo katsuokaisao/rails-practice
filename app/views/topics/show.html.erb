@@ -23,11 +23,11 @@
   <% if can_access?('comments', 'create') %>
     <section class="form-card">
       <h3><%= t('.new_comment') %></h3>
-      <div id="topic-comment-messages"></div>
-      <%= form_with(model: [@topic, Comment.new], local: false, id: "new-comment-form") do |f| %>
+      <div id="comment-form-errors"></div>
+      <%= form_with(model: [@topic, Comment.new], local: false) do |f| %>
         <div class="field">
           <%= f.label :content %>
-          <%= f.text_area :content, rows: 3 %>
+          <%= f.text_area :content, rows: 5 %>
         </div>
         <div class="actions">
           <%= f.submit t('.create') %>

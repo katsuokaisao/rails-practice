@@ -5,9 +5,9 @@ en:
       action:
         new: Create New Topic
     item:
-      count_suffix: 'count'
+      count_suffix: count
     show:
       comment: Comments
+      count_suffix: count
       create: Post Comment
       new_comment: Post a Comment
-      count_suffix: 'count'

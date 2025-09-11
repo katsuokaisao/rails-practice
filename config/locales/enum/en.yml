@@ -13,5 +13,5 @@ en:
         other: Other
         spam: Spam
       target_type:
-        comment: Comment
-        user: User
+        Comment: Comment
+        User: User

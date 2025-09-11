@@ -6,8 +6,7 @@ class ReportsController < ApplicationController
   before_action -> { authorize_action!(@report) }
 
   def index
-    params[:target_type] ||= 'comment'
-    @current_tab = params[:target_type]
+    @current_tab = target_type
 
     @pagination = Pagination::Paginator.new(
       relation: reports, page: params[:page], per: params[:per]
@@ -52,11 +51,11 @@ class ReportsController < ApplicationController
   private
 
   def reports
-    reports = Report.where(target_type: params[:target_type])
+    reports = Report.where(target_type: target_type)
                   .where.missing(:decision)
                   .order(created_at: :desc)
 
-    case params[:target_type]
+    case target_type
     when 'comment'
       reports = reports.includes(:reporter, target: %i[topic author])
     when 'user'
@@ -64,6 +63,12 @@ class ReportsController < ApplicationController
     end
 
     reports
+  end
+
+  def target_type
+    params[:target_type] ||= 'comment'
+    params[:target_type].presence_in(%w[comment user]) ||
+      raise(ActionController::BadRequest, "invalid target_type: #{params[:target_type]}")
   end
 
   def set_topic
@@ -74,7 +79,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.build(
       target_type: report_params[:reportable_type]
     )
-    case report_params[:reportable_type].downcase
+    case report_params[:reportable_type]
     when 'comment'
       @comment = Comment.find(report_params[:reportable_id])
       @report.target = @comment

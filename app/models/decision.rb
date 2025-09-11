@@ -29,12 +29,12 @@ class Decision < ApplicationRecord
        prefix: true, validate: true
 
   validates :report_id, uniqueness: true
-  validates :decision_type, presence: true
   validates :note, length: { maximum: 2000 }, allow_blank: true
+  validates :suspension_until, presence: true, if: :decision_type_suspend_user?
+  validates :suspension_until, absence: true, unless: :decision_type_suspend_user?
+
   validate :target_type_must_be_comment_report, if: :decision_type_hide_comment?
   validate :target_type_must_be_user_report, if: :decision_type_suspend_user?
-  validate :suspension_until_presence, if: :decision_type_suspend_user?
-  validate :suspension_until_absence, unless: :decision_type_suspend_user?
   validate :suspension_until_future, if: -> { suspension_until.present? && decision_type_suspend_user? }
 
   def execute!
@@ -83,14 +83,6 @@ class Decision < ApplicationRecord
 
   def target_type_must_be_user_report
     errors.add(:report, :invalid_for_user_report) if report && report.target_type != 'User'
-  end
-
-  def suspension_until_presence
-    errors.add(:suspension_until, :required_for_suspension) if suspension_until.blank?
-  end
-
-  def suspension_until_absence
-    errors.add(:suspension_until, :not_allowed_for_non_suspension) if suspension_until.present?
   end
 
   def suspension_until_future

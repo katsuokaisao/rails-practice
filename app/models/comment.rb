@@ -32,8 +32,8 @@ class Comment < ApplicationRecord
   counter_culture :topic, column_name: 'total_comment'
 
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
-  has_many :reports, class_name: 'Report', foreign_key: 'target_comment_id',
-                     dependent: :restrict_with_error, inverse_of: :target_comment
+  has_many :reports, class_name: 'Report', as: :target,
+                     dependent: :restrict_with_error
 
   validates :content, presence: true, length: { maximum: 5000 }
   validates :current_version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
@@ -67,6 +67,10 @@ class Comment < ApplicationRecord
         version_no: v
       )
     end
+  end
+
+  def apply_decision!(decision)
+    hide_by_decision!(decision)
   end
 
   def hide_by_decision!(decision)

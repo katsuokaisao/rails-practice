@@ -40,42 +40,26 @@ class Decision < ApplicationRecord
   def execute!
     ActiveRecord::Base.transaction do
       save!
-      apply_effect!
+      apply_decision! unless decision_type_reject?
     end
-    propagate_to_similar_reports!
+    apply_decision_for_similar_reports!
   end
 
   def report_type
     report.target_type
   end
 
+  def similar_reports
+    Report.same_target_as(report.target_id, report.target_type).without_report(report)
+  end
+
   private
 
-  def apply_effect!
-    case decision_type
-    when 'hide_comment'
-      hide_comment!
-    when 'suspend_user'
-      suspend_user!
-    end
+  def apply_decision!
+    report.target.apply_decision!(self)
   end
 
-  def hide_comment!
-    report.target_comment.hide_by_decision!(self)
-  end
-
-  def suspend_user!
-    report.target_user.suspend!(suspension_until)
-  end
-
-  def propagate_to_similar_reports!
-    similar_reports = case report_type
-                      when 'comment'
-                        similar_content_reports
-                      when 'user'
-                        similar_user_reports
-                      end
-
+  def apply_decision_for_similar_reports!
     similar_reports.each do |similar_report|
       next if similar_report.reviewed?
 
@@ -89,24 +73,16 @@ class Decision < ApplicationRecord
     end
   end
 
-  def similar_content_reports
-    Report.same_comment_as(report.target_comment_id).without_report(report)
-  end
-
-  def similar_user_reports
-    Report.same_user_as(report.target_user_id).without_report(report)
-  end
-
   def auto_note
     "自動作成: 関連する通報 ##{report.id} の審査結果に基づく"
   end
 
   def target_type_must_be_comment_report
-    errors.add(:report, :invalid_for_comment_report) if report && report.target_type != 'comment'
+    errors.add(:report, :invalid_for_comment_report) if report && report.target_type != 'Comment'
   end
 
   def target_type_must_be_user_report
-    errors.add(:report, :invalid_for_user_report) if report && report.target_type != 'user'
+    errors.add(:report, :invalid_for_user_report) if report && report.target_type != 'User'
   end
 
   def suspension_until_presence

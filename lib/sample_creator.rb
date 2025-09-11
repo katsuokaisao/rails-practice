@@ -66,17 +66,17 @@ class SampleCreator
     comments = Comment.eager_load(:author).to_a
     users = User.last(5)
     500.times do
-      type = %w[comment user].sample
+      type = %w[Comment User].sample
       case type
-      when 'comment'
+      when 'Comment'
         reporter = users.sample
         comment = comments.sample
         next if comment.author == reporter
 
-        FactoryBot.create(:report, :for_comment, reporter: reporter, target_comment: comment)
-      when 'user'
+        FactoryBot.create(:report, :for_comment, reporter: reporter, target: comment)
+      when 'User'
         reporter, target = users.sample(2)
-        FactoryBot.create(:report, :for_user, reporter: reporter, target_user: target)
+        FactoryBot.create(:report, :for_user, reporter: reporter, target: target)
       end
     end
   end
@@ -86,13 +86,8 @@ class SampleCreator
     moderators = Moderator.all.to_a
     reports.each do |report|
       moderator = moderators.sample
-      decision = FactoryBot.create(:decision, report: report, moderator: moderator)
-      case decision.decision_type
-      when 'hide_comment'
-        report.target_comment.hide_by_decision!(decision)
-      when 'suspend_user'
-        report.target_user.suspend!(decision.suspension_until)
-      end
+      decision = FactoryBot.create(:decision, report: report, decider: moderator)
+      report.target.apply_decision!(decision) unless decision.decision_type_reject?
     end
   end
 

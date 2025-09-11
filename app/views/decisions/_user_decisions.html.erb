@@ -18,7 +18,7 @@
         <td><%= decision.report.reporter.nickname %></td>
         <td><%= decision.report.enum_i18n(:reason_type) %></td>
         <td><%= decision.report.reason_text %></td>
-        <td><%= decision.report.target_user.nickname %></td>
+        <td><%= decision.report.target.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= decision.note %></td>
         <td><%= decision.suspension_until.present? ? l(decision.suspension_until, format: :default) : '-' %></td>

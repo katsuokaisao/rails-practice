@@ -10,17 +10,17 @@
     </tr>
     </thead>
     <tbody>
-    <% pagination.records.each do |report| %>
-        <tr>
-        <td><%= report.reporter.nickname %></td>
-        <td><%= report.enum_i18n(:reason_type) %></td>
-        <td><%= truncate(report.reason_text, length: 1000) %></td>
-        <td><%= report.target_user.nickname %></td>
-        <td><%= l(report.created_at, format: :default) %></td>
-        <td>
-            <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary' %>
-        </td>
-        </tr>
-    <% end %>
+        <% pagination.records.each do |report| %>
+            <tr>
+                <td><%= report.reporter.nickname %></td>
+                <td><%= report.enum_i18n(:reason_type) %></td>
+                <td><%= truncate(report.reason_text, length: 1000) %></td>
+                <td><%= report.target.nickname %></td>
+                <td><%= l(report.created_at, format: :default) %></td>
+                <td>
+                    <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary' %>
+                </td>
+            </tr>
+        <% end %>
     </tbody>
 </table>

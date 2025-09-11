@@ -1,8 +1,8 @@
-<div id="modal" class="modal">
+<div id="modal" class="modal" data-controller="close-modal decisions" data-decisions-target="modal">
   <div class="modal-content">
     <div class="modal-header">
       <h2><%= t('.title') %></h2>
-      <button type="button" class="close-button close-button-icon" data-controller="close-modal">×</button>
+      <button type="button" class="close-button close-button-icon" data-close-modal-target="closeButton">×</button>
     </div>
 
     <div class="modal-body">
@@ -15,7 +15,7 @@
           </tr>
           <tr>
             <th><%= t('.reporter_nickname') %></th>
-            <td><%= report.reporter&.nickname %></td>
+            <td><%= report.reporter.nickname %></td>
           </tr>
           <tr>
             <th><%= t('activerecord.attributes.report.target_type') %></th>
@@ -29,23 +29,23 @@
             <th><%= t('activerecord.attributes.report.reason_text') %></th>
             <td><%= report.reason_text %></td>
           </tr>
-          <% if report.target_type == 'comment' %>
+          <% if report.target_type == 'Comment' %>
             <tr>
               <th><%= t('activerecord.attributes.topic.title') %></th>
-              <td><%= report.target_comment&.topic&.title %></td>
+              <td><%= report.target.topic.title %></td>
             </tr>
             <tr>
               <th><%= t('activerecord.attributes.comment.content') %></th>
-              <td><%= report.target_comment&.content %></td>
+              <td><%= report.target.content %></td>
             </tr>
             <tr>
               <th><%= t('.comment_author_nickname') %></th>
-              <td><%= report.target_comment&.author&.nickname %></td>
+              <td><%= report.target.author.nickname %></td>
             </tr>
-          <% elsif report.target_type == 'user' %>
+          <% elsif report.target_type == 'User' %>
             <tr>
               <th><%= t('.target_user_nickname') %></th>
-              <td><%= report.target_user&.nickname %></td>
+              <td><%= report.target.nickname %></td>
             </tr>
           <% end %>
           <tr>
@@ -56,7 +56,7 @@
       </div>
 
       <%= form_with model: decision, url: decisions_path, local: false,
-      data: { controller: 'decisions', action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
+      data: { action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
         <%= f.hidden_field :report_id, value: report.id %>
         <div id="decision-form-errors"></div>
 
@@ -65,8 +65,8 @@
           <%= f.select :decision_type,
                       options_for_select([
                         [t('.reject'), 'reject'],
-                        report.target_type == 'comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
-                        report.target_type == 'user' ? [t('.suspend_user'), 'suspend_user'] : nil
+                        report.target_type == 'Comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
+                        report.target_type == 'User' ? [t('.suspend_user'), 'suspend_user'] : nil
                       ].compact),
                       { include_blank: t("action.select") },
                       { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>
@@ -79,7 +79,7 @@
 
         <div class="form-group suspension-period" style="display: none;" data-decisions-target="suspensionPeriod">
           <%= f.label :suspension_until %>
-          <%= f.datetime_field :suspension_until, class: 'form-control' %>
+          <%= f.datetime_field :suspension_until, class: 'form-control', data: { decisions_target: "suspensionUntilInput" } %>
           <div class="suspension-presets">
             <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1"><%= t('.1_day') %></button>
             <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3"><%= t('.3_days') %></button>
@@ -90,7 +90,7 @@
 
         <div class="form-actions">
           <%= f.submit t('action.settle'), class: 'btn btn-primary' %>
-          <button type="button" class="btn btn-secondary" data-controller="close-modal"><%= t('action.cancel') %></button>
+          <button type="button" class="btn btn-secondary" data-close-modal-target="closeButton"><%= t('action.cancel') %></button>
         </div>
       <% end %>
     </div>

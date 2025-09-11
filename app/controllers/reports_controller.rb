@@ -52,16 +52,18 @@ class ReportsController < ApplicationController
   private
 
   def reports
-    reports = case params[:target_type]
-              when 'comment'
-                Report.eager_load(:reporter, :target_comment, :target_user)
-                      .eager_load(target_comment: %i[topic author])
-              when 'user'
-                Report.eager_load(:reporter, :target_user)
-              end
-    reports = reports.where.missing(:decision)
-    reports = reports.where(target_type: params[:target_type]) if %w[comment user].include?(params[:target_type])
-    reports.order('reports.created_at DESC')
+    reports = Report.where(target_type: params[:target_type])
+                  .where.missing(:decision)
+                  .order(created_at: :desc)
+
+    case params[:target_type]
+    when 'comment'
+      reports = reports.includes(:reporter, target: %i[topic author])
+    when 'user'
+      reports = reports.includes(:reporter, :target)
+    end
+
+    reports
   end
 
   def set_topic
@@ -75,10 +77,10 @@ class ReportsController < ApplicationController
     case report_params[:reportable_type]
     when 'comment'
       @comment = Comment.find(report_params[:reportable_id])
-      @report.target_comment = @comment
+      @report.target = @comment
     when 'user'
       @user = User.find(report_params[:reportable_id])
-      @report.target_user = @user
+      @report.target = @user
     end
   end
 

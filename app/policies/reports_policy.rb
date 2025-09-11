@@ -19,8 +19,8 @@ class ReportsPolicy < ApplicationPolicy
   end
 
   def report_owner?(report)
-    return report.target_comment&.author_id == user.id if report.target_type == 'comment'
-    return report.target_user&.id == user.id if report.target_type == 'user'
+    return report.target&.author_id == user.id if report.target_type == 'comment'
+    return report.target&.id == user.id if report.target_type == 'user'
 
     false
   end

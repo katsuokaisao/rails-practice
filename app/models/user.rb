@@ -31,8 +31,8 @@ class User < ApplicationRecord
   has_many :topics, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :reports, class_name: 'Report', foreign_key: 'reporter_id',
                      dependent: :restrict_with_error, inverse_of: :reporter
-  has_many :received_reports, class_name: 'Report', foreign_key: 'target_user_id',
-                              dependent: :restrict_with_error, inverse_of: :target_user
+  has_many :received_reports, class_name: 'Report', as: :target,
+                              dependent: :restrict_with_error
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_one :suspend_user, dependent: :restrict_with_error, inverse_of: :user
 
@@ -48,6 +48,10 @@ class User < ApplicationRecord
     validates :password, presence: true, confirmation: true
     validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH },
                          format: { with: PASSWORD_REGEX }, allow_blank: true
+  end
+
+  def apply_decision!(decision)
+    suspend!(decision.suspension_until)
   end
 
   def suspend!(suspended_until)

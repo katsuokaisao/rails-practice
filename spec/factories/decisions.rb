@@ -28,9 +28,9 @@ FactoryBot.define do
 
     decision_type do
       case report.target_type
-      when 'comment'
+      when 'Comment'
         %w[reject hide_comment].sample
-      when 'user'
+      when 'User'
         %w[reject suspend_user].sample
       else
         'reject'

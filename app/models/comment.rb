@@ -80,10 +80,6 @@ class Comment < ApplicationRecord
     )
   end
 
-  def hidden?
-    hidden
-  end
-
   def invisible?
     hidden? || author.suspended?
   end

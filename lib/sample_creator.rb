@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class SampleCreator
-  class << self
-    delegate :create, to: :new
+  def self.create
+    new.create
   end
 
   def create

@@ -98,66 +98,6 @@ bundle exec erb_lint --lint-all
 bundle exec erb_lint --lint-all --autocorrect
 ```
 
-## i18n-tasksの使用方法
-
-### 概要
-i18n-tasksは、Railsプロジェクトで国際化（i18n）ファイルの管理を効率化するためのツールです。主に以下の機能を提供します：
-- 未使用キーの検出
-- 未翻訳キーの検出
-- キーの整理・整形
-
-### よく使うコマンド
-
-#### 未翻訳キーを検出
-```bash
-bundle exec i18n-tasks missing
-```
-- `ja.yml`にあるけど`en.yml`にないキーなどを一覧表示します。
-
-#### 未使用キーを検出
-```bash
-bundle exec i18n-tasks unused
-```
-- ソースコード上で参照されていないキーを検出します。
-- 例: `t('hello.world')`が使われていない場合に表示されます。
-
-#### キーの並び替え・整形
-```bash
-bundle exec i18n-tasks normalize
-```
-- 各ロケールファイルのキーをソート・整形して統一感を出します。
-
-#### 翻訳カバレッジを確認
-```bash
-bundle exec i18n-tasks health
-```
-- 未翻訳・未使用・重複キーなどをまとめてチェックします。
-
-#### キー検索
-```bash
-bundle exec i18n-tasks find some.key
-```
-- 指定したキーがどのファイルにあるかを確認できます。
-
-## annotaterb の使用方法
-
-### 概要
-
-`annotaterb` は **モデルファイルやスペックファイルにスキーマ情報のコメント（Schema Information）を自動付与するツール** です。
-
-### よく使うコマンド
-
-#### すべてのモデル/スペックにスキーマ情報を付与
-
-```bash
-bundle exec annotaterb models
-```
-
-## アセットパイプラインのビルド
-```bash
-bin/rails assets:precompile
-```
-
 ## 用語集
 
 ### 基本用語

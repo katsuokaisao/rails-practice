@@ -1,7 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
+import { formatInTimeZone } from 'date-fns-tz'
+import { addDays } from 'date-fns'
 
 export default class extends Controller {
   static targets = ["suspensionPeriod", "suspensionUntilInput", "modal"]
+
+  static values = {
+    userTimeZoneIdentifier: String,
+  }
 
   connect() {
     console.debug("Decisions controller connected")
@@ -19,13 +25,9 @@ export default class extends Controller {
 
   setDuration(event) {
     event.preventDefault()
-    const days = event.currentTarget.dataset.days
-    const date = new Date()
-    date.setDate(date.getDate() + parseInt(days))
-
-    const formattedDate = date.toISOString().slice(0, 16)
-
-    this.suspensionUntilInputTarget.value = formattedDate
+    const days = parseInt(event.currentTarget.dataset.days, 10)
+    const futureDate = addDays(new Date(), days)
+    this.suspensionUntilInputTarget.value = formatInTimeZone(futureDate, this.userTimeZoneIdentifierValue, "yyyy-MM-dd'T'HH:mm")
   }
 
   handleSubmit(event) {

@@ -16,6 +16,7 @@ class DecisionsController < ApplicationController
   end
 
   def new
+    @user_time_zone_identifier = user_time_zone_identifier
     respond_to do |format|
       format.turbo_stream
     end

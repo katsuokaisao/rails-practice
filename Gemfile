@@ -7,6 +7,7 @@ ruby '3.3.7'
 gem 'bootsnap', require: false
 gem 'counter_culture', '~> 3.2'
 gem 'devise'
+gem 'jsbundling-rails', '~> 1.3'
 gem 'mysql2', '~> 0.5'
 gem 'puma', '>= 5.0'
 gem 'rack-attack'
@@ -18,7 +19,6 @@ gem 'sprockets-rails'
 gem 'stimulus-rails'
 gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[windows jruby]
-gem "jsbundling-rails", "~> 1.3"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"

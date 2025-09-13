@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def user_time_zone_identifier
+    Time.zone&.tzinfo&.identifier || 'UTC'
+  end
+
   def render_forbidden
     render file: Rails.public_path.join('403.html'), status: :forbidden, layout: false, content_type: 'text/html'
   end

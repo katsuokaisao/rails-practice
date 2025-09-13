@@ -1,0 +1,13 @@
+---
+ja:
+  activerecord:
+    attributes:
+      comment_history:
+        author_id: 作成者
+        comment_id: コメント
+        content: コメント内容
+        created_at: 作成日時
+        topic_id: トピック
+        version_no: バージョン
+    models:
+      comment_history: コメント履歴

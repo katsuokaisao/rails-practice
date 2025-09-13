@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      comment_history:
+        author_id: Author
+        comment_id: Comment
+        content: Content
+        created_at: Created At
+        topic_id: Topic
+        version_no: Version
+    models:
+      comment_history: Comment History

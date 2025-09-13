@@ -1,2 +1,40 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
+  def root_class_name
+    [data_controller_name, data_action_name].join(' ')
+  end
+
+  def data_controller_name
+    "#{controller_path.gsub('/', '_')}_controller"
+  end
+
+  def data_action_name
+    "#{action_name}_action"
+  end
+
+  def render_comment_content(comment)
+    unless comment.invisible?
+      return content_tag(:div, simple_format(sanitize(comment.content)),
+                         class: ['comment-content'])
+    end
+
+    return content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info']) if comment.author != current_user
+
+    if comment.author.suspended?
+      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date}です。",
+                  class: ['hidden-comment-warning'])
+    else
+      content_tag(:p, '規約違反の可能性があるため、あなたのコメントは非表示になりました。', class: ['hidden-comment-warning'])
+    end
+  end
+
+  def can_access?(controller, action, record = nil)
+    policy_class_name = "#{controller.to_s.camelize}Policy"
+
+    policy_class = policy_class_name.constantize
+    policy = policy_class.new(current_user, current_moderator, record)
+
+    policy.public_send("#{action}?")
+  end
 end

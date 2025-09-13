@@ -1,0 +1,20 @@
+<section class="compare-view">
+  <%= render 'shared/back_button', url: comment_histories_path(@comment) %>
+  <h2><%= t('.title') %></h2>
+  <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
+
+  <div class="compare-header">
+    <div class="version-from">
+      <h3><%= t('version') %> <%= @from %></h3>
+      <p><span class="history-author"><%= t('author') %> <%= @compare_from_history.author.nickname %></span></p>
+      <p class="history-meta"><%= t('created_at') %> <%= l(@compare_from_history.created_at, format: :default) %></p>
+      <div class="history-content"><%= @compare_from_history.content %></div>
+    </div>
+    <div class="version-to">
+      <h3><%= t('version') %> <%= @to %></h3>
+      <p><span class="history-author"><%= t('author') %> <%= @compare_to_history.author.nickname %></span></p>
+      <p class="history-meta"><%= t('created_at') %> <%= l(@compare_to_history.created_at, format: :default) %></p>
+      <div class="history-content"><%= @compare_to_history.content %></div>
+    </div>
+  </div>
+</section>

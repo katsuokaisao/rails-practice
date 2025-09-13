@@ -1,0 +1,12 @@
+---
+ja:
+  reports:
+    comment_reports:
+      action: アクション
+    modal:
+      title: 通報の申請
+    tabs:
+      comment_reports_title: コメント通報
+      user_reports_title: ユーザー通報
+    user_reports:
+      action: アクション

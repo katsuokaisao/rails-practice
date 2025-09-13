@@ -1,0 +1,14 @@
+---
+ja:
+  moderators:
+    registrations:
+      password:
+        actions:
+          update: パスワードを更新
+        messages:
+          characters_minimum: 文字以上
+        title: パスワード変更
+      profile:
+        actions:
+          update: プロフィールを更新
+        title: プロフィール編集

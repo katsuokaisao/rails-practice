@@ -1,0 +1,178 @@
+.comment_histories_controller {
+  section {
+    max-width: 900px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #6c757d;
+    padding-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    margin: 20px 0 15px;
+    color: #444;
+  }
+
+  .version-selection {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+
+    .compare-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      .compare-hint {
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .version-selects {
+        display: flex;
+        gap: 20px;
+
+        .select-group {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          label {
+            color: #555;
+          }
+
+          .version-select {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background-color: white;
+            min-width: 100px;
+            font-size: 0.95rem;
+          }
+        }
+      }
+
+      .compare-button {
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        align-self: flex-start;
+
+        &:hover {
+          background-color: #5a6268;
+        }
+      }
+    }
+  }
+
+  &.index_action {
+    .pagination {
+      a {
+        background-color: white;
+        color: #6c757d;
+      }
+    }
+
+    .history {
+      background-color: white;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      p {
+        margin-bottom: 12px;
+        line-height: 1.5;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .history-version {
+        display: inline-block;
+        background-color: #6c757d;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-right: 10px;
+      }
+
+      .history-author {
+        font-weight: 600;
+        color: #444;
+      }
+
+      .history-content {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 15px;
+        margin: 10px 0;
+        white-space: pre-wrap;
+      }
+
+      .history-meta {
+        font-size: 0.9rem;
+        color: #666;
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
+
+      strong {
+        font-weight: 600;
+        color: #444;
+        margin-right: 15px;
+      }
+    }
+  }
+
+  &.compare_action {
+    .compare-view {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .compare-header {
+      display: flex;
+      gap: 30px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .version-from,
+    .version-to {
+      flex: 1;
+      min-width: 300px;
+      background-color: white;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: #6c757d;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+      }
+    }
+  }
+}

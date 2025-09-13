@@ -1,0 +1,83 @@
+<header>
+    <div class="header-left">
+        <%= link_to t('application_title'), current_moderator ? reports_path : root_path, class: "logo" %>
+    </div>
+    <div class="header-right dropdown" data-controller="dropdown">
+        <% if only_user_signed_in? %>
+            <button class="dropdown-trigger" data-action="click->dropdown#toggle">
+                <span class="material-icons user-icon">account_circle</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="dropdown-menu" data-dropdown-target="menu">
+                <ul class="dropdown-list">
+                    <li class="dropdown-item">
+                        <%= link_to edit_user_profile_path do %>
+                            <span class="material-icons">edit</span>
+                            <span class="vertical-middle"><%= t('header.profile') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= link_to edit_user_password_path do %>
+                            <span class="material-icons">lock</span>
+                            <span class="vertical-middle"><%= t('header.password') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= button_to destroy_user_session_path, method: :delete, class: "logout" do %>
+                            <span class="material-icons">logout</span>
+                            <span class="vertical-middle"><%= t('header.logout') %></span>
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+        <% elsif moderator_signed_in? %>
+            <div class="header-nav">
+                <%= link_to reports_path, class: "nav-button #{'active' if controller_name == 'reports'}" do %>
+                    <span class="material-icons">report</span>
+                    <%= t('title.index', resource: Report.model_name.human) %>
+                <% end %>
+                <%= link_to decisions_path, class: "nav-button #{'active' if controller_name == 'decisions'}" do %>
+                    <span class="material-icons">gavel</span>
+                    <%= t('title.index', resource: Decision.model_name.human) %>
+                <% end %>
+            </div>
+            <button class="dropdown-trigger" data-action="click->dropdown#toggle">
+                <span class="material-icons user-icon">admin_panel_settings</span>
+                <span class="material-icons">expand_more</span>
+            </button>
+            <div class="dropdown-menu" data-dropdown-target="menu">
+                <ul class="dropdown-list">
+                    <li class="dropdown-item">
+                        <%= link_to edit_moderator_profile_path do %>
+                            <span class="material-icons">edit</span>
+                            <span class="vertical-middle"><%= t('header.profile') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= link_to edit_moderator_password_path do %>
+                            <span class="material-icons">lock</span>
+                            <span class="vertical-middle"><%= t('header.password') %></span>
+                        <% end %>
+                    </li>
+                    <li class="dropdown-item">
+                        <%= button_to destroy_moderator_session_path, method: :delete, class: "logout" do %>
+                            <span class="material-icons">logout</span>
+                            <%= t('header.logout') %>
+                        <% end %>
+                    </li>
+                </ul>
+            </div>
+        <% else %>
+            <div class="header-nav">
+                <%= link_to new_user_registration_path, class: "nav-button" do %>
+                <span class="material-icons">person_add</span>
+                <%= t('authentication.signup') %>
+                <% end %>
+                <%= link_to new_user_session_path, class: "nav-button" do %>
+                <span class="material-icons">login</span>
+                <%= t('authentication.login') %>
+                <% end %>
+            </div>
+        <% end %>
+    </div>
+</header>

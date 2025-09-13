@@ -1,0 +1,32 @@
+base_locale: ja
+locales: [ja, en]
+data:
+  read:
+    - 'config/locales/defaults/%{locale}.yml'
+    - 'config/locales/**/*%{locale}.yml'
+ignore_unused:
+  # models
+  - activerecord.*
+  - activemodel.*
+  # defaults
+  - errors.*
+  - number.*
+  - time.*
+  - date.*
+  - datetime.*
+  - helpers.*
+  - support.*
+  - flash.*
+  # another libraries
+  - devise.*
+ignore_eq_base:
+  all:
+    - date.*
+    - number.*
+search:
+  paths:
+    - 'app/'
+  exclude:
+    - app/assets/javascripts/*
+    - app/assets/fonts/*
+    - app/views/administration/*

@@ -1,0 +1,13 @@
+<div class="decisions-header">
+  <h2><%= t('title.index', resource: Decision.model_name.human) %></h2>
+</div>
+
+<div id="decisions-tabs">
+  <%= render partial: 'tabs', locals: { current_tab: @current_tab } %>
+</div>
+
+<%= turbo_frame_tag "decision-contents" do %>
+  <div id="decisions-container">
+    <%= render partial: 'index', locals: { pagination: @pagination, current_tab: @current_tab } %>
+  </div>
+<% end %>

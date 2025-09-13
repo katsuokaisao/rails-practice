@@ -1,0 +1,40 @@
+---
+en:
+  activerecord:
+    attributes:
+      moderator:
+        confirmation_sent_at: Confirmation Sent At
+        confirmation_token: Confirmation Token
+        confirmed_at: Confirmed At
+        created_at: Created At
+        current_password: Current Password
+        current_sign_in_at: Current Sign In At
+        current_sign_in_ip: Current Sign In IP
+        email: Email
+        encrypted_password: Encrypted Password
+        failed_attempts: Failed Attempts
+        last_sign_in_at: Last Sign In At
+        last_sign_in_ip: Last Sign In IP
+        locked_at: Locked At
+        nickname: Nickname
+        password: Password
+        password_confirmation: Password Confirmation
+        remember_created_at: Remember Created At
+        remember_me: Remember Me
+        reset_password_sent_at: Reset Password Sent At
+        reset_password_token: Reset Password Token
+        sign_in_count: Sign In Count
+        time_zone: Time Zone
+        unconfirmed_email: Unconfirmed Email
+        unlock_token: Unlock Token
+        updated_at: Updated At
+    errors:
+      models:
+        moderator:
+          attributes:
+            password:
+              invalid: can only contain alphanumeric characters and symbols
+            time_zone:
+              inclusion: is not a valid time zone
+    models:
+      moderator: Moderator

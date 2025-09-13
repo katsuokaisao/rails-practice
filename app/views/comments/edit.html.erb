@@ -1,0 +1,17 @@
+<section class="form-card">
+  <%= render 'shared/back_button', url: topic_path(@topic) %>
+  <h3><%= t('edit', resource: Comment.model_name.human) %></h3>
+
+  <%= form_with(model: [@topic, @comment], local: true) do |f| %>
+    <%= render partial: "shared/form_errors", locals: { model: @comment } %>
+
+    <div class="field">
+      <%= f.label :content %>
+      <%= f.text_area :content, rows: 5 %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+</section>

@@ -1,0 +1,12 @@
+---
+en:
+  reports:
+    comment_reports:
+      action: Action
+    modal:
+      title: Report Submission
+    tabs:
+      comment_reports_title: Comment Reports
+      user_reports_title: User Reports
+    user_reports:
+      action: Action

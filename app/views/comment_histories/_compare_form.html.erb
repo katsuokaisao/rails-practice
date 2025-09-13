@@ -1,0 +1,18 @@
+<div class="version-selection">
+    <%= form_with url: compare_comment_histories_path(comment), method: :get, local: true do %>
+    <div class="compare-controls">
+        <p class="compare-hint"><%= t('.selection_hint') %></p>
+        <div class="version-selects">
+            <div class="select-group">
+                <label for="from"><%= t('.from') %></label>
+                <%= select_tag :from, options_for_select(versions, from), class: "version-select" %>
+            </div>
+            <div class="select-group">
+                <label for="to"><%= t('.to') %></label>
+                <%= select_tag :to, options_for_select(versions, to), class: "version-select" %>
+            </div>
+        </div>
+        <button type="submit" class="compare-button"><%= t('action.compare') %></button>
+    </div>
+    <% end %>
+</div>

@@ -28,7 +28,7 @@
             reportable_type: "user",
             reportable_id: comment.author.id,
             from_topic_id: comment.topic.id,
-          ) %>
+          ), data: { turbo_prefetch: false } %>
         </p>
         <p>
           <span class="material-icons">flag</span>
@@ -37,7 +37,7 @@
             reportable_type: "comment",
             reportable_id: comment.id,
             from_topic_id: comment.topic.id,
-          ) %>
+          ), data: { turbo_prefetch: false } %>
         </p>
       <% end %>
     </div>

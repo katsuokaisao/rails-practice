@@ -26,7 +26,7 @@
                 <td><%= report.target.current_version_no %></td>
                 <td><%= l(report.created_at, format: :default) %></td>
                 <td>
-                    <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary' %>
+                    <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary', data: { turbo_prefetch: false } %>
                 </td>
             </tr>
         <% end %>

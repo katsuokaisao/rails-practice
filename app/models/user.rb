@@ -21,13 +21,7 @@
 #  idx_users_nickname  (nickname) UNIQUE
 #
 class User < ApplicationRecord
-  NICKNAME_MIN_LENGTH = 1
-  NICKNAME_MAX_LENGTH = 50
-  PASSWORD_MIN_LENGTH = 8
-  PASSWORD_MAX_LENGTH = 50
-  PASSWORD_REGEX = /\A[!-~]+\z/ # Asciiの印刷可能文字(スペース含まない)のみ
-
-  devise :database_authenticatable, :registerable
+  include AuthenticatableAccount
 
   has_many :topics, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :reports, class_name: 'Report', foreign_key: 'reporter_id',
@@ -36,20 +30,7 @@ class User < ApplicationRecord
                               dependent: :restrict_with_error
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
 
-  before_validation :normalize_nickname
-
-  validates :nickname, presence: true, uniqueness: true,
-                       length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }
-  validates :time_zone, presence: true, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
   validate :suspended_until_future, if: -> { suspended_until.present? }
-
-  # user sign up: password, password_confirmation
-  # user account update: current_password, password, password_confirmation
-  with_options if: -> { new_record? || password_update? } do
-    validates :password, presence: true, confirmation: true
-    validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH },
-                         format: { with: PASSWORD_REGEX }, allow_blank: true
-  end
 
   def apply_decision!(decision)
     suspend!(decision.suspended_until)
@@ -76,16 +57,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def password_update?
-    !new_record? && (password.present? || password_confirmation.present?)
-  end
-
-  def normalize_nickname
-    return if nickname.nil?
-
-    self.nickname = nickname.strip.squish
-  end
 
   def suspended_until_future
     errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?

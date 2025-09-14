@@ -29,3 +29,6 @@ pre-commit:
     - name: rspec
       glob: "spec/**/*_spec.rb"
       run: "docker-compose exec rails bundle exec rspec {staged_files}"
+    - name: i18n-health
+      glob: "*.yml"
+      run: "bundle exec i18n-tasks health"

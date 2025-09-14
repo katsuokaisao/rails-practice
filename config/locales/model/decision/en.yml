@@ -10,7 +10,7 @@ en:
         note: Note
         report: Report
         report_id: Report ID
-        suspension_until: Suspension Until
+        suspended_until: Suspension Until
         updated_at: Updated At
     models:
       decision: Decision

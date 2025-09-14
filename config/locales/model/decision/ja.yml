@@ -10,7 +10,7 @@ ja:
         note: メモ
         report: 対象通報
         report_id: 通報ID
-        suspension_until: 停止期限
+        suspended_until: 停止期限
         updated_at: 更新日時
     models:
       decision: 審査

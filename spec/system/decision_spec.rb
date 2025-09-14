@@ -55,7 +55,7 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content(user_report_decision.report.target.nickname)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
-      expect(page).to have_content(user_report_decision.suspension_until.strftime('%Y/%m/%d %H:%M'))
+      expect(page).to have_content(user_report_decision.suspended_until.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_content(user_report_decision.decider.nickname)
       expect(page).to have_content(user_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end

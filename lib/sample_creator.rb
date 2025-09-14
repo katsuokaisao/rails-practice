@@ -64,7 +64,7 @@ class SampleCreator
 
   def create_reports
     comments = Comment.eager_load(:author).to_a
-    users = User.where(suspended_until: false).last(5)
+    users = User.where(suspended_until: nil).last(5)
     500.times do
       type = %w[Comment User].sample
       case type

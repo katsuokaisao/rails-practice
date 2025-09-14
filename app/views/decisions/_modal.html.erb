@@ -82,8 +82,8 @@
         </div>
 
         <div class="form-group suspension-period" style="display: none;" data-decisions-target="suspensionPeriod">
-          <%= f.label :suspension_until %>
-          <%= f.datetime_field :suspension_until, class: 'form-control', data: { decisions_target: "suspensionUntilInput" } %>
+          <%= f.label :suspended_until %>
+          <%= f.datetime_field :suspended_until, class: 'form-control', data: { decisions_target: "suspensionUntilInput" } %>
           <div class="suspension-presets">
             <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1"><%= t('.1_day') %></button>
             <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3"><%= t('.3_days') %></button>

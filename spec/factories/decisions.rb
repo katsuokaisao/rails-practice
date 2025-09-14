@@ -8,7 +8,7 @@
 #  decided_by                                                        :bigint           not null
 #  decision_type((enum: 'reject' | 'hide_comment' | 'suspend_user')) :string(255)      not null
 #  note                                                              :text(65535)
-#  suspension_until                                                  :datetime
+#  suspended_until                                                   :datetime
 #  created_at                                                        :datetime         not null
 #  report_id                                                         :bigint           not null
 #
@@ -41,7 +41,7 @@ FactoryBot.define do
     after(:build) do |decision|
       if decision.decision_type == 'suspend_user'
         suspension_days = [7, 14, 30, 90].sample
-        decision.suspension_until = Time.current + suspension_days.days
+        decision.suspended_until = Time.current + suspension_days.days
       end
     end
 
@@ -63,7 +63,7 @@ FactoryBot.define do
 
     trait :suspend_user do
       decision_type { 'suspend_user' }
-      suspension_until { [7, 14, 30, 90].sample.days.from_now }
+      suspended_until { [7, 14, 30, 90].sample.days.from_now }
 
       after(:build) do |decision|
         decision.report = create(:report, :for_user)

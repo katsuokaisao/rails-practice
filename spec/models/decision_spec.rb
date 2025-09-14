@@ -8,7 +8,7 @@
 #  decided_by                                                        :bigint           not null
 #  decision_type((enum: 'reject' | 'hide_comment' | 'suspend_user')) :string(255)      not null
 #  note                                                              :text(65535)
-#  suspension_until                                                  :datetime
+#  suspended_until                                                   :datetime
 #  created_at                                                        :datetime         not null
 #  report_id                                                         :bigint           not null
 #
@@ -130,12 +130,12 @@ RSpec.describe Decision, type: :model do
               report: report,
               decider: moderator,
               decision_type: 'suspend_user',
-              suspension_until: nil)
+              suspended_until: nil)
       end
 
       it 'レコードが保存され、ユーザーが一時停止されること' do
-        suspension_until = 7.days.from_now
-        decision.suspension_until = suspension_until
+        suspended_until = 7.days.from_now
+        decision.suspended_until = suspended_until
 
         user = report.target
         expect(user).not_to be_suspended
@@ -147,15 +147,15 @@ RSpec.describe Decision, type: :model do
 
         expect(decision).to be_persisted
         expect(user.reload).to be_suspended
-        expect(user.suspended_until).to be_within(1.second).of(suspension_until)
+        expect(user.suspended_until).to be_within(1.second).of(suspended_until)
       end
 
       context '類似の通報がある場合' do
         let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
 
         it '類似の通報に同じ決定が適用されること' do
-          suspension_until = 7.days.from_now
-          decision.suspension_until = suspension_until
+          suspended_until = 7.days.from_now
+          decision.suspended_until = suspended_until
           expect do
             decision.execute!
           end.to change(described_class, :count).by(2)
@@ -164,7 +164,7 @@ RSpec.describe Decision, type: :model do
           expect(similar_decision).to be_present
           expect(similar_decision.decision_type).to eq('suspend_user')
           expect(similar_decision.decider).to eq(moderator)
-          expect(similar_decision.suspension_until).to be_within(1.second).of(suspension_until)
+          expect(similar_decision.suspended_until).to be_within(1.second).of(suspended_until)
         end
       end
     end

@@ -7,7 +7,7 @@
       <th><%= t('activerecord.attributes.report.target_user') %></th>
       <th><%= t('activerecord.attributes.decision.decision_type') %></th>
       <th><%= t('activerecord.attributes.decision.note') %></th>
-      <th><%= t('activerecord.attributes.decision.suspension_until') %></th>
+      <th><%= t('activerecord.attributes.decision.suspended_until') %></th>
       <th><%= t('activerecord.attributes.decision.decided_by') %></th>
       <th><%= t('activerecord.attributes.decision.created_at') %></th>
     </tr>
@@ -21,7 +21,7 @@
         <td><%= decision.report.target.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= decision.note %></td>
-        <td><%= decision.suspension_until.present? ? l(decision.suspension_until, format: :default) : '-' %></td>
+        <td><%= decision.suspended_until.present? ? l(decision.suspended_until, format: :default) : '-' %></td>
         <td><%= decision.decider.nickname %></td>
         <td><%= l(decision.created_at, format: :default) %></td>
       </tr>

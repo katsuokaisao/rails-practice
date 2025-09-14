@@ -8,7 +8,7 @@
 #  decided_by                                                        :bigint           not null
 #  decision_type((enum: 'reject' | 'hide_comment' | 'suspend_user')) :string(255)      not null
 #  note                                                              :text(65535)
-#  suspension_until                                                  :datetime
+#  suspended_until                                                   :datetime
 #  created_at                                                        :datetime         not null
 #  report_id                                                         :bigint           not null
 #
@@ -31,10 +31,10 @@ class Decision < ApplicationRecord
   validates :report_id, uniqueness: true
   validates :note, length: { maximum: 2000 }, allow_blank: true
 
-  validate :suspension_until_must_match_decision_type
+  validate :suspended_until_must_match_decision_type
   validate :target_type_must_be_comment_report, if: :decision_type_hide_comment?
   validate :target_type_must_be_user_report, if: :decision_type_suspend_user?
-  validate :suspension_until_future, if: -> { suspension_until.present? && decision_type_suspend_user? }
+  validate :suspended_until_future, if: -> { suspended_until.present? && decision_type_suspend_user? }
 
   def execute!
     ActiveRecord::Base.transaction do
@@ -67,7 +67,7 @@ class Decision < ApplicationRecord
         decision_type: decision_type,
         note: auto_note,
         decider: decider,
-        suspension_until: decision_type_suspend_user? ? suspension_until : nil
+        suspended_until: decision_type_suspend_user? ? suspended_until : nil
       )
     end
   end
@@ -84,15 +84,15 @@ class Decision < ApplicationRecord
     errors.add(:report, :invalid_for_user_report) if report && report.target_type != 'User'
   end
 
-  def suspension_until_future
-    errors.add(:suspension_until, :must_be_in_future) unless suspension_until.future?
+  def suspended_until_future
+    errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
   end
 
-  def suspension_until_must_match_decision_type
+  def suspended_until_must_match_decision_type
     if decision_type_suspend_user?
-      errors.add(:suspension_until, :blank) if suspension_until.blank?
+      errors.add(:suspended_until, :blank) if suspended_until.blank?
     elsif decision_type_hide_comment?
-      errors.add(:suspension_until, :present) if suspension_until.present?
+      errors.add(:suspended_until, :present) if suspended_until.present?
     end
   end
 end

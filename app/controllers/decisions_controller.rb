@@ -23,7 +23,7 @@ class DecisionsController < ApplicationController
   end
 
   def create
-    @decision.assign_attributes(decision_params.slice(:decision_type, :note, :suspension_until))
+    @decision.assign_attributes(decision_params.slice(:decision_type, :note, :suspended_until))
 
     begin
       @decision.execute!
@@ -46,7 +46,7 @@ class DecisionsController < ApplicationController
   end
 
   def decision_params
-    params.expect(decision: %i[report_id decision_type note suspension_until])
+    params.expect(decision: %i[report_id decision_type note suspended_until])
   end
 
   def target_type

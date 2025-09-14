@@ -41,6 +41,7 @@ class User < ApplicationRecord
   validates :nickname, presence: true, uniqueness: true,
                        length: { minimum: NICKNAME_MIN_LENGTH, maximum: NICKNAME_MAX_LENGTH, allow_blank: true }
   validates :time_zone, presence: true, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }
+  validate :suspended_until_future, if: -> { suspended_until.present? }
 
   # user sign up: password, password_confirmation
   # user account update: current_password, password, password_confirmation
@@ -51,7 +52,7 @@ class User < ApplicationRecord
   end
 
   def apply_decision!(decision)
-    suspend!(decision.suspension_until)
+    suspend!(decision.suspended_until)
   end
 
   def suspend!(suspended_until)
@@ -84,5 +85,9 @@ class User < ApplicationRecord
     return if nickname.nil?
 
     self.nickname = nickname.strip.squish
+  end
+
+  def suspended_until_future
+    errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
   end
 end

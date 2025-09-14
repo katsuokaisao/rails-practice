@@ -143,11 +143,11 @@ RSpec.describe Decision, type: :model do
         expect do
           decision.execute!
         end.to change(described_class, :count).by(1)
-          .and change(SuspendUser, :count).by(1)
+          .and(change { user.reload.suspended? }.from(false).to(true))
 
         expect(decision).to be_persisted
         expect(user.reload).to be_suspended
-        expect(user.suspend_user.suspended_until).to be_within(1.second).of(suspension_until)
+        expect(user.suspended_until).to be_within(1.second).of(suspension_until)
       end
 
       context '類似の通報がある場合' do

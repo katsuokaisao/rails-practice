@@ -11,6 +11,7 @@
 #  id                 :bigint           not null, primary key
 #  encrypted_password :string(255)      not null
 #  nickname           :string(255)      not null
+#  suspended_until    :datetime
 #  time_zone          :string(255)      default("Tokyo"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
@@ -34,7 +35,6 @@ class User < ApplicationRecord
   has_many :received_reports, class_name: 'Report', as: :target,
                               dependent: :restrict_with_error
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
-  has_one :suspend_user, dependent: :restrict_with_error, inverse_of: :user
 
   before_validation :normalize_nickname
 
@@ -55,27 +55,23 @@ class User < ApplicationRecord
   end
 
   def suspend!(suspended_until)
-    record = suspend_user || build_suspend_user
-    record.with_lock do
-      record.suspended_until = suspended_until
-      record.save!
-    end
+    update!(suspended_until: suspended_until)
   end
 
   def suspended?
-    suspend_user.present? && suspend_user.suspended_until.future?
+    suspended_until.present? && suspended_until.future?
   end
 
   def suspended_until_date
     return unless suspended?
 
-    suspend_user.suspended_until.to_date
+    suspended_until.to_date
   end
 
   def enforce_release_suspension!
     return unless suspended?
 
-    suspend_user.destroy!
+    update!(suspended_until: nil)
   end
 
   private

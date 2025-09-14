@@ -28,8 +28,8 @@ class SampleCreator
   end
 
   def create_suspend_users
-    User.last(5).each do |user|
-      FactoryBot.create(:suspend_user, user: user)
+    5.times do
+      FactoryBot.create(:user, :suspended)
     end
   end
 
@@ -64,7 +64,7 @@ class SampleCreator
 
   def create_reports
     comments = Comment.eager_load(:author).to_a
-    users = User.last(5)
+    users = User.where(suspended_until: false).last(5)
     500.times do
       type = %w[Comment User].sample
       case type
@@ -93,7 +93,6 @@ class SampleCreator
 
   def put_records
     puts_users
-    puts_suspend_users
     puts_moderators
     puts_topics
     puts_comments
@@ -104,13 +103,7 @@ class SampleCreator
 
   def puts_users
     User.find_each do |user|
-      puts "User: #{user.nickname}"
-    end
-  end
-
-  def puts_suspend_users
-    SuspendUser.find_each do |suspend_user|
-      puts "SuspendUser: #{suspend_user.user.nickname}, Suspended Until: #{suspend_user.suspended_until}"
+      puts "User: #{user.nickname}, Suspended: #{user.suspended? ? 'Yes' : 'No'}"
     end
   end
 

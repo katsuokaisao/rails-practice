@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
+  REPORTABLE_TYPE_MAP = Report::REPORTABLE_CLASSES.index_by { |k| k.name.downcase }.freeze
+
   before_action :set_topic, only: %i[new create]
   before_action :set_report, only: %i[new create]
   before_action -> { authorize_action!(@report) }
@@ -53,13 +55,12 @@ class ReportsController < ApplicationController
   def reports
     reports = Report.where(reportable_type: reportable_type)
                   .where.missing(:decision)
+                  .includes(:reporter, :reportable)
                   .order(created_at: :desc)
 
     case reportable_type
     when 'comment'
-      reports = reports.includes(:reporter, reportable: %i[topic author])
-    when 'user'
-      reports = reports.includes(:reporter, :reportable)
+      reports = reports.includes(reportable: %i[topic author])
     end
 
     reports
@@ -67,7 +68,7 @@ class ReportsController < ApplicationController
 
   def reportable_type
     params[:reportable_type] ||= 'comment'
-    params[:reportable_type].presence_in(%w[comment user]) ||
+    params[:reportable_type].presence_in(REPORTABLE_TYPE_MAP) ||
       raise(ActionController::BadRequest, "invalid reportable_type: #{params[:reportable_type]}")
   end
 
@@ -76,17 +77,10 @@ class ReportsController < ApplicationController
   end
 
   def set_report
+    klass = REPORTABLE_TYPE_MAP[reportable_type]
     @report = current_user.reports.build(
-      reportable_type: report_params[:reportable_type]
+      reportable: klass.find(report_params[:reportable_id])
     )
-    case report_params[:reportable_type]
-    when 'comment'
-      @comment = Comment.find(report_params[:reportable_id])
-      @report.reportable = @comment
-    when 'user'
-      @user = User.find(report_params[:reportable_id])
-      @report.reportable = @user
-    end
   end
 
   def report_params

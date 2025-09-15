@@ -26,7 +26,6 @@ FactoryBot.define do
     reason_text { Faker::Lorem.paragraph }
 
     trait :for_user do
-      reportable_type { 'User' }
       association :reportable, factory: :user
 
       # reporter と reportable_user の衝突回避
@@ -36,7 +35,6 @@ FactoryBot.define do
     end
 
     trait :for_comment do
-      reportable_type { 'Comment' }
       association :reportable, factory: :comment
 
       after(:build) do |report|

@@ -45,7 +45,7 @@ RSpec.describe Decision, type: :model do
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'User') }
+          let!(:similar_report) { create(:report, reportable: report.reportable) }
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
@@ -74,7 +74,7 @@ RSpec.describe Decision, type: :model do
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
+          let!(:similar_report) { create(:report, reportable: report.reportable) }
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
@@ -108,7 +108,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
+        let!(:similar_report) { create(:report, reportable: report.reportable) }
 
         it '類似の通報に同じ決定が適用されること' do
           expect do
@@ -151,7 +151,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'User') }
+        let!(:similar_report) { create(:report, reportable: report.reportable) }
 
         it '類似の通報に同じ決定が適用されること' do
           suspended_until = 7.days.from_now
@@ -210,7 +210,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context 'apply_decision_for_similar_reports! が失敗した場合' do
-        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
+        let!(:similar_report) { create(:report, reportable: report.reportable) }
 
         before do
           allow(decision).to receive(:apply_decision_for_similar_reports!).and_raise(StandardError.new('伝播エラー'))

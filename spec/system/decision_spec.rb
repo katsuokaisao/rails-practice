@@ -9,10 +9,10 @@ RSpec.describe '審査', type: :system do
   let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, author: reported_user, content: '報告対象コメント') }
   let!(:comment_report) do
-    create(:report, reportable_type: 'comment', reportable: comment, reporter: user, reason_type: 'spam')
+    create(:report, reportable: comment, reporter: user, reason_type: 'spam')
   end
   let!(:user_report) do
-    create(:report, reportable_type: 'user', reportable: reported_user, reporter: user, reason_type: 'harassment')
+    create(:report, reportable: reported_user, reporter: user, reason_type: 'harassment')
   end
   let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, decider: moderator) }
   let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, decider: moderator) }

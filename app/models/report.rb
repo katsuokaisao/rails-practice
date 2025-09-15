@@ -20,6 +20,9 @@
 #  idx_reports_reporter_id                    (reporter_id)
 #
 class Report < ApplicationRecord
+  REPORTABLE_CLASSES = [Comment, User].freeze
+  REPORTABLE_TYPES   = REPORTABLE_CLASSES.map(&:name).freeze
+
   belongs_to :reporter, class_name: 'User'
   belongs_to :reportable, polymorphic: true, optional: true
   has_one :decision, dependent: :restrict_with_error
@@ -28,7 +31,7 @@ class Report < ApplicationRecord
     where(reportable: report.reportable).where.not(id: report.id)
   }
 
-  validates :reportable_type, presence: true, inclusion: { in: %w[Comment User] }
+  validates :reportable_type, presence: true, inclusion: { in: REPORTABLE_TYPES }
   validates :reason_type, presence: true
   validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true
   validate :reportable_presence

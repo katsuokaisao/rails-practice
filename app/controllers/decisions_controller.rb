@@ -56,26 +56,26 @@ class DecisionsController < ApplicationController
   end
 
   def decisions
+    base = Decision.includes(:decider, report: %i[reporter reportable])
+                    .joins(:report).where(reports: { reportable_type: reportable_type })
     decisions = case reportable_type
                 when 'comment'
-                  Decision.includes(:decider, report: [:reporter, { reportable: %i[topic author] }])
-                          .joins(:report).where(reports: { reportable_type: reportable_type })
+                  base.includes(report: { reportable: %i[topic author] })
                 when 'user'
-                  Decision.includes(:decider, { report: %i[reporter reportable] })
-                          .joins(:report).where(reports: { reportable_type: reportable_type })
+                  base
                 end
     decisions.order(created_at: :desc)
   end
 
   def redirect_to_reports_page
     flash[:notice] = t('flash.actions.create.notice', resource: Decision.model_name.human)
-    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
+    redirect_to reports_path(reportable_type: reportable_type)
   end
 
   def handle_concurrent_modification
     flash[:alert] = t('flash.actions.create.alert', resource: Decision.model_name.human)
     flash[:alert] << t('flash.actions.conflict')
-    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
+    redirect_to reports_path(reportable_type: reportable_type)
   end
 
   def handle_invalid_record(exception)

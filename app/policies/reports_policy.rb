@@ -19,8 +19,8 @@ class ReportsPolicy < ApplicationPolicy
   end
 
   def report_owner?(report)
-    return report.reportable&.author_id == user.id if report.reportable_type == 'comment'
-    return report.reportable&.id == user.id if report.reportable_type == 'user'
+    return report.reportable&.author_id == user.id if report.reportable_type_comment?
+    return report.reportable&.id == user.id if report.reportable_type_user?
 
     false
   end

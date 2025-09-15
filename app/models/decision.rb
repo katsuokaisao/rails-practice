@@ -31,9 +31,8 @@ class Decision < ApplicationRecord
   validates :report_id, uniqueness: true
   validates :note, length: { maximum: 2000 }, allow_blank: true
 
+  validate :reportable_type_must_match_decision_type
   validate :suspended_until_must_match_decision_type
-  validate :reportable_type_must_be_comment_report, if: :decision_type_hide_comment?
-  validate :reportable_type_must_be_user_report, if: :decision_type_suspend_user?
   validate :suspended_until_future, if: -> { suspended_until.present? && decision_type_suspend_user? }
 
   def execute!
@@ -76,12 +75,12 @@ class Decision < ApplicationRecord
     "自動作成: 関連する通報 ##{report.id} の審査結果に基づく"
   end
 
-  def reportable_type_must_be_comment_report
-    errors.add(:report, :invalid_for_comment_report) if report && report.reportable_type != 'Comment'
-  end
-
-  def reportable_type_must_be_user_report
-    errors.add(:report, :invalid_for_user_report) if report && report.reportable_type != 'User'
+  def reportable_type_must_match_decision_type
+    if decision_type_hide_comment? && !report.reportable_type_comment?
+      errors.add(:report, :invalid_for_comment_report)
+    elsif decision_type_suspend_user? && !report.reportable_type_user?
+      errors.add(:report, :invalid_for_user_report)
+    end
   end
 
   def suspended_until_future
@@ -91,6 +90,7 @@ class Decision < ApplicationRecord
   def suspended_until_must_match_decision_type
     if decision_type_suspend_user?
       errors.add(:suspended_until, :blank) if suspended_until.blank?
+      errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
     elsif decision_type_hide_comment?
       errors.add(:suspended_until, :present) if suspended_until.present?
     end

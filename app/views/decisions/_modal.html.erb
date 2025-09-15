@@ -33,7 +33,7 @@
             <th><%= t('activerecord.attributes.report.reason_text') %></th>
             <td><%= report.reason_text %></td>
           </tr>
-          <% if report.reportable_type == 'Comment' %>
+          <% if report.reportable_type_comment? %>
             <tr>
               <th><%= t('activerecord.attributes.topic.title') %></th>
               <td><%= report.reportable.topic.title %></td>
@@ -46,7 +46,7 @@
               <th><%= t('.comment_author_nickname') %></th>
               <td><%= report.reportable.author.nickname %></td>
             </tr>
-          <% elsif report.reportable_type == 'User' %>
+          <% elsif report.reportable_type_user? %>
             <tr>
               <th><%= t('.reportable_user_nickname') %></th>
               <td><%= report.reportable.nickname %></td>
@@ -69,8 +69,8 @@
           <%= f.select :decision_type,
                       options_for_select([
                         [t('.reject'), 'reject'],
-                        report.reportable_type == 'Comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
-                        report.reportable_type == 'User' ? [t('.suspend_user'), 'suspend_user'] : nil
+                        report.reportable_type_comment? ? [t('.hide_comment'), 'hide_comment'] : nil,
+                        report.reportable_type_user? ? [t('.suspend_user'), 'suspend_user'] : nil
                       ].compact),
                       { include_blank: t("action.select") },
                       { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>

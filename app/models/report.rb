@@ -22,6 +22,10 @@
 class Report < ApplicationRecord
   REPORTABLE_CLASSES = [Comment, User].freeze
 
+  POLYMORPHIC_FLAG_ASSOC_NAME = :reportable
+  POLYMORPHIC_FLAG_CLASSES = REPORTABLE_CLASSES
+  include PolymorphicTypeCheck
+
   belongs_to :reporter, class_name: 'User'
   belongs_to :reportable, polymorphic: true, optional: true
   has_one :decision, dependent: :restrict_with_error

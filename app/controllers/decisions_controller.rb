@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class DecisionsController < ApplicationController
+  before_action :set_default_reportable_type, only: :index
   before_action :set_report, only: %i[new create]
   before_action :build_decision, only: %i[new create]
   before_action -> { authorize_action!(@decision) }
@@ -37,6 +38,10 @@ class DecisionsController < ApplicationController
 
   private
 
+  def set_default_reportable_type
+    params[:reportable_type] ||= 'comment'
+  end
+
   def set_report
     @report = Report.find(params[:report_id] || decision_params[:report_id])
   end
@@ -50,7 +55,6 @@ class DecisionsController < ApplicationController
   end
 
   def reportable_type
-    params[:reportable_type] ||= 'comment'
     params[:reportable_type].presence_in(%w[comment user]) ||
       raise(ActionController::BadRequest, "invalid reportable_type: #{params[:reportable_type]}")
   end
@@ -69,13 +73,13 @@ class DecisionsController < ApplicationController
 
   def redirect_to_reports_page
     flash[:notice] = t('flash.actions.create.notice', resource: Decision.model_name.human)
-    redirect_to reports_path(reportable_type: reportable_type)
+    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
   end
 
   def handle_concurrent_modification
     flash[:alert] = t('flash.actions.create.alert', resource: Decision.model_name.human)
     flash[:alert] << t('flash.actions.conflict')
-    redirect_to reports_path(reportable_type: reportable_type)
+    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
   end
 
   def handle_invalid_record(exception)

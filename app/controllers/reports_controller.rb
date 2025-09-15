@@ -3,6 +3,7 @@
 class ReportsController < ApplicationController
   REPORTABLE_TYPE_MAP = Report::REPORTABLE_CLASSES.index_by { |k| k.name.downcase }.freeze
 
+  before_action :set_default_reportable_type, only: :index
   before_action :set_topic, only: %i[new create]
   before_action :set_report, only: %i[new create]
   before_action -> { authorize_action!(@report) }
@@ -30,10 +31,7 @@ class ReportsController < ApplicationController
   end
 
   def create
-    @report.assign_attributes(
-      reason_type: report_params[:report][:reason_type],
-      reason_text: report_params[:report][:reason_text]
-    )
+    @report.assign_attributes(create_params)
 
     if @report.save
       respond_to do |format|
@@ -67,9 +65,12 @@ class ReportsController < ApplicationController
   end
 
   def reportable_type
-    params[:reportable_type] ||= 'comment'
     params[:reportable_type].presence_in(REPORTABLE_TYPE_MAP) ||
       raise(ActionController::BadRequest, "invalid reportable_type: #{params[:reportable_type]}")
+  end
+
+  def set_default_reportable_type
+    params[:reportable_type] ||= 'comment'
   end
 
   def set_topic
@@ -84,11 +85,10 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.permit(
-      :reportable_type,
-      :reportable_id,
-      :from_topic_id,
-      report: %i[reason_type reason_text]
-    )
+    params.permit(:reportable_type, :reportable_id, :from_topic_id)
+  end
+
+  def create_params
+    params.expect(report: %i[reason_type reason_text])
   end
 end

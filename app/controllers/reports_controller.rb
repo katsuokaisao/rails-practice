@@ -78,7 +78,7 @@ class ReportsController < ApplicationController
 
   def set_report
     klass = REPORTABLE_TYPE_MAP[reportable_type]
-    @report = current_user.reports.build(
+    @report = current_user.authored_reports.build(
       reportable: klass.find(report_params[:reportable_id])
     )
   end

@@ -22,12 +22,11 @@
 #
 class User < ApplicationRecord
   include AuthenticatableAccount
+  include Reportable
 
   has_many :topics, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
-  has_many :reports, class_name: 'Report', foreign_key: 'reporter_id',
-                     dependent: :restrict_with_error, inverse_of: :reporter
-  has_many :received_reports, class_name: 'Report', as: :reportable,
-                              dependent: :restrict_with_error
+  has_many :authored_reports, class_name: 'Report', foreign_key: 'reporter_id',
+                              dependent: :restrict_with_error, inverse_of: :reporter
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
 
   validate :suspended_until_future, if: -> { suspended_until.present? }

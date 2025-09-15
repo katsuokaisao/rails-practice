@@ -24,10 +24,9 @@ class Report < ApplicationRecord
   belongs_to :reportable, polymorphic: true, optional: true
   has_one :decision, dependent: :restrict_with_error
 
-  scope :same_reportable_as, lambda { |reportable_id, reportable_type|
-    where(reportable_type: reportable_type, reportable_id: reportable_id)
+  scope :similar_reports, lambda { |report|
+    where(reportable: report.reportable).where.not(id: report.id)
   }
-  scope :without_report, ->(report) { where.not(id: report.id) }
 
   validates :reportable_type, presence: true, inclusion: { in: %w[Comment User] }
   validates :reason_type, presence: true

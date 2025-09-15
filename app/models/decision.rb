@@ -49,7 +49,7 @@ class Decision < ApplicationRecord
   end
 
   def similar_reports
-    Report.same_reportable_as(report.reportable_id, report.reportable_type).without_report(report)
+    Report.similar_reports(report)
   end
 
   private

@@ -33,7 +33,6 @@ class Decision < ApplicationRecord
 
   validate :reportable_type_must_match_decision_type
   validate :suspended_until_must_match_decision_type
-  validate :suspended_until_future, if: -> { suspended_until.present? && decision_type_suspend_user? }
 
   def execute!
     ActiveRecord::Base.transaction do
@@ -81,10 +80,6 @@ class Decision < ApplicationRecord
     elsif decision_type_suspend_user? && !report.reportable_type_user?
       errors.add(:report, :invalid_for_user_report)
     end
-  end
-
-  def suspended_until_future
-    errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
   end
 
   def suspended_until_must_match_decision_type

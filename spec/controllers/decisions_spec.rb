@@ -8,7 +8,7 @@ RSpec.describe 'Decisions', type: :request do
     let(:other_moderator) { create(:moderator) }
     let(:comment) { create(:comment) }
     let(:report) do
-      create(:report, :for_comment, target: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+      create(:report, :for_comment, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
     end
 
     # リクエストレベルの重複であって、DBレベルの重複テストではないことに注意
@@ -24,7 +24,7 @@ RSpec.describe 'Decisions', type: :request do
           }
         }, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
-        expect(response).to redirect_to(reports_path(target_type: report.target_type.downcase))
+        expect(response).to redirect_to(reports_path(reportable_type: report.reportable_type.downcase))
         expect(flash[:notice]).to eq(I18n.t('flash.actions.create.notice', resource: Decision.model_name.human))
 
         logout moderator

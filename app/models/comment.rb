@@ -32,7 +32,7 @@ class Comment < ApplicationRecord
   counter_culture :topic, column_name: 'total_comment'
 
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
-  has_many :reports, class_name: 'Report', as: :target,
+  has_many :reports, class_name: 'Report', as: :reportable,
                      dependent: :restrict_with_error
 
   validates :content, presence: true, length: { maximum: 5000 }

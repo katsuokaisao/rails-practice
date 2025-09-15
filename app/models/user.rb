@@ -26,7 +26,7 @@ class User < ApplicationRecord
   has_many :topics, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :reports, class_name: 'Report', foreign_key: 'reporter_id',
                      dependent: :restrict_with_error, inverse_of: :reporter
-  has_many :received_reports, class_name: 'Report', as: :target,
+  has_many :received_reports, class_name: 'Report', as: :reportable,
                               dependent: :restrict_with_error
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
 

@@ -10,10 +10,10 @@ en:
       hide_comment: Hide Comment
       reject: Reject
       report_detail: Report Details
+      reportable_user_nickname: Reportable User
       reported_at: Reported At
       reporter_nickname: Reporter
       suspend_user: Suspend User
-      target_user_nickname: Target User
       title: Decision
     tabs:
       comment_decisions_title: Comment Report Decisions

@@ -6,7 +6,7 @@ class DecisionsController < ApplicationController
   before_action -> { authorize_action!(@decision) }
 
   def index
-    @current_tab = target_type
+    @current_tab = reportable_type
 
     @pagination = Pagination::Paginator.new(
       relation: decisions, page: params[:page], per: params[:per]
@@ -49,33 +49,33 @@ class DecisionsController < ApplicationController
     params.expect(decision: %i[report_id decision_type note suspended_until])
   end
 
-  def target_type
-    params[:target_type] ||= 'comment'
-    params[:target_type].presence_in(%w[comment user]) ||
-      raise(ActionController::BadRequest, "invalid target_type: #{params[:target_type]}")
+  def reportable_type
+    params[:reportable_type] ||= 'comment'
+    params[:reportable_type].presence_in(%w[comment user]) ||
+      raise(ActionController::BadRequest, "invalid reportable_type: #{params[:reportable_type]}")
   end
 
   def decisions
-    decisions = case target_type
+    decisions = case reportable_type
                 when 'comment'
-                  Decision.includes(:decider, report: [:reporter, { target: %i[topic author] }])
-                          .joins(:report).where(reports: { target_type: target_type })
+                  Decision.includes(:decider, report: [:reporter, { reportable: %i[topic author] }])
+                          .joins(:report).where(reports: { reportable_type: reportable_type })
                 when 'user'
-                  Decision.includes(:decider, { report: %i[reporter target] })
-                          .joins(:report).where(reports: { target_type: target_type })
+                  Decision.includes(:decider, { report: %i[reporter reportable] })
+                          .joins(:report).where(reports: { reportable_type: reportable_type })
                 end
     decisions.order(created_at: :desc)
   end
 
   def redirect_to_reports_page
     flash[:notice] = t('flash.actions.create.notice', resource: Decision.model_name.human)
-    redirect_to reports_path(target_type: @report.target_type.downcase)
+    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
   end
 
   def handle_concurrent_modification
     flash[:alert] = t('flash.actions.create.alert', resource: Decision.model_name.human)
     flash[:alert] << t('flash.actions.conflict')
-    redirect_to reports_path(target_type: @report.target_type.downcase)
+    redirect_to reports_path(reportable_type: @report.reportable_type.downcase)
   end
 
   def handle_invalid_record(exception)

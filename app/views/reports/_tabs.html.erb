@@ -2,11 +2,11 @@
   <ul class="tabs-list">
     <li class="<%= current_tab == 'comment' ? 'active' : '' %>">
       <%= link_to t('.comment_reports_title'),
-                  reports_path(target_type: 'comment') %>
+                  reports_path(reportable_type: 'comment') %>
     </li>
     <li class="<%= current_tab == 'user' ? 'active' : '' %>">
       <%= link_to t('.user_reports_title'),
-                  reports_path(target_type: 'user') %>
+                  reports_path(reportable_type: 'user') %>
     </li>
   </ul>
 </div>

@@ -6,7 +6,7 @@ class ReportsController < ApplicationController
   before_action -> { authorize_action!(@report) }
 
   def index
-    @current_tab = target_type
+    @current_tab = reportable_type
 
     @pagination = Pagination::Paginator.new(
       relation: reports, page: params[:page], per: params[:per]
@@ -51,24 +51,24 @@ class ReportsController < ApplicationController
   private
 
   def reports
-    reports = Report.where(target_type: target_type)
+    reports = Report.where(reportable_type: reportable_type)
                   .where.missing(:decision)
                   .order(created_at: :desc)
 
-    case target_type
+    case reportable_type
     when 'comment'
-      reports = reports.includes(:reporter, target: %i[topic author])
+      reports = reports.includes(:reporter, reportable: %i[topic author])
     when 'user'
-      reports = reports.includes(:reporter, :target)
+      reports = reports.includes(:reporter, :reportable)
     end
 
     reports
   end
 
-  def target_type
-    params[:target_type] ||= 'comment'
-    params[:target_type].presence_in(%w[comment user]) ||
-      raise(ActionController::BadRequest, "invalid target_type: #{params[:target_type]}")
+  def reportable_type
+    params[:reportable_type] ||= 'comment'
+    params[:reportable_type].presence_in(%w[comment user]) ||
+      raise(ActionController::BadRequest, "invalid reportable_type: #{params[:reportable_type]}")
   end
 
   def set_topic
@@ -77,15 +77,15 @@ class ReportsController < ApplicationController
 
   def set_report
     @report = current_user.reports.build(
-      target_type: report_params[:reportable_type]
+      reportable_type: report_params[:reportable_type]
     )
     case report_params[:reportable_type]
     when 'comment'
       @comment = Comment.find(report_params[:reportable_id])
-      @report.target = @comment
+      @report.reportable = @comment
     when 'user'
       @user = User.find(report_params[:reportable_id])
-      @report.target = @user
+      @report.reportable = @user
     end
   end
 

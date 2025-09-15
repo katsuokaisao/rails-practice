@@ -41,11 +41,11 @@ RSpec.describe Decision, type: :model do
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
-          expect(report.reload.target).not_to be_suspended
+          expect(report.reload.reportable).not_to be_suspended
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
+          let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'User') }
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
@@ -70,11 +70,11 @@ RSpec.describe Decision, type: :model do
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
-          expect(report.reload.target).not_to be_hidden
+          expect(report.reload.reportable).not_to be_hidden
         end
 
         context '類似の通報がある場合' do
-          let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
+          let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
@@ -95,7 +95,7 @@ RSpec.describe Decision, type: :model do
       end
 
       it 'レコードが保存され、コメントが非表示になること' do
-        comment = report.target
+        comment = report.reportable
         expect(comment).not_to be_hidden
 
         expect do
@@ -108,7 +108,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
+        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
 
         it '類似の通報に同じ決定が適用されること' do
           expect do
@@ -137,7 +137,7 @@ RSpec.describe Decision, type: :model do
         suspended_until = 7.days.from_now
         decision.suspended_until = suspended_until
 
-        user = report.target
+        user = report.reportable
         expect(user).not_to be_suspended
 
         expect do
@@ -151,7 +151,7 @@ RSpec.describe Decision, type: :model do
       end
 
       context '類似の通報がある場合' do
-        let!(:similar_report) { create(:report, target: report.target, target_type: 'User') }
+        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'User') }
 
         it '類似の通報に同じ決定が適用されること' do
           suspended_until = 7.days.from_now
@@ -181,7 +181,7 @@ RSpec.describe Decision, type: :model do
         end
 
         it '全体がロールバックされること' do
-          comment = report.target
+          comment = report.reportable
           expect(comment).not_to be_hidden
 
           expect do
@@ -198,7 +198,7 @@ RSpec.describe Decision, type: :model do
         end
 
         it '全体がロールバックされること' do
-          comment = report.target
+          comment = report.reportable
           expect(comment).not_to be_hidden
 
           expect do
@@ -210,14 +210,14 @@ RSpec.describe Decision, type: :model do
       end
 
       context 'apply_decision_for_similar_reports! が失敗した場合' do
-        let!(:similar_report) { create(:report, target: report.target, target_type: 'Comment') }
+        let!(:similar_report) { create(:report, reportable: report.reportable, reportable_type: 'Comment') }
 
         before do
           allow(decision).to receive(:apply_decision_for_similar_reports!).and_raise(StandardError.new('伝播エラー'))
         end
 
         it 'トランザクション内の処理はコミットされること' do
-          comment = report.target
+          comment = report.reportable
           expect(comment).not_to be_hidden
 
           expect do

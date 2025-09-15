@@ -12,6 +12,6 @@ en:
         obscene: Obscene
         other: Other
         spam: Spam
-      target_type:
+      reportable_type:
         Comment: Comment
         User: User

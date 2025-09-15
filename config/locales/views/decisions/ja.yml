@@ -10,10 +10,10 @@ ja:
       hide_comment: コメントを非表示
       reject: 却下
       report_detail: 通報詳細
+      reportable_user_nickname: 通報対象ユーザー
       reported_at: 通報日時
       reporter_nickname: 通報者
       suspend_user: ユーザーを停止
-      target_user_nickname: 対象ユーザー
       title: 審査
     tabs:
       comment_decisions_title: コメント通報審査

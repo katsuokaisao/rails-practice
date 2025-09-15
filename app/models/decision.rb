@@ -32,8 +32,8 @@ class Decision < ApplicationRecord
   validates :note, length: { maximum: 2000 }, allow_blank: true
 
   validate :suspended_until_must_match_decision_type
-  validate :target_type_must_be_comment_report, if: :decision_type_hide_comment?
-  validate :target_type_must_be_user_report, if: :decision_type_suspend_user?
+  validate :reportable_type_must_be_comment_report, if: :decision_type_hide_comment?
+  validate :reportable_type_must_be_user_report, if: :decision_type_suspend_user?
   validate :suspended_until_future, if: -> { suspended_until.present? && decision_type_suspend_user? }
 
   def execute!
@@ -45,17 +45,17 @@ class Decision < ApplicationRecord
   end
 
   def report_type
-    report.target_type
+    report.reportable_type
   end
 
   def similar_reports
-    Report.same_target_as(report.target_id, report.target_type).without_report(report)
+    Report.same_reportable_as(report.reportable_id, report.reportable_type).without_report(report)
   end
 
   private
 
   def apply_decision!
-    report.target.apply_decision!(self)
+    report.reportable.apply_decision!(self)
   end
 
   def apply_decision_for_similar_reports!
@@ -76,12 +76,12 @@ class Decision < ApplicationRecord
     "自動作成: 関連する通報 ##{report.id} の審査結果に基づく"
   end
 
-  def target_type_must_be_comment_report
-    errors.add(:report, :invalid_for_comment_report) if report && report.target_type != 'Comment'
+  def reportable_type_must_be_comment_report
+    errors.add(:report, :invalid_for_comment_report) if report && report.reportable_type != 'Comment'
   end
 
-  def target_type_must_be_user_report
-    errors.add(:report, :invalid_for_user_report) if report && report.target_type != 'User'
+  def reportable_type_must_be_user_report
+    errors.add(:report, :invalid_for_user_report) if report && report.reportable_type != 'User'
   end
 
   def suspended_until_future

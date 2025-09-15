@@ -22,8 +22,8 @@
             <td><%= report.reporter.nickname %></td>
           </tr>
           <tr>
-            <th><%= t('activerecord.attributes.report.target_type') %></th>
-            <td><%= report.enum_i18n("target_type") %></td>
+            <th><%= t('activerecord.attributes.report.reportable_type') %></th>
+            <td><%= report.enum_i18n("reportable_type") %></td>
           </tr>
           <tr>
             <th><%= t('activerecord.attributes.report.reason_type') %></th>
@@ -33,23 +33,23 @@
             <th><%= t('activerecord.attributes.report.reason_text') %></th>
             <td><%= report.reason_text %></td>
           </tr>
-          <% if report.target_type == 'Comment' %>
+          <% if report.reportable_type == 'Comment' %>
             <tr>
               <th><%= t('activerecord.attributes.topic.title') %></th>
-              <td><%= report.target.topic.title %></td>
+              <td><%= report.reportable.topic.title %></td>
             </tr>
             <tr>
               <th><%= t('activerecord.attributes.comment.content') %></th>
-              <td><%= report.target.content %></td>
+              <td><%= report.reportable.content %></td>
             </tr>
             <tr>
               <th><%= t('.comment_author_nickname') %></th>
-              <td><%= report.target.author.nickname %></td>
+              <td><%= report.reportable.author.nickname %></td>
             </tr>
-          <% elsif report.target_type == 'User' %>
+          <% elsif report.reportable_type == 'User' %>
             <tr>
-              <th><%= t('.target_user_nickname') %></th>
-              <td><%= report.target.nickname %></td>
+              <th><%= t('.reportable_user_nickname') %></th>
+              <td><%= report.reportable.nickname %></td>
             </tr>
           <% end %>
           <tr>
@@ -69,8 +69,8 @@
           <%= f.select :decision_type,
                       options_for_select([
                         [t('.reject'), 'reject'],
-                        report.target_type == 'Comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
-                        report.target_type == 'User' ? [t('.suspend_user'), 'suspend_user'] : nil
+                        report.reportable_type == 'Comment' ? [t('.hide_comment'), 'hide_comment'] : nil,
+                        report.reportable_type == 'User' ? [t('.suspend_user'), 'suspend_user'] : nil
                       ].compact),
                       { include_blank: t("action.select") },
                       { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>

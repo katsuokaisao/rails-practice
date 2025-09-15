@@ -27,7 +27,7 @@ FactoryBot.define do
     association :decider, factory: :moderator
 
     decision_type do
-      case report.target_type
+      case report.reportable_type
       when 'Comment'
         %w[reject hide_comment].sample
       when 'User'

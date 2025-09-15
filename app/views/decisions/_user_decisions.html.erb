@@ -4,7 +4,7 @@
       <th><%= t('activerecord.attributes.report.reporter') %></th>
       <th><%= t('activerecord.attributes.report.reason_type') %></th>
       <th><%= t('activerecord.attributes.report.reason_text') %></th>
-      <th><%= t('activerecord.attributes.report.target_user') %></th>
+      <th><%= t('activerecord.attributes.report.reportable_user') %></th>
       <th><%= t('activerecord.attributes.decision.decision_type') %></th>
       <th><%= t('activerecord.attributes.decision.note') %></th>
       <th><%= t('activerecord.attributes.decision.suspended_until') %></th>
@@ -18,7 +18,7 @@
         <td><%= decision.report.reporter.nickname %></td>
         <td><%= decision.report.enum_i18n(:reason_type) %></td>
         <td><%= decision.report.reason_text %></td>
-        <td><%= decision.report.target.nickname %></td>
+        <td><%= decision.report.reportable.nickname %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= decision.note %></td>
         <td><%= decision.suspended_until.present? ? l(decision.suspended_until, format: :default) : '-' %></td>

@@ -148,7 +148,7 @@ RSpec.describe 'コメント', type: :system do
   end
 
   scenario 'ユーザーを停止が解除された後のコメント表示状態の確認' do
-    create(:report, :for_user, target: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
     login_as(moderator, scope: :moderator)
     visit reports_path
 
@@ -179,7 +179,7 @@ RSpec.describe 'コメント', type: :system do
   end
 
   scenario '停止中ユーザーの非表示コメントの状態確認（二重制約の確認）' do
-    create(:report, :for_comment, target: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit reports_path
@@ -192,7 +192,7 @@ RSpec.describe 'コメント', type: :system do
     click_button '確定'
     expect(page).to have_content('審査が作成されました。')
 
-    create(:report, :for_user, target: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
 
     visit reports_path
     click_link 'ユーザー通報'

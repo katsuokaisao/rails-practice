@@ -20,10 +20,10 @@
         <td><%= decision.report.reporter.nickname %></td>
         <td><%= decision.report.enum_i18n(:reason_type) %></td>
         <td><%= decision.report.reason_text %></td>
-        <td><%= decision.report.target.topic.title %></td>
-        <td><%= truncate(decision.report.target.content, length: 500) %></td>
-        <td><%= decision.report.target.author.nickname %></td>
-        <td><%= l(decision.report.target.created_at, format: :default) %></td>
+        <td><%= decision.report.reportable.topic.title %></td>
+        <td><%= truncate(decision.report.reportable.content, length: 500) %></td>
+        <td><%= decision.report.reportable.author.nickname %></td>
+        <td><%= l(decision.report.reportable.created_at, format: :default) %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= truncate(decision.note, length: 100) %></td>
         <td><%= decision.decider.nickname %></td>

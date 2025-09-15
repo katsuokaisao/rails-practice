@@ -12,6 +12,6 @@ ja:
         obscene: わいせつ
         other: その他
         spam: スパム
-      target_type:
+      reportable_type:
         Comment: コメント
         User: ユーザー

@@ -6,10 +6,10 @@ ja:
         created_at: 作成日時
         reason_text: 理由詳細
         reason_type: 理由種別
+        reportable_comment: 通報対象コメント
+        reportable_type: 対象種別
+        reportable_user: 通報対象ユーザー
         reporter: 通報者
-        target_comment: 通報対象コメント
-        target_type: 対象種別
-        target_user: 通報対象ユーザー
         updated_at: 更新日時
     models:
       report: 通報

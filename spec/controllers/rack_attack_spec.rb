@@ -95,8 +95,8 @@ RSpec.describe 'Rack::Attack', type: :request do
     let(:params) do
       {
         report: {
-          target_type: 'Comment',
-          target_id: comment.id,
+          reportable_type: 'Comment',
+          reportable_id: comment.id,
           reason_type: 'harassment',
           reason_text: 'テスト理由'
         }

@@ -4,33 +4,35 @@
 #
 # Table name: reports
 #
-#  id                                      :bigint           not null, primary key
-#  reason_text                             :text(65535)      not null
-#  reason_type                             :string(255)      not null
-#  target_type((enum: 'Comment' | 'User')) :string(255)      not null
-#  created_at                              :datetime         not null
-#  updated_at                              :datetime         not null
-#  reporter_id                             :bigint           not null
-#  target_id                               :bigint
+#  id                                          :bigint           not null, primary key
+#  reason_text                                 :text(65535)      not null
+#  reason_type                                 :string(255)      not null
+#  reportable_type((enum: 'Comment' | 'User')) :string(255)      not null
+#  created_at                                  :datetime         not null
+#  updated_at                                  :datetime         not null
+#  reportable_id                               :bigint
+#  reporter_id                                 :bigint           not null
 #
 # Indexes
 #
-#  idx_reports_reporter_id             (reporter_id)
-#  idx_reports_target                  (target_type,target_id)
-#  idx_reports_target_type_created_at  (target_type,created_at)
+#  idx_reports_reportable_type_created_at     (reportable_type,created_at)
+#  idx_reports_reportable_type_reportable_id  (reportable_type,reportable_id)
+#  idx_reports_reporter_id                    (reporter_id)
 #
 class Report < ApplicationRecord
   belongs_to :reporter, class_name: 'User'
-  belongs_to :target, polymorphic: true, optional: true
+  belongs_to :reportable, polymorphic: true, optional: true
   has_one :decision, dependent: :restrict_with_error
 
-  scope :same_target_as, ->(target_id, target_type) { where(target_type: target_type, target_id: target_id) }
+  scope :same_reportable_as, lambda { |reportable_id, reportable_type|
+    where(reportable_type: reportable_type, reportable_id: reportable_id)
+  }
   scope :without_report, ->(report) { where.not(id: report.id) }
 
-  validates :target_type, presence: true, inclusion: { in: %w[Comment User] }
+  validates :reportable_type, presence: true, inclusion: { in: %w[Comment User] }
   validates :reason_type, presence: true
   validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true
-  validate :target_presence
+  validate :reportable_presence
 
   enum :reason_type,
        { spam: 'spam', harassment: 'harassment', obscene: 'obscene', other: 'other' },
@@ -54,7 +56,7 @@ class Report < ApplicationRecord
 
   private
 
-  def target_presence
-    errors.add(:target, 'must be present') if target.nil?
+  def reportable_presence
+    errors.add(:reportable, 'must be present') if reportable.nil?
   end
 end

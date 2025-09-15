@@ -73,10 +73,10 @@ class SampleCreator
         comment = comments.sample
         next if comment.author == reporter
 
-        FactoryBot.create(:report, :for_comment, reporter: reporter, target: comment)
+        FactoryBot.create(:report, :for_comment, reporter: reporter, reportable: comment)
       when 'User'
-        reporter, target = users.sample(2)
-        FactoryBot.create(:report, :for_user, reporter: reporter, target: target)
+        reporter, reportable_user = users.sample(2)
+        FactoryBot.create(:report, :for_user, reporter: reporter, reportable: reportable_user)
       end
     end
   end
@@ -87,7 +87,7 @@ class SampleCreator
     reports.each do |report|
       moderator = moderators.sample
       decision = FactoryBot.create(:decision, report: report, decider: moderator)
-      report.target.apply_decision!(decision) unless decision.decision_type_reject?
+      report.reportable.apply_decision!(decision) unless decision.decision_type_reject?
     end
   end
 
@@ -143,7 +143,7 @@ class SampleCreator
     Report.take(10).each do |report|
       puts <<~MSG
         Reporter: #{report.reporter.nickname},
-        Target Type: #{report.target_type},
+        Reportable Type: #{report.reportable_type},
         Reason Type: #{report.reason_type},
         Reason Text: #{report.reason_text}
       MSG

@@ -25,7 +25,7 @@
 require 'rails_helper'
 
 RSpec.describe Decision, type: :model do
-  describe '#execute!' do
+  describe '#save!' do
     let(:moderator) { create(:moderator) }
 
     context '通報を却下する場合' do
@@ -37,7 +37,7 @@ RSpec.describe Decision, type: :model do
 
         it 'レコードが保存され、ユーザーが一時停止されていないこと' do
           expect do
-            decision.execute!
+            decision.save!
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
@@ -49,7 +49,7 @@ RSpec.describe Decision, type: :model do
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
-              decision.execute!
+              decision.save!
             end.to change(described_class, :count).by(1)
 
             similar_decision = similar_report.reload.decision
@@ -66,7 +66,7 @@ RSpec.describe Decision, type: :model do
 
         it 'レコードが保存され、コメントが非表示になっていないこと' do
           expect do
-            decision.execute!
+            decision.save!
           end.to change(described_class, :count).by(1)
 
           expect(decision).to be_persisted
@@ -78,7 +78,7 @@ RSpec.describe Decision, type: :model do
 
           it '類似の通報に同じ審査結果が適用されないこと' do
             expect do
-              decision.execute!
+              decision.save!
             end.to change(described_class, :count).by(1)
 
             similar_decision = similar_report.reload.decision
@@ -99,7 +99,7 @@ RSpec.describe Decision, type: :model do
         expect(comment).not_to be_hidden
 
         expect do
-          decision.execute!
+          decision.save!
         end.to change(described_class, :count).by(1)
 
         expect(decision).to be_persisted
@@ -112,7 +112,7 @@ RSpec.describe Decision, type: :model do
 
         it '類似の通報に同じ決定が適用されること' do
           expect do
-            decision.execute!
+            decision.save!
           end.to change(described_class, :count).by(2)
 
           similar_decision = similar_report.reload.decision
@@ -141,7 +141,7 @@ RSpec.describe Decision, type: :model do
         expect(user).not_to be_suspended
 
         expect do
-          decision.execute!
+          decision.save!
         end.to change(described_class, :count).by(1)
           .and(change { user.reload.suspended? }.from(false).to(true))
 
@@ -157,7 +157,7 @@ RSpec.describe Decision, type: :model do
           suspended_until = 7.days.from_now
           decision.suspended_until = suspended_until
           expect do
-            decision.execute!
+            decision.save!
           end.to change(described_class, :count).by(2)
 
           similar_decision = similar_report.reload.decision
@@ -185,7 +185,7 @@ RSpec.describe Decision, type: :model do
           expect(comment).not_to be_hidden
 
           expect do
-            expect { decision.execute! }.to raise_error(ActiveRecord::RecordInvalid)
+            expect { decision.save! }.to raise_error(ActiveRecord::RecordInvalid)
           end.to change(described_class, :count).by(0)
 
           expect(comment.reload).not_to be_hidden
@@ -202,7 +202,7 @@ RSpec.describe Decision, type: :model do
           expect(comment).not_to be_hidden
 
           expect do
-            expect { decision.execute! }.to raise_error(StandardError, '効果適用エラー')
+            expect { decision.save! }.to raise_error(StandardError, '効果適用エラー')
           end.to change(described_class, :count).by(0)
 
           expect(comment.reload).not_to be_hidden
@@ -221,7 +221,7 @@ RSpec.describe Decision, type: :model do
           expect(comment).not_to be_hidden
 
           expect do
-            expect { decision.execute! }.to raise_error(StandardError, '伝播エラー')
+            expect { decision.save! }.to raise_error(StandardError, '伝播エラー')
           end.to change(described_class, :count).by(1)
 
           expect(comment.reload).to be_hidden

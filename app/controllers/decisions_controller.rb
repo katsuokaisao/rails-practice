@@ -27,7 +27,7 @@ class DecisionsController < ApplicationController
     @decision.assign_attributes(decision_params.slice(:decision_type, :note, :suspended_until))
 
     begin
-      @decision.execute!
+      @decision.save!
       redirect_to_reports_page
     rescue ActiveRecord::RecordNotUnique
       handle_concurrent_modification

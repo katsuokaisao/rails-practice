@@ -34,13 +34,8 @@ class Decision < ApplicationRecord
   validate :reportable_type_must_match_decision_type
   validate :suspended_until_must_match_decision_type
 
-  def execute!
-    ActiveRecord::Base.transaction do
-      save!
-      apply_decision! unless decision_type_reject?
-    end
-    apply_decision_for_similar_reports! unless decision_type_reject?
-  end
+  after_create :apply_decision!, unless: :decision_type_reject?
+  after_commit :apply_decision_for_similar_reports!, on: :create, unless: :decision_type_reject?
 
   def report_type
     report.reportable_type

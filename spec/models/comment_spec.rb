@@ -27,7 +27,7 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  describe '.create_with_history!' do
+  describe 'create!' do
     let(:topic) { create(:topic) }
     let(:author) { create(:user) }
     let(:content) { 'テストコメント内容' }
@@ -37,7 +37,7 @@ RSpec.describe Comment, type: :model do
         comment = nil
 
         expect do
-          comment = described_class.create_with_history!(
+          comment = described_class.create!(
             topic: topic,
             author: author,
             content: content
@@ -68,7 +68,7 @@ RSpec.describe Comment, type: :model do
         allow_any_instance_of(CommentHistory).to receive(:save!).and_raise(ActiveRecord::RecordInvalid.new(CommentHistory.new))
 
         expect do
-          described_class.create_with_history!(
+          described_class.create!(
             topic: topic,
             author: author,
             content: content
@@ -90,7 +90,7 @@ RSpec.describe Comment, type: :model do
           threads << Thread.new do
             ActiveRecord::Base.connection_pool.with_connection do
               ActiveRecord::Base.transaction do
-                created_comments << described_class.create_with_history!(
+                created_comments << described_class.create!(
                   topic: topic,
                   author: author,
                   content: content

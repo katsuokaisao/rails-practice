@@ -229,7 +229,7 @@ RSpec.describe 'コメント', type: :system do
     visit topic_path(topic)
     expect(page).to have_content('コメント数: 0件')
 
-    Comment.create_with_history!(
+    Comment.create!(
       topic: topic,
       author: user,
       content: 'テストコメント1'

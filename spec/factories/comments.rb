@@ -33,10 +33,6 @@ FactoryBot.define do
     current_version_no { 1 }
     hidden { false }
 
-    after(:create) do |comment|
-      create(:comment_history, comment: comment)
-    end
-
     trait :short_content do
       content { Faker::Lorem.paragraphs(number: 1).join }
     end

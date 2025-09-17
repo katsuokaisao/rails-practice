@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
   def edit; end
 
   def create
-    @comment = Comment.create_with_history!(
+    @comment = Comment.create!(
       topic: @topic,
       author: current_user,
       content: comment_params[:content]

@@ -45,7 +45,7 @@ class SampleCreator
     users = User.all.to_a
     topics.each do |topic|
       300.times do
-        Comment.create_with_history!(
+        Comment.create!(
           topic: topic,
           author: users.sample,
           content: Faker::Lorem.paragraphs(number: 3).join("\n")

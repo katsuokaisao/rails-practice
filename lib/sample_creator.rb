@@ -84,10 +84,12 @@ class SampleCreator
   def create_decisions
     reports = Report.order(created_at: :asc).limit(200)
     moderators = Moderator.all.to_a
+
     reports.each do |report|
       moderator = moderators.sample
-      decision = FactoryBot.create(:decision, report: report, decider: moderator)
-      report.reportable.apply_decision!(decision) unless decision.decision_type_reject?
+      next if report.reload.reviewed?
+
+      FactoryBot.create(:decision, report: report, decider: moderator)
     end
   end
 

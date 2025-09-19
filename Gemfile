@@ -54,6 +54,7 @@ group :development do
   gem 'rubocop-rspec', require: false
 
   gem 'bullet'
+  gem 'brakeman', require: false
 
   gem 'annotaterb'
 

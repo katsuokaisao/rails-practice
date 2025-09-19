@@ -6,6 +6,7 @@ ja:
     compare: 選択したバージョンを比較
     select: 選択してください
     settle: 確定
+    settle_confirm: 本当に確定しますか？
   activerecord:
     errors:
       messages:

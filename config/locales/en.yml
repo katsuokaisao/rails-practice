@@ -6,6 +6,7 @@ en:
     compare: Compare Selected Versions
     select: Please, select
     settle: Confirm
+    settle_confirm: Are you sure you want to confirm?
   activerecord:
     errors:
       messages:

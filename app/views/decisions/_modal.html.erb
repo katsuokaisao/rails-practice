@@ -93,7 +93,7 @@
         </div>
 
         <div class="form-actions">
-          <%= f.submit t('action.settle'), class: 'btn btn-primary' %>
+          <%= f.submit t('action.settle'), class: 'btn btn-primary', data: { turbo_confirm: t('action.settle_confirm') } %>
           <button type="button" class="btn btn-secondary" data-close-modal-target="closeButton"><%= t('action.cancel') %></button>
         </div>
       <% end %>

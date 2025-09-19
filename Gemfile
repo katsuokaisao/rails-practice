@@ -53,8 +53,8 @@ group :development do
   gem 'rubocop-rails', require: false
   gem 'rubocop-rspec', require: false
 
-  gem 'bullet'
   gem 'brakeman', require: false
+  gem 'bullet'
   gem 'bundler-audit', require: false
 
   gem 'annotaterb'

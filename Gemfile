@@ -55,6 +55,7 @@ group :development do
 
   gem 'bullet'
   gem 'brakeman', require: false
+  gem 'bundler-audit', require: false
 
   gem 'annotaterb'
 

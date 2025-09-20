@@ -20,7 +20,7 @@ module AuthenticatableAccount
 
     # user sign up: password, password_confirmation
     # user account update: current_password, password, password_confirmation
-    with_options if: -> { require_password_validations? } do
+    with_options if: :require_password_validations? do
       validates :password, presence: true, confirmation: true
       validates :password, length: { minimum: PASSWORD_MIN_LENGTH, maximum: PASSWORD_MAX_LENGTH },
                            format: { with: PASSWORD_REGEX }, allow_blank: true

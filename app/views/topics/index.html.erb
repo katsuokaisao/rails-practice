@@ -10,9 +10,7 @@
     </div>
   </div>
   <ul class="topics-list">
-    <% @pagination.records.each do |topic| %>
-      <%= render partial: 'item', locals: { topic: topic } %>
-    <% end %>
+    <%= render partial: 'item', collection: @pagination.records, as: :topic %>
   </ul>
   <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
 </article>

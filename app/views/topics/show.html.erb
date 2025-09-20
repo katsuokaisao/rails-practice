@@ -13,9 +13,7 @@
     <section class="topic-comments">
       <h4><%= t('.comment') %></h4>
       <div id="comment-list" class="comment-list">
-        <% @pagination.records.to_a.reverse.each do |comment| %>
-          <%= render partial: 'comments/comment', locals: { comment: comment } %>
-        <% end %>
+        <%= render partial: 'comments/comment', collection: @pagination.records.to_a.reverse %>
       </div>
       <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
     </section>

@@ -164,7 +164,9 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('審査')
     select '却下', from: '審査種別'
     fill_in 'メモ', with: '審査メモ'
-    click_button '確定'
+    accept_confirm do
+      click_button '確定'
+    end
 
     visit reports_path
     expect(page).not_to have_content(report.reason_text)
@@ -194,7 +196,9 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('審査')
     select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '確定'
+    accept_confirm do
+      click_button '確定'
+    end
     expect(page).to have_content('審査が作成されました。')
     logout
 
@@ -224,7 +228,9 @@ RSpec.describe '通報', type: :system do
 
     select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '確定'
+    accept_confirm do
+      click_button '確定'
+    end
     expect(page).to have_content('審査が作成されました。')
     logout
 

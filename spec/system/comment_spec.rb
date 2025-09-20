@@ -163,7 +163,10 @@ RSpec.describe 'コメント', type: :system do
     select 'ユーザーを停止', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に停止'
     click_button '1日'
-    click_button '確定'
+
+    accept_confirm do
+      click_button '確定'
+    end
     expect(page).to have_content('審査が作成されました。')
     logout
 
@@ -189,7 +192,9 @@ RSpec.describe 'コメント', type: :system do
 
     select 'コメントを非表示', from: '審査種別'
     fill_in 'メモ', with: 'テスト用に非表示'
-    click_button '確定'
+    accept_confirm do
+      click_button '確定'
+    end
     expect(page).to have_content('審査が作成されました。')
 
     create(:report, :for_user, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
@@ -204,7 +209,9 @@ RSpec.describe 'コメント', type: :system do
     select 'ユーザーを停止', from: '審査'
     fill_in 'メモ', with: 'テスト用に停止'
     click_button '1日'
-    click_button '確定'
+    accept_confirm do
+      click_button '確定'
+    end
     expect(page).to have_content('審査が作成されました。')
 
     logout

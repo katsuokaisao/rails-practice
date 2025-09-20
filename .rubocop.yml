@@ -99,3 +99,4 @@ Style/Documentation:
 Rails/SkipsModelValidations:
   AllowedMethods:
     - update_all
+    - insert_all

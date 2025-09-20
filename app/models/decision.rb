@@ -52,16 +52,23 @@ class Decision < ApplicationRecord
   end
 
   def apply_decision_for_similar_reports!
-    similar_reports.each do |similar_report|
-      next if similar_report.reviewed?
+    unreviewed_ids = similar_reports.includes(:decision).reject(&:reviewed?).map!(&:id)
+    return if unreviewed_ids.empty?
 
-      Decision.create!(
-        report: similar_report,
+    now = Time.current
+    decisions_data = unreviewed_ids.map do |rid|
+      {
+        report_id: rid,
         decision_type: decision_type,
         note: auto_note,
-        decider: decider,
-        suspended_until: decision_type_suspend_user? ? suspended_until : nil
-      )
+        decided_by: decider.id,
+        suspended_until: decision_type_suspend_user? ? suspended_until : nil,
+        created_at: now
+      }
+    end
+
+    decisions_data.each_slice(1000) do |slice|
+      Decision.insert_all(slice) # ON DUPLICATE KEY UPDATE `report_id`=`decisions`.`report_id` が付与される
     end
   end
 

@@ -79,8 +79,11 @@ class Decision < ApplicationRecord
 
   def suspended_until_must_match_decision_type
     if decision_type_suspend_user?
-      errors.add(:suspended_until, :blank) if suspended_until.blank?
-      errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
+      if suspended_until.blank?
+        errors.add(:suspended_until, :blank)
+      elsif !suspended_until.future?
+        errors.add(:suspended_until, :must_be_in_future)
+      end
     elsif decision_type_hide_comment?
       errors.add(:suspended_until, :present) if suspended_until.present?
     end

@@ -21,10 +21,9 @@
 #  fk_rails_...  (comment_id => comments.id)
 #
 class CommentHistory < ApplicationRecord
-  belongs_to :comment
-  belongs_to :topic
-  belongs_to :author, class_name: 'User'
+  include CommentSharedBehavior
 
-  validates :content, presence: true, length: { maximum: 5000 }
+  belongs_to :comment
+
   validates :version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
 end

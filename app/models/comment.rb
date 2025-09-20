@@ -26,13 +26,11 @@
 #
 class Comment < ApplicationRecord
   include Reportable
+  include CommentSharedBehavior
 
-  belongs_to :topic
-  belongs_to :author, class_name: 'User'
   belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
 
-  validates :content, presence: true, length: { maximum: 5000 }
   validates :current_version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   counter_culture :topic, column_name: 'total_comment'

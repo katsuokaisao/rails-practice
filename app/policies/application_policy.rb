@@ -28,7 +28,22 @@ class ApplicationPolicy
   def user? = !!user
   def moderator? = !!moderator
   def unsuspended_user? = user? && !user.suspended?
-  def owner? = user? && record.author_id == user.id
   def only_user? = !!user && !moderator?
   def only_moderator? = !!moderator && !user?
+
+  def owner?
+    return false unless user?
+
+    return record.author == user if record.respond_to?(:author)
+    return report_owner?(record) if record.is_a?(Report)
+
+    false
+  end
+
+  def report_owner?(report)
+    return report.reportable&.author == user if report.reportable_type_comment?
+    return report.reportable == user if report.reportable_type_user?
+
+    false
+  end
 end

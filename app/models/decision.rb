@@ -25,9 +25,10 @@
 class Decision < ApplicationRecord
   belongs_to :report
   belongs_to :decider, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
+
   enum :decision_type, { reject: 'reject', hide_comment: 'hide_comment', suspend_user: 'suspend_user' },
        prefix: true, validate: true
-
+  validates :decision_type, presence: true
   validates :report_id, uniqueness: true
   validates :note, length: { maximum: 2000 }, allow_blank: true
 
@@ -45,6 +46,10 @@ class Decision < ApplicationRecord
     Report.similar_reports(report)
   end
 
+  def similar_unreviewed_reports
+    similar_reports.where.missing(:decision).includes(:decision)
+  end
+
   private
 
   def apply_decision!
@@ -52,7 +57,7 @@ class Decision < ApplicationRecord
   end
 
   def apply_decision_for_similar_reports!
-    unreviewed_ids = similar_reports.includes(:decision).reject(&:reviewed?).map!(&:id)
+    unreviewed_ids = similar_unreviewed_reports.pluck(:id)
     return if unreviewed_ids.empty?
 
     now = Time.current
@@ -91,8 +96,8 @@ class Decision < ApplicationRecord
       elsif !suspended_until.future?
         errors.add(:suspended_until, :must_be_in_future)
       end
-    elsif decision_type_hide_comment?
-      errors.add(:suspended_until, :present) if suspended_until.present?
+    elsif suspended_until.present?
+      errors.add(:suspended_until, :present)
     end
   end
 end

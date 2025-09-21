@@ -40,10 +40,6 @@ class Comment < ApplicationRecord
               if: -> { will_save_change_to_content? && persisted? }
   after_save :create_history, if: :saved_change_to_content?
 
-  def update_content!(content)
-    update!(content: content)
-  end
-
   def apply_decision!(decision)
     hide_by_decision!(decision)
   end

@@ -57,7 +57,7 @@ class SampleCreator
   def update_comments
     Comment.first(100).each do |comment|
       10.times do
-        comment.update_content!(Faker::Lorem.paragraphs(number: 3).join("\n"))
+        comment.update!(content: Faker::Lorem.paragraphs(number: 3).join("\n"))
       end
     end
   end

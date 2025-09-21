@@ -27,7 +27,7 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment.update_content!(comment_params[:content])
+    @comment.update!(comment_params)
     redirect_to comment_histories_path(@comment),
                 notice: t('flash.actions.update.notice', resource: Comment.model_name.human)
   rescue ActiveRecord::RecordInvalid => e

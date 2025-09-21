@@ -23,6 +23,8 @@
 #  fk_rails_...  (report_id => reports.id)
 #
 class Decision < ApplicationRecord
+  MAX_BULK_INSERT_SIZE = 10_000
+
   belongs_to :report
   belongs_to :decider, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
 
@@ -47,7 +49,7 @@ class Decision < ApplicationRecord
   end
 
   def similar_unreviewed_reports
-    similar_reports.where.missing(:decision).includes(:decision)
+    similar_reports.where.missing(:decision).includes(:decision).limit(MAX_BULK_INSERT_SIZE)
   end
 
   private
@@ -57,23 +59,24 @@ class Decision < ApplicationRecord
   end
 
   def apply_decision_for_similar_reports!
-    unreviewed_ids = similar_unreviewed_reports.pluck(:id)
-    return if unreviewed_ids.empty?
+    report_ids = similar_unreviewed_reports.pluck(:id)
+    return if report_ids.empty?
 
+    # ON DUPLICATE KEY UPDATE `report_id`=`decisions`.`report_id` が付与されるので衝突した時に値も更新されずエラーも発生しない
+    Decision.insert_all(build_similar_decisions_from_report_ids(report_ids))
+  end
+
+  def build_similar_decisions_from_report_ids(report_ids)
     now = Time.current
-    decisions_data = unreviewed_ids.map do |rid|
+    report_ids.map do |rid|
       {
         report_id: rid,
         decision_type: decision_type,
         note: auto_note,
-        decided_by: decider.id,
-        suspended_until: decision_type_suspend_user? ? suspended_until : nil,
+        decided_by: decided_by,
+        suspended_until: suspended_until,
         created_at: now
       }
-    end
-
-    decisions_data.each_slice(1000) do |slice|
-      Decision.insert_all(slice) # ON DUPLICATE KEY UPDATE `report_id`=`decisions`.`report_id` が付与される
     end
   end
 

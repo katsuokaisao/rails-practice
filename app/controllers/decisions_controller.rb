@@ -24,7 +24,7 @@ class DecisionsController < ApplicationController
   end
 
   def create
-    @decision.assign_attributes(decision_params.slice(:decision_type, :note, :suspended_until))
+    @decision.assign_attributes(decision_params)
 
     begin
       @decision.save!
@@ -43,7 +43,7 @@ class DecisionsController < ApplicationController
   end
 
   def set_report
-    @report = Report.find(params[:report_id] || decision_params[:report_id])
+    @report = Report.find(params[:report_id] || params[:decision][:report_id])
   end
 
   def build_decision
@@ -51,7 +51,7 @@ class DecisionsController < ApplicationController
   end
 
   def decision_params
-    params.expect(decision: %i[report_id decision_type note suspended_until])
+    params.expect(decision: %i[decision_type note suspended_until])
   end
 
   def reportable_type

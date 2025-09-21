@@ -74,18 +74,14 @@ class ReportsController < ApplicationController
   end
 
   def set_topic
-    @topic = Topic.find(report_params[:from_topic_id])
+    @topic = Topic.find(params[:from_topic_id])
   end
 
   def set_report
     klass = REPORTABLE_TYPE_MAP[reportable_type]
     @report = current_user.authored_reports.build(
-      reportable: klass.find(report_params[:reportable_id])
+      reportable: klass.find(params[:reportable_id])
     )
-  end
-
-  def report_params
-    params.permit(:reportable_type, :reportable_id, :from_topic_id)
   end
 
   def create_params

@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
     @comment = Comment.create!(
       topic: @topic,
       author: current_user,
-      content: comment_params[:content]
+      **comment_params
     )
 
     redirect_to @topic, notice: t('flash.actions.comment_created.notice')

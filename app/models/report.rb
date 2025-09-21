@@ -27,7 +27,7 @@ class Report < ApplicationRecord
   include PolymorphicTypeCheck
 
   belongs_to :reporter, class_name: 'User'
-  belongs_to :reportable, polymorphic: true, optional: true
+  belongs_to :reportable, polymorphic: true
   has_one :decision, dependent: :restrict_with_error
 
   scope :similar_reports, lambda { |report|
@@ -36,7 +36,6 @@ class Report < ApplicationRecord
 
   validates :reason_type, presence: true
   validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true
-  validate :reportable_presence
 
   enum :reason_type,
        { spam: 'spam', harassment: 'harassment', obscene: 'obscene', other: 'other' },
@@ -56,11 +55,5 @@ class Report < ApplicationRecord
 
   def user_suspended?
     decision.decision_type_suspend_user?
-  end
-
-  private
-
-  def reportable_presence
-    errors.add(:reportable, 'must be present') if reportable.nil?
   end
 end

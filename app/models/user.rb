@@ -29,7 +29,7 @@ class User < ApplicationRecord
                               dependent: :restrict_with_error, inverse_of: :reporter
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
 
-  validate :suspended_until_future, if: -> { suspended_until.present? }
+  validate :suspended_until_future
 
   def apply_decision!(decision)
     suspend!(decision.suspended_until)
@@ -58,6 +58,8 @@ class User < ApplicationRecord
   private
 
   def suspended_until_future
+    return if suspended_until.nil?
+
     errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
   end
 end

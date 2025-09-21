@@ -33,15 +33,11 @@ class ReportsController < ApplicationController
   def create
     @report.assign_attributes(create_params)
 
-    if @report.save
-      respond_to do |format|
-        format.turbo_stream do
+    respond_to do |format|
+      format.turbo_stream do
+        if @report.save
           redirect_to topic_path(@topic), notice: t('flash.actions.create.notice', resource: Report.model_name.human)
-        end
-      end
-    else
-      respond_to do |format|
-        format.turbo_stream do
+        else
           render :create_error, status: :unprocessable_content
         end
       end

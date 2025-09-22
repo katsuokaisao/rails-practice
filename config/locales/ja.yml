@@ -43,6 +43,8 @@ ja:
         alert: "%{resource}を削除できませんでした。"
         notice: "%{resource}が削除されました。"
       out_of_bounds: 範囲外のリクエストです。
+      stale_object_error:
+        alert: 同一のリソースの更新が行われたので保存できませんでした。最新の情報を確認してください。
       update:
         alert: "%{resource}を更新できませんでした。"
         notice: "%{resource}が更新されました。"

@@ -4,3 +4,5 @@ ja:
     comment:
       hide_comment: コメントを非表示
       report_user: 違法ユーザ
+    edit:
+      current_content: 最新のコメント内容(編集不可)

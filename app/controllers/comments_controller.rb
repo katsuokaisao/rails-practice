@@ -33,12 +33,19 @@ class CommentsController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     @comment = e.record
     render :edit, status: :unprocessable_content
+  rescue ActiveRecord::StaleObjectError
+    old_content = @comment.content
+    @comment.reload
+    @current_content = @comment.content
+    @comment.content = old_content
+    flash.now[:alert] = t('flash.actions.stale_object_error.alert')
+    render :edit, status: :conflict
   end
 
   private
 
   def comment_params
-    params.expect(comment: [:content])
+    params.expect(comment: %i[content lock_version])
   end
 
   def set_pagination

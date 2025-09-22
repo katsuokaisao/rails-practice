@@ -4,6 +4,14 @@
 
   <%= form_with(model: [@topic, @comment], local: true) do |f| %>
     <%= render partial: "shared/form_errors", locals: { model: @comment } %>
+    <%= f.hidden_field :lock_version %>
+
+    <% if @current_content.present? %>
+      <div class="field">
+        <%= f.label :current_content, t('.current_content') %>
+        <%= f.text_area :current_content, rows: 5, value: @current_content, readonly: true %>
+      </div>
+    <% end %>
 
     <div class="field">
       <%= f.label :content %>

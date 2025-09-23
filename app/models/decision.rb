@@ -38,8 +38,8 @@ class Decision < ApplicationRecord
   validate :reportable_type_must_match_decision_type
   validate :suspended_until_must_match_decision_type
 
-  after_create :apply_decision!, unless: :decision_type_reject?
-  after_commit :apply_decision_for_similar_reports!, on: :create, unless: :decision_type_reject?
+  after_create :apply_decision!
+  after_commit :apply_decision_for_similar_reports!, on: :create
 
   def report_type
     report.reportable_type
@@ -56,10 +56,12 @@ class Decision < ApplicationRecord
   private
 
   def apply_decision!
-    report.reportable.apply_decision!(self)
+    report.reportable.apply_decision!(self) unless decision_type_reject?
   end
 
   def apply_decision_for_similar_reports!
+    return if decision_type_reject?
+
     report_ids = similar_unreviewed_reports.pluck(:id)
     return if report_ids.empty?
 

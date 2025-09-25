@@ -24,7 +24,7 @@
 #  fk_rails_...  (report_id => reports.id)
 #
 class Decision < ApplicationRecord
-  MAX_BULK_INSERT_SIZE = 10_000
+  MAX_BULK_INSERT_SIZE = 1000
 
   belongs_to :report
   belongs_to :decider, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
@@ -39,7 +39,7 @@ class Decision < ApplicationRecord
   validate :suspended_until_must_match_decision_type
 
   after_create :apply_decision!
-  after_commit :apply_decision_for_similar_reports!, on: :create
+  after_create :apply_decision_for_similar_reports!
 
   def report_type
     report.reportable_type

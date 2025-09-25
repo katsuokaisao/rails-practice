@@ -217,16 +217,16 @@ RSpec.describe Decision, type: :model do
           allow(decision).to receive(:apply_decision_for_similar_reports!).and_raise(StandardError.new('伝播エラー'))
         end
 
-        it 'トランザクション内の処理はコミットされること' do
+        it 'トランザクション内の処理はコミットされないこと' do
           comment = report.reportable
           expect(comment).not_to be_hidden
 
           expect do
             expect { decision.save! }.to raise_error(StandardError, '伝播エラー')
-          end.to change(described_class, :count).by(1)
+          end.to change(described_class, :count).by(0)
 
-          expect(comment.reload).to be_hidden
-          expect(comment.hidden_cause_decision).to eq(decision)
+          expect(comment.reload).not_to be_hidden
+          expect(comment.hidden_cause_decision).to be_nil
         end
       end
     end

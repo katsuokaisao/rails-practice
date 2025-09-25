@@ -112,7 +112,7 @@ RSpec.describe Comment, type: :model do
     end
   end
 
-  describe '#update!' do
+  describe '#update_content!' do
     let!(:comment) { create(:comment) }
     let(:new_content) { '更新されたコメント内容' }
 
@@ -121,7 +121,7 @@ RSpec.describe Comment, type: :model do
         initial_version = comment.current_version_no
 
         expect do
-          comment.update!(content: new_content)
+          comment.update_content!(new_content)
         end.to change { comment.reload.content }
         .to(new_content)
         .and change(comment, :current_version_no)
@@ -143,7 +143,7 @@ RSpec.describe Comment, type: :model do
         allow_any_instance_of(CommentHistory).to receive(:save!).and_raise(ActiveRecord::RecordInvalid.new(CommentHistory.new))
 
         expect do
-          comment.update!(content: new_content)
+          comment.update_content!(new_content)
         end.to raise_error(ActiveRecord::RecordInvalid)
 
         aggregate_failures do
@@ -168,7 +168,7 @@ RSpec.describe Comment, type: :model do
             ActiveRecord::Base.connection_pool.with_connection do
               ActiveRecord::Base.transaction do
                 local_comment = described_class.find(comment.id)
-                local_comment.update!(content: "更新 #{i + 1}")
+                local_comment.update_content!("更新 #{i + 1}")
                 update_results << { success: true, version: local_comment.current_version_no }
               end
             end

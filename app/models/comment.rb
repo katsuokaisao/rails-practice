@@ -36,9 +36,22 @@ class Comment < ApplicationRecord
   counter_culture :topic, column_name: 'total_comment'
 
   before_validation :set_initial_version, on: :create
-  before_save :bump_version,
-              if: -> { will_save_change_to_content? && persisted? }
-  after_save :create_history, if: :saved_change_to_content?
+  after_create :create_history
+
+  def update_content!(content)
+    return if will_save_change_to_content?
+
+    with_lock do
+      next_version_no = current_version_no + 1
+      update!(content: content, current_version_no: next_version_no)
+      histories.create!(
+        topic: topic,
+        author: author,
+        content: content,
+        version_no: next_version_no
+      )
+    end
+  end
 
   def apply_decision!(decision)
     hide_by_decision!(decision)
@@ -59,10 +72,6 @@ class Comment < ApplicationRecord
 
   def set_initial_version
     self.current_version_no ||= 1
-  end
-
-  def bump_version
-    self.current_version_no = current_version_no + 1
   end
 
   def create_history

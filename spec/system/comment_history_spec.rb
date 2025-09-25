@@ -11,10 +11,10 @@ RSpec.describe 'コメント履歴', type: :system do
   let!(:other_comment) { create(:comment, topic: topic, author: other_user, content: '他のユーザーのコメント') }
 
   before do
-    comment.update!(content: '2回目の編集')
-    comment.update!(content: '3回目の編集')
-    other_comment.update!(content: '他のユーザーのコメント 2回目の編集')
-    other_comment.update!(content: '他のユーザーのコメント 3回目の編集')
+    comment.update_content!('2回目の編集')
+    comment.update_content!('3回目の編集')
+    other_comment.update_content!('他のユーザーのコメント 2回目の編集')
+    other_comment.update_content!('他のユーザーのコメント 3回目の編集')
   end
 
   scenario '未ログインユーザーがコメント履歴を閲覧できない' do
@@ -79,7 +79,7 @@ RSpec.describe 'コメント履歴', type: :system do
 
   scenario 'コメント履歴のページネーションが機能する' do
     10.times do |i|
-      comment.update!(content: "#{i + 1}回目の編集")
+      comment.update_content!("#{i + 1}回目の編集")
     end
     login_as(user)
     visit comment_histories_path(comment)

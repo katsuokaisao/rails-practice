@@ -4,5 +4,3 @@ en:
     comment:
       hide_comment: Hide Comment
       report_user: Report User
-    edit:
-      current_content: Current Comment Content (Read Only)

@@ -7,7 +7,6 @@ create_table 'comments', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.integer  'current_version_no',       null: false
   t.boolean  'hidden',                   null: false, default: false
   t.bigint   'hidden_cause_decision_id', null: true
-  t.bigint   'lock_version',             null: false, default: 0
   t.datetime 'created_at',               null: false
   t.datetime 'updated_at',               null: false
 

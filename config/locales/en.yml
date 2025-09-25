@@ -43,9 +43,6 @@ en:
         alert: "%{resource} could not be destroyed."
         notice: "%{resource} was successfully destroyed."
       out_of_bounds: Out of bounds request.
-      stale_object_error:
-        alert: The resource could not be saved because it was updated simultaneously.
-          Please check the latest information.
       update:
         alert: "%{resource} could not be updated."
         notice: "%{resource} was successfully updated."

@@ -8,7 +8,6 @@
 #  content                  :text(65535)      not null
 #  current_version_no       :integer          not null
 #  hidden                   :boolean          default(FALSE), not null
-#  lock_version             :bigint           default(0), not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  author_id                :bigint           not null

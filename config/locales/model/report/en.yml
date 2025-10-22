@@ -1,0 +1,15 @@
+---
+en:
+  activerecord:
+    attributes:
+      report:
+        created_at: Created At
+        reason_text: Reason Details
+        reason_type: Reason Type
+        reportable_comment: Reportable Comment
+        reportable_type: Reportable Type
+        reportable_user: Reportable User
+        reporter: Reporter
+        updated_at: Updated At
+    models:
+      report: Report

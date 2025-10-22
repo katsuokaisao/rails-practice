@@ -1,0 +1,42 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://lefthook.dev/configuration/
+#
+# pre-push:
+#   jobs:
+#     - name: packages audit
+#       tags:
+#         - frontend
+#         - security
+#       run: yarn audit
+#
+#     - name: gems audit
+#       tags:
+#         - backend
+#         - security
+#       run: bundle audit
+#
+pre-commit:
+  parallel: true
+  jobs:
+    - name: rubocop
+      glob: "*.rb"
+      run: "bundle exec rubocop --format progress {staged_files}"
+    - name: erblint
+      glob: "*.erb"
+      run: "bundle exec erblint {staged_files}"
+    - name: rspec
+      glob: "spec/**/*_spec.rb"
+      run: "docker-compose exec rails bundle exec rspec {staged_files}"
+    - name: i18n-health
+      glob: "*.yml"
+      run: "bundle exec i18n-tasks health"
+    - name: brakeman
+      tags:
+        - security
+      run: "bundle exec brakeman --no-pager"
+    - name: bundler-audit
+      tags:
+        - security
+      run: "bundle exec bundler-audit check --update"

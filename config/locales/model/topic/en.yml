@@ -1,0 +1,11 @@
+---
+en:
+  activerecord:
+    attributes:
+      topic:
+        author: Author
+        created_at: Created At
+        title: Title
+        updated_at: Updated At
+    models:
+      topic: Topic

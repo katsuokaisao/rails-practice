@@ -1,0 +1,36 @@
+<article>
+  <%= render 'shared/back_button', url: topics_path %>
+  <section class="topic-show">
+    <h3><%= @topic.title %></h3>
+    <div class="topic-details">
+      <p><%= t('author') %> <%= @topic.author.nickname %></p>
+      <p><%= t('created_at') %> <%= l(@topic.created_at, format: :default) %></p>
+      <p><%= t('comment_count') %> <%= @topic.total_comment %><%= t('.count_suffix') %></p>
+    </div>
+    <%= render partial: 'edit_action', locals: { topic: @topic } %>
+  </section>
+  <% if @pagination.records.any? %>
+    <section class="topic-comments">
+      <h4><%= t('.comment') %></h4>
+      <div id="comment-list" class="comment-list">
+        <%= render partial: 'comments/comment', collection: @pagination.records.to_a.reverse %>
+      </div>
+      <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
+    </section>
+  <% end %>
+  <% if can_access?('comments', 'create') %>
+    <section class="form-card">
+      <h3><%= t('.new_comment') %></h3>
+      <div id="comment-form-errors"></div>
+      <%= form_with(model: [@topic, Comment.new], local: false) do |f| %>
+        <div class="field">
+          <%= f.label :content %>
+          <%= f.text_area :content, rows: 5 %>
+        </div>
+        <div class="actions">
+          <%= f.submit t('.create') %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+</article>

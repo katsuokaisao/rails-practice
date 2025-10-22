@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= t('application_title') %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application" %>
+    <%= stylesheet_link_tag "https://fonts.googleapis.com/icon?family=Material+Icons", rel: "stylesheet" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="<%= root_class_name %>">
+    <main>
+      <article class="layout-center">
+        <section class="form-card">
+          <%= render 'shared/flash_messages' %>
+          <%= yield %>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

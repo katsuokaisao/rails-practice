@@ -1,0 +1,3 @@
+<%= turbo_stream.update "report-form-errors" do %>
+  <%= render partial: "shared/form_errors", locals: { model: @report } %>
+<% end %>

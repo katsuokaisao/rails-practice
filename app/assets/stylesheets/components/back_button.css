@@ -1,0 +1,20 @@
+.back-button-container {
+  width: stretch;
+  margin-bottom: 10px;
+
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    margin: 0px;
+    color: #333;
+    text-decoration: none;
+
+    &:hover {
+      color: #555;
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+}

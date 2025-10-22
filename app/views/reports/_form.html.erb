@@ -1,0 +1,27 @@
+<%= form_with model: report,
+              url: reports_path,
+              method: :post do |f| %>
+  <div id="report-form-errors"></div>
+
+  <%= hidden_field_tag :from_topic_id, topic.id %>
+  <%= hidden_field_tag :reportable_type, report.reportable_type.downcase %>
+  <%= hidden_field_tag :reportable_id, report.reportable_id %>
+
+  <div class="form-group">
+    <%= f.label :reason_type %>
+    <%= f.select :reason_type,
+                Report.reason_types.keys.map { |k| [t("enums.report.reason_type.#{k}"), k] },
+                { prompt: t('action.select') },
+                { class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :reason_text %>
+    <%= f.text_area :reason_text, rows: 5, class: "form-control", required: true %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit t('action.settle'), class: "btn btn-primary" %>
+    <button type="button" class="close-button" data-close-modal-target="closeButton"><%= t('action.close') %></button>
+  </div>
+<% end %>

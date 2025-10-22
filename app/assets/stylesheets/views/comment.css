@@ -1,0 +1,13 @@
+.comments_controller.edit_action {
+    .back-action {
+        width: stretch;
+    }
+
+    .form-card {
+        width: 500px;
+    }
+
+    textarea {
+        max-width: stretch;
+    }
+}

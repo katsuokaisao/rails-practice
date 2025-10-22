@@ -1,0 +1,102 @@
+# RuboCop設定ファイル
+# プロジェクト全体のコーディング規約を定義
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    # 自動生成ファイル
+    - 'bin/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'storage/**/*'
+    - 'public/**/*'
+    - '.ruby-lsp/**/*'
+    - '.vscode/**/*'
+    - spec/spec_helper.rb
+    - spec/rails_helper.rb
+
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+
+Metrics/BlockLength:
+  Max: 25
+  Exclude:
+    - 'config/routes.rb'
+    - 'spec/**/*'
+    - 'lib/tasks/**/*'
+    - 'config/environments/**/*'
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'config/initializers/**/*'
+
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/AbcSize:
+  Max: 17
+  Exclude:
+    - 'app/controllers/**/*'
+
+Metrics/ClassLength:
+  Max: 100
+  Exclude:
+    - 'lib/sample_creator.rb'
+
+# Deviseコントローラーでは親クラスのアクションを使用するため除外
+Rails/LexicallyScopedActionFilter:
+  Exclude:
+    - 'app/controllers/users/**/*'
+    - 'app/controllers/admins/**/*'
+
+Rails/Output:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 15
+  Include:
+    - 'spec/system/**/*'
+
+# 日本語でのコンテキスト記述のため無効化
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+  Exclude:
+    - 'spec/system/**/*'
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/ChangeByZero:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  AllowedMethods:
+    - update_all
+    - insert_all

@@ -1,0 +1,17 @@
+---
+ja:
+  enums:
+    decision:
+      decision_type:
+        hide_comment: コメントを非表示
+        reject: 却下
+        suspend_user: ユーザーを一時停止
+    report:
+      reason_type:
+        harassment: 嫌がらせ
+        obscene: わいせつ
+        other: その他
+        spam: スパム
+      reportable_type:
+        Comment: コメント
+        User: ユーザー

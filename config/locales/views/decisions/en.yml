@@ -1,0 +1,20 @@
+---
+en:
+  decisions:
+    modal:
+      1_day: 1 Day
+      1_month: 1 Month
+      1_week: 1 Week
+      3_days: 3 Days
+      comment_author_nickname: Comment Author
+      hide_comment: Hide Comment
+      reject: Reject
+      report_detail: Report Details
+      reportable_user_nickname: Reportable User
+      reported_at: Reported At
+      reporter_nickname: Reporter
+      suspend_user: Suspend User
+      title: Decision
+    tabs:
+      comment_decisions_title: Comment Report Decisions
+      user_decisions_title: User Report Decisions

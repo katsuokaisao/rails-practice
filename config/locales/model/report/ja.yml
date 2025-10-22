@@ -1,0 +1,15 @@
+---
+ja:
+  activerecord:
+    attributes:
+      report:
+        created_at: 作成日時
+        reason_text: 理由詳細
+        reason_type: 理由種別
+        reportable_comment: 通報対象コメント
+        reportable_type: 対象種別
+        reportable_user: 通報対象ユーザー
+        reporter: 通報者
+        updated_at: 更新日時
+    models:
+      report: 通報

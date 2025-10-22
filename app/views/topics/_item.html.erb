@@ -1,0 +1,13 @@
+<li class="topic-item">
+    <div>
+        <%= link_to topic_path(topic) do %>
+            <h3><%= topic.title %></h3>
+        <% end %>
+        <div class="topic-details">
+            <p><%= t('author') %> <%= topic.author.nickname %></p>
+            <p><%= t('created_at') %> <%= l(topic.created_at, format: :default) %></p>
+            <p><%= t('comment_count') %> <%= topic.total_comment %><%= t('.count_suffix') %></p>
+        </div>
+    </div>
+    <%= render partial: 'edit_action', locals: { topic: topic } %>
+</li>

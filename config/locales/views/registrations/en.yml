@@ -1,0 +1,17 @@
+---
+en:
+  devise:
+    registrations:
+      password:
+        actions:
+          update: Update Password
+        messages:
+          characters_minimum: characters minimum
+        title: Change Password
+      profile:
+        actions:
+          update: Update Profile
+        title: Edit Profile
+      shared:
+        messages:
+          current_password_help: We need your current password to confirm your changes

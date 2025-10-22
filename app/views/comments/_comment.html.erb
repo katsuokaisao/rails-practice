@@ -1,0 +1,45 @@
+<div class="comment" id="comment-<%= comment.id %>">
+  <div class="comment-header">
+    <p><strong><%= comment.author.nickname %></strong></p>
+  </div>
+  <%= render_comment_content(comment) %>
+  <div class="comment-footer">
+    <p>
+      <%= t('created_at') %> <%= l(comment.created_at, format: :default) %>
+    </p>
+    <div class="comment-actions">
+      <% if can_access?('comments', 'edit', comment) %>
+        <p>
+          <span class="material-icons">edit</span>
+          <%= link_to t('edit'), edit_topic_comment_path(comment.topic, comment), class: "edit-link" %>
+        </p>
+      <% end %>
+      <% if can_access?('comment_histories', 'index', comment) %>
+        <p>
+          <span class="material-icons">history</span>
+          <%= link_to t('history'), comment_histories_path(comment), class: "history-link" %>
+        </p>
+      <% end %>
+      <% if !comment.invisible? && can_access?('reports', 'new', comment) %>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.report_user'), new_report_path(
+            format: :turbo_stream,
+            reportable_type: "user",
+            reportable_id: comment.author.id,
+            from_topic_id: comment.topic.id,
+          ), data: { turbo_prefetch: false } %>
+        </p>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.hide_comment'), new_report_path(
+            format: :turbo_stream,
+            reportable_type: "comment",
+            reportable_id: comment.id,
+            from_topic_id: comment.topic.id,
+          ), data: { turbo_prefetch: false } %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>

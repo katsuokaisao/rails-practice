@@ -1,0 +1,25 @@
+<section>
+    <%= render 'shared/back_button', url: topic_path(@comment.topic) %>
+    <h2><%= t('.title') %></h2>
+    <% if @pagination.records.length > 1 %>
+        <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
+    <% end %>
+
+    <div class="history-list">
+        <h3><%= t('.history_list') %></h3>
+        <% @pagination.records.each do |history| %>
+            <div class="history">
+                <p>
+                    <span class="history-version"><%= t('version') %> <%= history.version_no %></span>
+                    <span class="history-author"><%= t('author') %> <%= history.author.nickname %></span>
+                </p>
+                <div class="history-content"><%= history.content %></div>
+                <p class="history-meta">
+                    <%= t('created_at') %> <%= l(history.created_at, format: :default) %>
+                </p>
+            </div>
+        <% end %>
+    </div>
+
+    <%= render 'shared/pagination', pagination: @pagination %>
+</section>

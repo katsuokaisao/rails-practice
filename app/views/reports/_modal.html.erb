@@ -1,0 +1,12 @@
+<div class="modal" data-controller="close-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2><%= t('.title') %></h2>
+      <button type="button" class="close-button close-button-icon" data-close-modal-target="closeButton">×</button>
+    </div>
+
+    <div class="modal-body">
+      <%= render "form", topic: topic, report: report %>
+    </div>
+  </div>
+</div>

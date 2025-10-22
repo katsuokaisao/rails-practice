@@ -1,0 +1,64 @@
+---
+ja:
+  action:
+    cancel: キャンセル
+    close: 閉じる
+    compare: 選択したバージョンを比較
+    select: 選択してください
+    settle: 確定
+    settle_confirm: 本当に確定しますか？
+  activerecord:
+    errors:
+      messages:
+        html_not_allowed: HTMLタグは使用できません
+        must_be_in_future: は未来の日付にしてください
+  application_title: 掲示板アプリ
+  authentication:
+    login: ログイン
+    moderator_login: モデレータログイン
+    signup: 新規登録
+  author: '作成者:'
+  comment_count: 'コメント数:'
+  created_at: '作成日:'
+  date:
+    formats:
+      default: "%Y/%m/%d"
+      long: "%Y年%m月%d日(%a)"
+      short: "%m/%d"
+  datetime:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%Y年%m月%d日(%a) %H:%M:%S"
+      short: "%m/%d %H:%M"
+  edit: 編集
+  flash:
+    actions:
+      comment_created:
+        notice: コメントが投稿されました。
+      conflict: 同時に別のユーザーがこのリソースを変更しました。
+      create:
+        alert: "%{resource}を作成できませんでした。"
+        notice: "%{resource}が作成されました。"
+      destroy:
+        alert: "%{resource}を削除できませんでした。"
+        notice: "%{resource}が削除されました。"
+      out_of_bounds: 範囲外のリクエストです。
+      update:
+        alert: "%{resource}を更新できませんでした。"
+        notice: "%{resource}が更新されました。"
+  header:
+    logout: ログアウト
+    password: パスワード
+    profile: プロフィール
+  history: 履歴
+  time:
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%Y年%m月%d日(%a) %H:%M:%S"
+      short: "%m/%d %H:%M"
+  title:
+    edit: "%{resource} 編集"
+    index: "%{resource} 一覧"
+    new: "%{resource} 新規作成"
+    show: "%{resource} 詳細"
+  version: 'バージョン:'

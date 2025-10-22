@@ -1,0 +1,13 @@
+<div class="reports-header">
+  <h2><%= t('title.index', resource: Report.model_name.human) %></h2>
+</div>
+
+<div id="reports-tabs">
+  <%= render partial: 'tabs', locals: { current_tab: @current_tab } %>
+</div>
+
+<%= turbo_frame_tag "report-contents" do %>
+  <div id="reports-container">
+    <%= render partial: 'index', locals: { pagination: @pagination, current_tab: @current_tab } %>
+  </div>
+<% end %>

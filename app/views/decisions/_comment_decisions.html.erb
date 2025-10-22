@@ -1,0 +1,34 @@
+<table class="decisions-table">
+  <thead>
+    <tr>
+      <th><%= t('activerecord.attributes.report.reporter') %></th>
+      <th><%= t('activerecord.attributes.report.reason_type') %></th>
+      <th><%= t('activerecord.attributes.report.reason_text') %></th>
+      <th><%= t('activerecord.attributes.topic.title') %></th>
+      <th><%= t('activerecord.attributes.comment.content') %></th>
+      <th><%= t('activerecord.attributes.comment.author') %></th>
+      <th><%= t('activerecord.attributes.comment.created_at') %></th>
+      <th><%= t('activerecord.attributes.decision.decision_type') %></th>
+      <th><%= t('activerecord.attributes.decision.note') %></th>
+      <th><%= t('activerecord.attributes.decision.decided_by') %></th>
+      <th><%= t('activerecord.attributes.decision.created_at') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% pagination.records.each do |decision| %>
+      <tr>
+        <td><%= decision.report.reporter.nickname %></td>
+        <td><%= decision.report.enum_i18n(:reason_type) %></td>
+        <td><%= decision.report.reason_text %></td>
+        <td><%= decision.report.reportable.topic.title %></td>
+        <td><%= truncate(decision.report.reportable.content, length: 500) %></td>
+        <td><%= decision.report.reportable.author.nickname %></td>
+        <td><%= l(decision.report.reportable.created_at, format: :default) %></td>
+        <td><%= decision.enum_i18n(:decision_type) %></td>
+        <td><%= truncate(decision.note, length: 100) %></td>
+        <td><%= decision.decider.nickname %></td>
+        <td><%= l(decision.created_at, format: :default) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

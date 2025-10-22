@@ -1,0 +1,9 @@
+<div class="reports-container">
+  <% if current_tab == 'user' %>
+    <%= render partial: 'user_reports', locals: { pagination: pagination } %>
+  <% else %>
+    <%= render partial: 'comment_reports', locals: { pagination: pagination } %>
+  <% end %>
+</div>
+
+<%= render partial: 'shared/pagination', locals: { pagination: pagination, query_params: { reportable_type: params[:reportable_type] } } %>

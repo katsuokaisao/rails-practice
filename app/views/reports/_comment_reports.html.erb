@@ -1,0 +1,34 @@
+<table class="reports-table">
+    <thead>
+    <tr>
+        <th><%= t('activerecord.attributes.report.reporter') %></th>
+        <th><%= t('activerecord.attributes.report.reason_type') %></th>
+        <th><%= t('activerecord.attributes.report.reason_text') %></th>
+        <th><%= t('activerecord.attributes.topic.title') %></th>
+        <th><%= t('activerecord.attributes.comment.content') %></th>
+        <th><%= t('activerecord.attributes.comment.created_at') %></th>
+        <th><%= t('activerecord.attributes.comment.author') %></th>
+        <th><%= t('activerecord.attributes.comment.current_version_no') %></th>
+        <th><%= t('activerecord.attributes.report.created_at') %></th>
+        <th><%= t('.action') %></th>
+    </tr>
+    </thead>
+    <tbody>
+        <% pagination.records.each do |report| %>
+            <tr>
+                <td><%= report.reporter.nickname %></td>
+                <td><%= report.enum_i18n(:reason_type) %></td>
+                <td><%= truncate(report.reason_text, length: 1000) %></td>
+                <td><%= report.reportable.topic.title %></td>
+                <td><%= truncate(report.reportable.content, length: 1000) %></td>
+                <td><%= l(report.reportable.created_at, format: :default) %></td>
+                <td><%= report.reportable.author.nickname %></td>
+                <td><%= report.reportable.current_version_no %></td>
+                <td><%= l(report.created_at, format: :default) %></td>
+                <td>
+                    <%= link_to Decision.model_name.human, new_decision_path(report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary', data: { turbo_prefetch: false } %>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

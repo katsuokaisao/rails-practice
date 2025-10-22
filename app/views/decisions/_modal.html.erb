@@ -1,0 +1,102 @@
+<div id="modal"
+  class="modal"
+  data-controller="close-modal decisions"
+  data-decisions-target="modal"
+  data-decisions-user-time-zone-identifier-value="<%= @user_time_zone_identifier %>">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2><%= t('.title') %></h2>
+      <button type="button" class="close-button close-button-icon" data-close-modal-target="closeButton">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="report-details">
+        <h3><%= t('.report_detail') %></h3>
+        <table class="report-details-table">
+          <tr>
+            <th><%= t('activerecord.attributes.decision.report_id') %></th>
+            <td><%= report.id %></td>
+          </tr>
+          <tr>
+            <th><%= t('.reporter_nickname') %></th>
+            <td><%= report.reporter.nickname %></td>
+          </tr>
+          <tr>
+            <th><%= t('activerecord.attributes.report.reportable_type') %></th>
+            <td><%= report.enum_i18n("reportable_type") %></td>
+          </tr>
+          <tr>
+            <th><%= t('activerecord.attributes.report.reason_type') %></th>
+            <td><%= report.enum_i18n("reason_type") %></td>
+          </tr>
+          <tr>
+            <th><%= t('activerecord.attributes.report.reason_text') %></th>
+            <td><%= report.reason_text %></td>
+          </tr>
+          <% if report.reportable_type_comment? %>
+            <tr>
+              <th><%= t('activerecord.attributes.topic.title') %></th>
+              <td><%= report.reportable.topic.title %></td>
+            </tr>
+            <tr>
+              <th><%= t('activerecord.attributes.comment.content') %></th>
+              <td><%= report.reportable.content %></td>
+            </tr>
+            <tr>
+              <th><%= t('.comment_author_nickname') %></th>
+              <td><%= report.reportable.author.nickname %></td>
+            </tr>
+          <% elsif report.reportable_type_user? %>
+            <tr>
+              <th><%= t('.reportable_user_nickname') %></th>
+              <td><%= report.reportable.nickname %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <th><%= t('.reported_at') %></th>
+            <td><%= l(report.created_at, format: :default) %></td>
+          </tr>
+        </table>
+      </div>
+
+      <%= form_with model: decision, url: decisions_path, local: false,
+      data: { action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
+        <%= f.hidden_field :report_id, value: report.id %>
+        <div id="decision-form-errors"></div>
+
+        <div class="form-group">
+          <%= f.label :decision_type %>
+          <%= f.select :decision_type,
+                      options_for_select([
+                        [t('.reject'), 'reject'],
+                        report.reportable_type_comment? ? [t('.hide_comment'), 'hide_comment'] : nil,
+                        report.reportable_type_user? ? [t('.suspend_user'), 'suspend_user'] : nil
+                      ].compact),
+                      { include_blank: t("action.select") },
+                      { class: 'form-control', data: { action: 'change->decisions#toggleFields' } } %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :note %>
+          <%= f.text_area :note, class: 'form-control' %>
+        </div>
+
+        <div class="form-group suspension-period" style="display: none;" data-decisions-target="suspensionPeriod">
+          <%= f.label :suspended_until %>
+          <%= f.datetime_field :suspended_until, class: 'form-control', data: { decisions_target: "suspensionUntilInput" } %>
+          <div class="suspension-presets">
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="1"><%= t('.1_day') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="3"><%= t('.3_days') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="7"><%= t('.1_week') %></button>
+            <button type="button" class="btn btn-sm" data-action="click->decisions#setDuration" data-days="30"><%= t('.1_month') %></button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit t('action.settle'), class: 'btn btn-primary', data: { turbo_confirm: t('action.settle_confirm') } %>
+          <button type="button" class="btn btn-secondary" data-close-modal-target="closeButton"><%= t('action.cancel') %></button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

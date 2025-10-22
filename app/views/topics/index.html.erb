@@ -1,0 +1,16 @@
+<article>
+  <div class="topic-header">
+    <h2><%= t('title.index', resource: Topic.model_name.human) %></h2>
+    <div class="topic-actions">
+      <% if can_access?('topics', 'new') %>
+        <%= link_to new_topic_path do %>
+          <%= t('.action.new', resource: Topic.model_name.human) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <ul class="topics-list">
+    <%= render partial: 'item', collection: @pagination.records, as: :topic %>
+  </ul>
+  <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
+</article>

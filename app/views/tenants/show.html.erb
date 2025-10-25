@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="tenant-detail-header">
+    <h1 class="text-title"><%= @tenant.name %></h1>
+    <div class="tenant-detail-identifier-wrapper">
+      <span class="text-caption">@<%= @tenant.identifier %></span>
+      <button class="icon-btn"
+              data-controller="clipboard"
+              data-clipboard-text-value="<%= @tenant.identifier %>"
+              data-action="click->clipboard#copy">
+        <span class="material-icons" data-clipboard-target="icon">content_copy</span>
+        <span class="material-icons hidden" data-clipboard-target="successIcon">check</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="divider--thick"></div>
+
+  <div class="tenant-detail-section">
+    <h2 class="text-heading"><%= t('.description_title') %></h2>
+    <div class="tenant-detail-description">
+      <p class="text-body"><%= @tenant.description %></p>
+    </div>
+  </div>
+
+  <div class="tenant-detail-back divider">
+    <%= link_to root_path, class: "text-link" do %>
+      ← <%= t('.back_to_list') %>
+    <% end %>
+  </div>
+</div>

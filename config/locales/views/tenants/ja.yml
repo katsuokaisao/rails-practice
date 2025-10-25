@@ -4,3 +4,6 @@ ja:
     index:
       no_tenants: テナントが登録されていません
       title: テナント一覧
+    show:
+      back_to_list: テナント一覧に戻る
+      description_title: 説明

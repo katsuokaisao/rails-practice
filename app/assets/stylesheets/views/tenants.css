@@ -1,0 +1,53 @@
+/* ========================================
+   Tenant List Page
+   ======================================== */
+
+.tenant-list-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.tenant-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+}
+
+.tenant-list-empty {
+  text-align: center;
+
+  p {
+    font-size: var(--font-size-base);
+    color: var(--color-gray-400);
+  }
+}
+
+/* ========================================
+   Tenant Card Component
+   ======================================== */
+
+.tenant-card {
+  display: block;
+  padding: var(--spacing-lg);
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    background: var(--color-gray-50);
+    cursor: pointer;
+  }
+
+  .tenant-card-header {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .tenant-card-body {
+    margin-bottom: var(--spacing-md);
+    min-height: var(--min-content-height);
+  }
+
+  .tenant-card-footer {
+    padding-top: var(--spacing-sm);
+  }
+}

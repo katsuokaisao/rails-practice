@@ -1,0 +1,6 @@
+---
+ja:
+  tenants:
+    index:
+      no_tenants: テナントが登録されていません
+      title: テナント一覧

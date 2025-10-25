@@ -20,5 +20,6 @@ FactoryBot.define do
   factory :tenant do
     sequence(:name) { |n| "テナント#{n}" }
     sequence(:identifier) { |n| "tenant-#{n}" }
+    description { Faker::Lorem.sentence }
   end
 end

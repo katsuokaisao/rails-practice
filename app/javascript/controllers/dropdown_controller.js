@@ -9,7 +9,7 @@ export default class extends Controller {
   }
 
   hide(event) {
-    if (!this.element.contains(event.target)) {
+    if (this.hasMenuTarget && !this.element.contains(event.target)) {
       this.menuTarget.classList.remove("show")
     }
   }

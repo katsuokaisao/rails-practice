@@ -27,5 +27,5 @@ class Tenant < ApplicationRecord
               with: /\A[a-z0-9-]+\z/
             }
 
-  validates :description, length: { maximum: 500 }, allow_blank: true
+  validates :description, presence: true, length: { maximum: 500 }
 end

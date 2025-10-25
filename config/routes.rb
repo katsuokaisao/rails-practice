@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'topics#index'
-
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
@@ -49,4 +47,9 @@ Rails.application.routes.draw do
   resources :decisions, only: %i[index new create]
 
   get 'up' => 'rails/health#show', as: :rails_health_check
+
+  root to: 'tenants#index'
+  scope '/:tenant_slug', as: :tenant do
+    get '/', to: 'tenants#show', as: :root
+  end
 end

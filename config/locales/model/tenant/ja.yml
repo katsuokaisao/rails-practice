@@ -1,0 +1,19 @@
+---
+ja:
+  activerecord:
+    attributes:
+      tenant:
+        active: 有効
+        created_at: 作成日時
+        description: 説明
+        identifier: 識別子
+        name: テナント名
+        updated_at: 更新日時
+    errors:
+      models:
+        tenant:
+          attributes:
+            identifier:
+              invalid: は英小文字、数字、ハイフンのみ使用できます
+    models:
+      tenant: テナント

@@ -43,6 +43,7 @@ en:
         alert: "%{resource} could not be destroyed."
         notice: "%{resource} was successfully destroyed."
       out_of_bounds: Out of bounds request.
+      tenant_missing: Tenant is not specified.
       update:
         alert: "%{resource} could not be updated."
         notice: "%{resource} was successfully updated."

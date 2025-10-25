@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="tenant-list-header">
+    <h1 class="text-title"><%= t('.title') %></h1>
+  </div>
+
+  <% if @tenants.any? %>
+    <div class="tenant-grid">
+      <% @tenants.each do |tenant| %>
+        <%= link_to tenant_root_path(tenant_slug: tenant.identifier), class: "tenant-card card" do %>
+          <div class="tenant-card-header">
+            <h2 class="text-card-title"><%= tenant.name %></h2>
+          </div>
+
+          <div class="tenant-card-body">
+            <p class="text-body"><%= tenant.description %></p>
+          </div>
+
+          <div class="tenant-card-footer divider--light">
+            <span class="text-caption">@<%= tenant.identifier %></span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="tenant-list-empty">
+      <p><%= t('.no_tenants') %></p>
+    </div>
+  <% end %>
+</div>

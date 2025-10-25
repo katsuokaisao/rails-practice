@@ -43,6 +43,7 @@ ja:
         alert: "%{resource}を削除できませんでした。"
         notice: "%{resource}が削除されました。"
       out_of_bounds: 範囲外のリクエストです。
+      tenant_missing: テナントが指定されていません。
       update:
         alert: "%{resource}を更新できませんでした。"
         notice: "%{resource}が更新されました。"

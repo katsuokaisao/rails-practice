@@ -1,0 +1,9 @@
+---
+en:
+  tenants:
+    index:
+      no_tenants: No tenants registered
+      title: Tenant List
+    show:
+      back_to_list: Back to Tenant List
+      description_title: Description

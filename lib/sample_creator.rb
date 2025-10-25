@@ -6,6 +6,7 @@ class SampleCreator
   end
 
   def create
+    create_tenants
     create_users
     create_suspend_users
     create_moderators
@@ -18,6 +19,39 @@ class SampleCreator
   end
 
   private
+
+  def create_tenants
+    tenants_data = [
+      {
+        name: '社内フォーラム',
+        identifier: 'company-forum',
+        description: '社員向けの情報共有・質問・議論のための掲示板です。'
+      },
+      {
+        name: 'アイドルファンコミュニティ',
+        identifier: 'idol-community',
+        description: 'アイドルファンが集まるコミュニティ掲示板です。'
+      },
+      {
+        name: 'ゲーム攻略掲示板',
+        identifier: 'game-strategy',
+        description: 'ゲームの攻略情報を共有する掲示板です。'
+      },
+      {
+        name: 'プログラミング学習',
+        identifier: 'programming-study',
+        description: 'プログラミング学習者のための質問・共有掲示板です。'
+      }
+    ]
+
+    tenants_data.each do |data|
+      Tenant.create!(
+        name: data[:name],
+        identifier: data[:identifier],
+        description: data[:description]
+      )
+    end
+  end
 
   def create_moderators
     FactoryBot.create_list(:moderator, 5)
@@ -94,6 +128,7 @@ class SampleCreator
   end
 
   def put_records
+    puts_tenants
     puts_users
     puts_moderators
     puts_topics
@@ -101,6 +136,13 @@ class SampleCreator
     puts_comment_histories
     puts_reports
     puts_decisions
+  end
+
+  def puts_tenants
+    puts 'Tenants'
+    Tenant.find_each do |tenant|
+      puts "Tenant: #{tenant.name} (@#{tenant.identifier})}"
+    end
   end
 
   def puts_users

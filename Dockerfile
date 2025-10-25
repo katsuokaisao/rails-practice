@@ -18,18 +18,17 @@ RUN npx --yes playwright@latest install --with-deps chromium
 
 WORKDIR /app
 
+# Install Ruby dependencies
 COPY Gemfile Gemfile.lock ./
-
 RUN bundle config set path 'vendor/bundle' \
     && bundle install
 
-COPY . .
+# Install Node.js dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# Add entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Copy application code
+COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["bin/dev"]

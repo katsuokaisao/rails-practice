@@ -1,7 +1,6 @@
 services:
   rails:
     build: .
-    command: [ "sh", "-c", "rm -f /app/tmp/pids/server.pid && bin/dev" ]
     stdin_open: true
     tty: true
     volumes:

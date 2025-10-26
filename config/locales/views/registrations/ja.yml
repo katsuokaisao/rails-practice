@@ -9,8 +9,12 @@ ja:
           characters_minimum: 文字以上
         title: パスワード変更
       profile:
-        actions:
-          update: プロフィールを更新
+        memberships:
+          display_name_label: '表示名:'
+          empty: 所属しているテナントがありません
+          title: 所属テナント
+        timezone:
+          help: この設定は全てのテナントで共通です
         title: プロフィール編集
       shared:
         messages:

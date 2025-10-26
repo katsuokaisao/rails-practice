@@ -1,0 +1,20 @@
+---
+en:
+  activerecord:
+    attributes:
+      tenant_membership:
+        created_at: Created at
+        display_name: Display name
+        tenant_id: Tenant
+        updated_at: Updated at
+        user_id: User
+    errors:
+      models:
+        tenant_membership:
+          attributes:
+            display_name:
+              taken: has already been taken in this tenant
+            user_id:
+              taken: is already a member of this tenant
+    models:
+      tenant_membership: Tenant Membership

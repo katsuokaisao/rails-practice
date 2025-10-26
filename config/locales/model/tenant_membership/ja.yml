@@ -1,0 +1,20 @@
+---
+ja:
+  activerecord:
+    attributes:
+      tenant_membership:
+        created_at: 作成日時
+        display_name: 表示名
+        tenant_id: テナント
+        updated_at: 更新日時
+        user_id: ユーザー
+    errors:
+      models:
+        tenant_membership:
+          attributes:
+            display_name:
+              taken: はこのテナント内で既に使用されています
+            user_id:
+              taken: は既にこのテナントのメンバーです
+    models:
+      tenant_membership: テナントメンバーシップ

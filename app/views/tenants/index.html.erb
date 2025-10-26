@@ -3,9 +3,9 @@
     <h1 class="text-title"><%= t('.title') %></h1>
   </div>
 
-  <% if @tenants.any? %>
+  <% if @pagination.records.any? %>
     <div class="tenant-grid">
-      <% @tenants.each do |tenant| %>
+      <% @pagination.records.each do |tenant| %>
         <%= link_to tenant_root_path(tenant_slug: tenant.identifier), class: "tenant-card card" do %>
           <div class="tenant-card-header">
             <h2 class="text-card-title"><%= tenant.name %></h2>
@@ -21,6 +21,8 @@
         <% end %>
       <% end %>
     </div>
+
+    <%= render partial: 'shared/pagination' %>
   <% else %>
     <div class="tenant-list-empty">
       <p><%= t('.no_tenants') %></p>

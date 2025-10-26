@@ -6,13 +6,13 @@ RSpec.describe 'テナント', type: :system do
   let!(:user) { create(:user) }
   let!(:moderator) { create(:moderator) }
 
-  describe '認可' do
+  describe '全てのユーザーがテナント一覧から詳細ページへの一連の閲覧ができる' do
     [
       { role: '未ログインユーザー', login: :none },
       { role: 'ログインユーザー', login: :user },
       { role: 'モデレーター', login: :moderator }
     ].each do |test_case|
-      scenario "#{test_case[:role]}がテナント一覧から詳細ページへの一連の操作ができる" do
+      scenario "#{test_case[:role]}がテナント一覧から詳細ページへの一連の閲覧ができる" do
         create(:tenant, name: '社内フォーラム', identifier: 'company-forum',
                         description: '社員向けの情報共有・質問・議論のための掲示板です。')
         create(:tenant, name: 'アイドルファンコミュニティ', identifier: 'idol-community',
@@ -27,14 +27,14 @@ RSpec.describe 'テナント', type: :system do
           login_as(moderator, scope: :moderator)
         end
 
-        # テナント一覧でテナントが識別子順に並んでいることを確認
+        # テナント一覧でテナントが作成日時の降順で表示される
         visit root_path
         expect(page).to have_content('テナント一覧')
 
         tenant_cards = all('.tenant-card')
-        expect(tenant_cards[0]).to have_content('社内フォーラム') # company-forum
-        expect(tenant_cards[1]).to have_content('ゲーム攻略掲示板') # game-strategy
-        expect(tenant_cards[2]).to have_content('アイドルファンコミュニティ') # idol-community
+        expect(tenant_cards[0]).to have_content('ゲーム攻略掲示板') # game-strategy
+        expect(tenant_cards[1]).to have_content('アイドルファンコミュニティ') # idol-community
+        expect(tenant_cards[2]).to have_content('社内フォーラム') # company-forum
 
         # テナントカードをクリックして詳細ページに遷移
         click_link '社内フォーラム'
@@ -60,5 +60,26 @@ RSpec.describe 'テナント', type: :system do
     expect(page).to have_content('テナント一覧')
     expect(page).to have_content('テナントが登録されていません')
     expect(page).not_to have_selector('.tenant-card')
+  end
+
+  describe 'ページネーション' do
+    scenario 'テナント一覧でページネーションが機能する' do
+      create_list(:tenant, 30, description: 'テストテナントの説明です。')
+
+      visit root_path
+      expect(page).to have_selector('.pagination')
+
+      click_link '2'
+      tenant = Tenant.order(created_at: :desc).offset(20).first
+      expect(page).to have_content(tenant.name)
+      expect(page).to have_content("@#{tenant.identifier}")
+    end
+
+    scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
+      create_list(:tenant, 30, description: 'テストテナントの説明です。')
+      visit root_path(page: 999)
+      expect(page).to have_current_path(root_path)
+      expect(page).to have_content('範囲外のリクエストです。')
+    end
   end
 end

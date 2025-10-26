@@ -2,9 +2,11 @@
 
 class TenantProfilesController < ApplicationController
   include TenantScoped
+  include Authorization
 
   before_action :require_tenant
   before_action :set_membership
+  before_action -> { authorize_action!(@membership) }
 
   def edit; end
 

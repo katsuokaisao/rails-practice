@@ -38,6 +38,7 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'spec/**/*'
+    - 'lib/sample_creator.rb'
 
 Metrics/AbcSize:
   Max: 17

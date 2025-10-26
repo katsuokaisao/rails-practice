@@ -1,0 +1,100 @@
+/* ========================================
+   Tenant List Page
+   ======================================== */
+
+.tenant-list-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.tenant-list-empty {
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-lg);
+
+  p {
+    font-size: var(--font-size-base);
+    color: var(--color-gray-400);
+  }
+}
+
+.tenant-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  max-width: var(--container-narrow);
+  margin: 0 auto;
+}
+
+/* ========================================
+   Tenant Card Component
+   ======================================== */
+
+.tenant-card {
+  display: block;
+  padding: var(--spacing-lg);
+  text-decoration: none;
+  color: inherit;
+  min-width: 300px;
+
+  &:hover {
+    background: var(--color-gray-50);
+    cursor: pointer;
+  }
+
+  .tenant-card-header {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .tenant-card-body {
+    margin-bottom: var(--spacing-md);
+    min-height: var(--min-content-height);
+
+    p {
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .tenant-card-footer {
+    padding-top: var(--spacing-sm);
+  }
+}
+
+/* ========================================
+   Tenant Detail Page
+   ======================================== */
+
+.tenant-detail-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.tenant-detail-identifier-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.tenant-detail-section {
+  margin-bottom: var(--spacing-3xl);
+
+  .text-heading {
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+.tenant-detail-description {
+  padding: var(--spacing-lg);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  min-width: 300px;
+
+  p {
+    line-height: 1.5;
+    overflow-wrap: break-word;
+  }
+}
+
+.tenant-detail-back {
+  margin-top: var(--spacing-3xl);
+  padding-top: var(--spacing-lg);
+}

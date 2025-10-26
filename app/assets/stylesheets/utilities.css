@@ -1,0 +1,129 @@
+/* ========================================
+   General Utilities
+   ======================================== */
+
+.hidden {
+    display: none !important;
+}
+
+/* ========================================
+   Typography Utilities
+   ======================================== */
+
+/* Page Title - 大見出し（ページタイトル） */
+.text-title {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+    line-height: 1.25;
+}
+
+/* Section Heading - 中見出し（セクション見出し） */
+.text-heading {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-lg);
+}
+
+/* Card Title - カード見出し */
+.text-card-title {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    line-height: 1.4;
+}
+
+/* Body Text - 本文 */
+.text-body {
+    font-size: var(--font-size-sm);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+/* Caption - キャプション・メタ情報 */
+.text-caption {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-500);
+}
+
+/* Link - リンク */
+.text-link {
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+}
+
+/* ========================================
+   Layout Utilities
+   ======================================== */
+
+/* Container - コンテナ */
+.container {
+    max-width: 100%;
+}
+
+/* ========================================
+   Component Utilities
+   ======================================== */
+
+/* Card Base - カード基底クラス */
+.card {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Badge - バッジ */
+.badge {
+    padding: var(--spacing-2xs) var(--spacing-sm);
+    background: var(--color-gray-50);
+    border-radius: var(--radius-sm);
+    display: inline-block;
+}
+
+/* Divider - 区切り線 */
+.divider {
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.divider--light {
+    border-top: 1px solid var(--color-gray-100);
+}
+
+.divider--bold {
+    border-top: 2px solid var(--color-gray-200);
+}
+
+.divider--thick {
+    height: 2px;
+    background: var(--color-gray-200);
+    margin: var(--spacing-xl) 0;
+    border: none;
+}
+
+/* Icon Button - アイコンボタン */
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xs);
+    background: transparent;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-sm);
+    color: var(--color-gray-500);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+        background: var(--color-gray-50);
+        border-color: var(--color-gray-400);
+        color: var(--color-gray-900);
+    }
+
+    .material-icons {
+        font-size: 16px;
+    }
+}

@@ -51,5 +51,8 @@ Rails.application.routes.draw do
   root to: 'tenants#index'
   scope '/:tenant_slug', as: :tenant do
     get '/', to: 'tenants#show', as: :root
+
+    get 'profile', to: 'tenant_profiles#edit', as: :users_profile
+    patch 'profile', to: 'tenant_profiles#update'
   end
 end

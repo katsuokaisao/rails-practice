@@ -1,0 +1,26 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: edit_user_profile_path %>
+
+    <div class="tenant-info">
+      <h3><%= @membership.tenant.name %></h3>
+    </div>
+
+    <%= form_with model: @membership,
+                  url: tenant_users_profile_path(@membership.tenant.identifier),
+                  method: :patch,
+                  html: { "data-turbo": "false" } do |f| %>
+
+      <%= render partial: "shared/form_errors", locals: { model: @membership } %>
+
+      <div class="field">
+        <%= f.label :display_name %>
+        <%= f.text_field :display_name %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <% end %>
+  </section>
+</article>

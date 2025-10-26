@@ -33,6 +33,7 @@
   padding: var(--spacing-lg);
   text-decoration: none;
   color: inherit;
+  min-width: 300px;
 
   &:hover {
     background: var(--color-gray-50);
@@ -46,6 +47,11 @@
   .tenant-card-body {
     margin-bottom: var(--spacing-md);
     min-height: var(--min-content-height);
+
+    p {
+      line-height: 1.5;
+      overflow-wrap: break-word;
+    }
   }
 
   .tenant-card-footer {
@@ -80,6 +86,12 @@
   padding: var(--spacing-lg);
   background: var(--color-gray-50);
   border-radius: var(--radius-md);
+  min-width: 300px;
+
+  p {
+    line-height: 1.5;
+    overflow-wrap: break-word;
+  }
 }
 
 .tenant-detail-back {

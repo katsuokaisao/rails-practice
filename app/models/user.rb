@@ -28,6 +28,8 @@ class User < ApplicationRecord
   has_many :authored_reports, class_name: 'Report', foreign_key: 'reporter_id',
                               dependent: :restrict_with_error, inverse_of: :reporter
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
+  has_many :tenant_memberships, dependent: :destroy
+  has_many :tenants, through: :tenant_memberships
 
   validate :suspended_until_future
 
@@ -53,6 +55,15 @@ class User < ApplicationRecord
     return unless suspended?
 
     update!(suspended_until: nil)
+  end
+
+  def member_of?(tenant)
+    tenant_memberships.exists?(tenant: tenant)
+  end
+
+  def display_name_for(tenant)
+    membership = tenant_memberships.find_by(tenant: tenant)
+    membership&.display_name || ''
   end
 
   private

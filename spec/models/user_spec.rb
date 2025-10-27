@@ -19,6 +19,10 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  let(:user) { create(:user) }
+  let(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
+  let(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+
   describe 'バリデーション' do
     context '新規作成時' do
       it '有効な場合は保存できる' do
@@ -123,6 +127,42 @@ RSpec.describe User, type: :model do
       it 'パスワードの長さが最小未満だと無効' do
         user.update(password: 'A1!a', password_confirmation: 'A1!a')
         expect(user.errors[:password]).to be_present
+      end
+    end
+  end
+
+  describe '#member_of?' do
+    context 'ユーザーがテナントのメンバーの場合' do
+      before do
+        create(:tenant_membership, user: user, tenant: tenant_a)
+      end
+
+      it 'trueを返す' do
+        expect(user.member_of?(tenant_a)).to be true
+      end
+    end
+
+    context 'ユーザーがテナントのメンバーでない場合' do
+      it 'falseを返す' do
+        expect(user.member_of?(tenant_a)).to be false
+      end
+    end
+  end
+
+  describe '#display_name_for' do
+    context 'ユーザーがテナントのメンバーの場合' do
+      before do
+        create(:tenant_membership, user: user, tenant: tenant_a, display_name: '山田太郎')
+      end
+
+      it 'そのテナントでの表示名を返す' do
+        expect(user.display_name_for(tenant_a)).to eq('山田太郎')
+      end
+    end
+
+    context 'ユーザーがテナントのメンバーでない場合' do
+      it '空文字列を返す' do
+        expect(user.display_name_for(tenant_a)).to eq('')
       end
     end
   end

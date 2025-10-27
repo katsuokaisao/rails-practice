@@ -72,16 +72,6 @@ class SampleCreator
     tenants = Tenant.all.to_a
     users = User.all.to_a
 
-    # 日本語の表示名候補
-    display_names = %w[
-      山田太郎 鈴木花子 田中一郎 佐藤美咲 高橋健太
-      渡辺優子 伊藤大輔 中村舞 小林拓也 加藤愛
-      吉田悠太 山本さくら 佐々木隼人 松本美優 井上翔
-      木村結衣 林雄大 斉藤琴音 清水陽介 森本彩花
-      たろちゃん はなちゃん けんけん まいまい ゆうちゃん
-      taro_y hanako_s ken_t mai_n yuta_y
-    ]
-
     # 各テナントに10〜15人のメンバーを追加
     tenants.each do |tenant|
       member_count = rand(10..15)
@@ -89,9 +79,7 @@ class SampleCreator
       used_names = []
 
       selected_users.each do |user|
-        # このテナント内で未使用の表示名を選択
-        available_names = display_names - used_names
-        display_name = available_names.sample || "ユーザー#{rand(1000..9999)}"
+        display_name = generate_unique_display_name(used_names)
 
         TenantMembership.create!(
           tenant: tenant,
@@ -116,10 +104,8 @@ class SampleCreator
       selected_tenants = available_tenants.sample(additional_tenant_count)
 
       selected_tenants.each do |tenant|
-        # このテナント内で未使用の表示名を選択
         used_names = TenantMembership.where(tenant: tenant).pluck(:display_name)
-        available_names = display_names - used_names
-        display_name = available_names.sample || "ユーザー#{rand(1000..9999)}"
+        display_name = generate_unique_display_name(used_names)
 
         TenantMembership.create!(
           tenant: tenant,
@@ -127,6 +113,13 @@ class SampleCreator
           display_name: display_name
         )
       end
+    end
+  end
+
+  def generate_unique_display_name(used_names)
+    loop do
+      name = Faker::Japanese::Name.name
+      return name unless used_names.include?(name)
     end
   end
 

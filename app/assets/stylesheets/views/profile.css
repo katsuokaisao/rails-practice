@@ -24,6 +24,13 @@
                 margin-bottom: var(--spacing-md);
                 color: var(--color-text-primary);
             }
+
+            .text-muted {
+                font-size: var(--font-size-sm);
+                color: var(--color-gray-400);
+                text-align: center;
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
         }
 
         .memberships-list {
@@ -71,11 +78,4 @@
             }
         }
     }
-}
-
-.text-muted {
-    font-size: var(--font-size-sm);
-    color: var(--color-gray-400);
-    text-align: center;
-    padding: var(--spacing-xl) var(--spacing-md);
 }

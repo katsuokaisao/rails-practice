@@ -22,7 +22,9 @@ class TenantProfilesController < ApplicationController
   private
 
   def set_membership
-    @membership = current_user.tenant_memberships.find_by!(tenant: current_tenant)
+    return unless current_user
+
+    @membership = current_user.tenant_memberships.find_by(tenant: current_tenant)
   end
 
   def membership_params

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :user, :moderator, :record
+  attr_reader :user, :moderator, :tenant, :record
 
-  def initialize(user, moderator, record)
+  def initialize(user, moderator, tenant, record)
     @user = user
     @moderator = moderator
+    @tenant = tenant
     @record = record
   end
 
@@ -45,5 +46,17 @@ class ApplicationPolicy
     return report.reportable == user if report.reportable_type_user?
 
     false
+  end
+
+  def tenant_member?
+    return false unless user? && tenant
+
+    user.member_of?(tenant)
+  end
+
+  def membership_owner?
+    return false unless user? && tenant && record.is_a?(TenantMembership)
+
+    record.user == user && record.tenant == tenant
   end
 end

@@ -17,6 +17,9 @@
 #  idx_tenants_name        (name)
 #
 class Tenant < ApplicationRecord
+  has_many :tenant_memberships, dependent: :destroy
+  has_many :members, through: :tenant_memberships, source: :user
+
   validates :name, presence: true, length: { maximum: 100 }
 
   validates :identifier,
@@ -28,4 +31,10 @@ class Tenant < ApplicationRecord
             }
 
   validates :description, presence: true, length: { maximum: 500 }
+
+  def member?(user)
+    return false if user.nil?
+
+    tenant_memberships.exists?(user: user)
+  end
 end

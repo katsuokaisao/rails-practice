@@ -44,9 +44,18 @@ Metrics/AbcSize:
   Max: 17
   Exclude:
     - 'app/controllers/**/*'
+    - 'lib/sample_creator.rb'
 
 Metrics/ClassLength:
   Max: 100
+  Exclude:
+    - 'lib/sample_creator.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/sample_creator.rb'
+
+Metrics/PerceivedComplexity:
   Exclude:
     - 'lib/sample_creator.rb'
 

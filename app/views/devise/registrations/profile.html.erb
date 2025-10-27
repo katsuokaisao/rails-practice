@@ -1,6 +1,6 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: topics_path %>
+    <%= render 'shared/back_button', url: root_path %>
     <h2><%= t('.title') %></h2>
 
     <%= form_with(model: resource, as: resource_name, url: user_registration_path, html: { "data-turbo": "false" }) do |f| %>
@@ -9,21 +9,42 @@
       <%= f.hidden_field :update_kind, value: "profile" %>
 
       <div class="field">
-        <%= f.label :nickname %>
-        <%= f.text_field :nickname, autofocus: true, autocomplete: "nickname" %>
-      </div>
-
-      <div class="field">
         <%= f.label :time_zone %>
         <%= f.time_zone_select :time_zone,
                               ActiveSupport::TimeZone.all.sort,
                               default: Rails.application.config.time_zone,
                               include_blank: true %>
+        <small class="form-text"><%= t('.timezone.help') %></small>
       </div>
 
       <div class="actions">
-        <%= f.submit t('.actions.update') %>
+        <%= f.submit %>
       </div>
     <% end %>
-  </section>
+
+    <hr>
+
+    <div class="memberships-section">
+      <h3><%= t('.memberships.title') %></h3>
+
+      <% if @memberships.any? %>
+        <div class="memberships-list">
+          <% @memberships.each do |membership| %>
+            <div class="membership-item">
+              <div class="membership-info">
+                <h4><%= membership.tenant.name %></h4>
+                <p><%= t('.memberships.display_name_label') %> <strong><%= membership.display_name %></strong></p>
+              </div>
+              <div class="membership-actions">
+                <%= link_to t('action.edit'),
+                            tenant_users_profile_path(membership.tenant.identifier),
+                            class: 'btn-link' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted"><%= t('.memberships.empty') %></p>
+      <% end %>
+    </div>
 </article>

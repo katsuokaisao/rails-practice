@@ -20,6 +20,7 @@ module Users
 
     # GET /resource/profile
     def profile
+      @memberships = current_user.tenant_memberships.includes(:tenant).order('tenants.name')
       render :profile
     end
 
@@ -42,6 +43,11 @@ module Users
         respond_with resource, location: after_update_path_for(resource)
       else
         clean_up_passwords resource
+        if update_kind == :profile
+          @memberships = current_user.tenant_memberships
+                                     .includes(:tenant)
+                                     .order('tenants.name')
+        end
         render update_kind
       end
     end
@@ -87,7 +93,7 @@ module Users
     def account_update_params
       permitted =
         case update_kind
-        when :profile  then %i[nickname time_zone]
+        when :profile  then %i[time_zone]
         when :password then %i[current_password password password_confirmation]
         else []
         end
@@ -102,7 +108,7 @@ module Users
     end
 
     def configure_account_update_params
-      devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone])
+      devise_parameter_sanitizer.permit(:account_update, keys: %i[time_zone])
     end
 
     def after_sign_up_path_for(_resource)

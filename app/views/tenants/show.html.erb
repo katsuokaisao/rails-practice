@@ -22,6 +22,14 @@
     </div>
   </div>
 
+  <div class="divider--thick"></div>
+
+  <div class="tenant-detail-actions">
+    <%= link_to t('.invite_member'),
+                new_tenant_invitation_path(tenant_slug: @tenant.identifier),
+                class: "btn-link" %>
+  </div>
+
   <div class="tenant-detail-back divider">
     <%= link_to root_path, class: "text-link" do %>
       ← <%= t('.back_to_list') %>

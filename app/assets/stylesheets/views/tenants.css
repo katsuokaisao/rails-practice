@@ -94,6 +94,12 @@
   }
 }
 
+.tenant-detail-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
 .tenant-detail-back {
   margin-top: var(--spacing-3xl);
   padding-top: var(--spacing-lg);

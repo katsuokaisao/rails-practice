@@ -1,0 +1,29 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: tenant_root_path(tenant_slug: current_tenant.identifier) %>
+
+    <h1><%= t('.title') %></h1>
+
+    <%= form_with model: @invitation,
+                  url: tenant_invitations_path(tenant_slug: current_tenant.identifier),
+                  html: { "data-turbo": "false" } do |f| %>
+
+      <%= render partial: "shared/form_errors", locals: { model: @invitation } %>
+
+      <div class="field">
+        <%= f.label :invited_user_id %>
+        <%= f.number_field :invited_user_id,
+                           required: true,
+                           min: 1,
+                           step: 1,
+                           autocomplete: 'off',
+                           placeholder: t('.user_id_placeholder') %>
+        <p class="field-hint"><%= t('.user_id_hint') %></p>
+      </div>
+
+      <div class="actions">
+        <%= f.submit t('.submit') %>
+      </div>
+    <% end %>
+  </section>
+</article>

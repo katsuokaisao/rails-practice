@@ -56,7 +56,8 @@ Rails.application.routes.draw do
     patch 'profile', to: 'tenant_profiles#update'
 
     scope module: 'tenants' do
-      resources :users, only: [:show]
+      resources :users, only: %i[show]
+      resources :invitations, only: %i[new create]
     end
   end
 end

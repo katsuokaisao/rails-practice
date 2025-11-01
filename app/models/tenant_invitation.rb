@@ -14,9 +14,9 @@
 #
 # Indexes
 #
-#  idx_tenant_invitations_invited_user_status  (invited_user_id,status)
-#  idx_tenant_invitations_inviter              (inviter_id)
-#  idx_tenant_invitations_tenant_user_pending  (tenant_id,invited_user_id) UNIQUE
+#  idx_tenant_invitations_invited_user_status          (invited_user_id,status)
+#  idx_tenant_invitations_inviter                      (inviter_id)
+#  idx_tenant_invitations_tenant_inviter_user_pending  (tenant_id,inviter_id,invited_user_id) UNIQUE
 #
 # Foreign Keys
 #
@@ -34,7 +34,7 @@ class TenantInvitation < ApplicationRecord
   belongs_to :invited_user, class_name: 'User'
 
   validates :invited_user_id, uniqueness: {
-    scope: :tenant_id,
+    scope: %i[tenant_id inviter_id],
     conditions: -> { status_pending }
   }
   validate :validate_invited_user

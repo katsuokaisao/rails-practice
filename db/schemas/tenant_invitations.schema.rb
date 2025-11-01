@@ -9,10 +9,10 @@ create_table :tenant_invitations, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb
   t.datetime 'created_at',       null: false
   t.datetime 'updated_at',       null: false
 
-  t.index %w[tenant_id invited_user_id],
+  t.index %w[tenant_id inviter_id invited_user_id],
           where: "status = 'pending'",
           unique: true,
-          name: 'idx_tenant_invitations_tenant_user_pending'
+          name: 'idx_tenant_invitations_tenant_inviter_user_pending'
   t.index %w[invited_user_id status], name: 'idx_tenant_invitations_invited_user_status'
   t.index %w[inviter_id], name: 'idx_tenant_invitations_inviter'
 end

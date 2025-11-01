@@ -15,3 +15,9 @@ ja:
       reportable_type:
         Comment: コメント
         User: ユーザー
+    tenant_invitation:
+      status:
+        accepted: 受諾済み
+        canceled: キャンセル済み
+        pending: 保留中
+        rejected: 拒否済み

@@ -1,0 +1,9 @@
+---
+ja:
+  tenants:
+    users:
+      show:
+        back: 戻る
+        invitation_guide_description: このユーザーIDを使用して、他のユーザーをテナントに招待することができます。招待画面でこのIDを入力してください。
+        invitation_guide_title: 招待について
+        user_id_label: ユーザーID

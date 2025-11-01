@@ -54,5 +54,9 @@ Rails.application.routes.draw do
 
     get 'profile', to: 'tenant_profiles#edit', as: :users_profile
     patch 'profile', to: 'tenant_profiles#update'
+
+    scope module: 'tenants' do
+      resources :users, only: [:show]
+    end
   end
 end

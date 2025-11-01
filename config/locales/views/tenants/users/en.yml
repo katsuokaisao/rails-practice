@@ -1,0 +1,10 @@
+---
+en:
+  tenants:
+    users:
+      show:
+        back: Back
+        invitation_guide_description: You can use this User ID to invite other users
+          to the tenant. Please enter this ID on the invitation screen.
+        invitation_guide_title: About Invitation
+        user_id_label: User ID

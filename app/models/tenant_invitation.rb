@@ -34,7 +34,7 @@ class TenantInvitation < ApplicationRecord
   belongs_to :invited_user, class_name: 'User'
 
   validates :invited_user_id, uniqueness: {
-    scope: %i[tenant_id inviter_id],
+    scope: :tenant_id,
     conditions: -> { status_pending }
   }
   validate :validate_invited_user

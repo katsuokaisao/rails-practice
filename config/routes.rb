@@ -49,8 +49,8 @@ Rails.application.routes.draw do
   namespace :my do
     resources :invitations, only: %i[index] do
       member do
-        get :display_name
-        post :accept
+        get :accept
+        post :accept, action: :create_acceptance
         post :reject
       end
     end

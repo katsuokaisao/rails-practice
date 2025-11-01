@@ -1,0 +1,38 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: my_invitations_path %>
+
+    <h1><%= t('.title', tenant_name: @invitation.tenant.name) %></h1>
+
+    <div class="invitation-info">
+      <dl class="info-list">
+        <dt><%= t('.inviter') %></dt>
+        <dd><%= @invitation.inviter.display_name_for(@invitation.tenant) %></dd>
+
+        <dt><%= t('.invited_at') %></dt>
+        <dd><%= l(@invitation.created_at, format: :long) %></dd>
+      </dl>
+    </div>
+
+    <%= form_with model: @tenant_membership,
+                  url: accept_my_invitation_path(@invitation),
+                  html: { "data-turbo": "false" } do |f| %>
+
+      <%= render partial: "shared/form_errors", locals: { model: @tenant_membership } %>
+
+      <div class="field">
+        <%= f.label :display_name %>
+        <%= f.text_field :display_name,
+                         required: true,
+                         autocomplete: 'off',
+                         placeholder: t('.display_name_placeholder') %>
+        <p class="field-hint"><%= t('.display_name_hint') %></p>
+      </div>
+
+      <div class="actions">
+        <%= f.submit t('.submit') %>
+        <%= link_to t('action.cancel'), my_invitations_path, class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </section>
+</article>

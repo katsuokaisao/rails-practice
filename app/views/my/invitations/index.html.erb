@@ -23,7 +23,7 @@
 
           <div class="invitation-card-actions">
             <%= link_to t('.accept'),
-                        display_name_my_invitation_path(invitation),
+                        accept_my_invitation_path(invitation),
                         class: "btn btn-primary btn-sm" %>
             <%= button_to t('.reject'),
                           reject_my_invitation_path(invitation),

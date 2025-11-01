@@ -5,13 +5,19 @@ class ApplicationController < ActionController::Base
 
   before_action :set_time_zone
 
-  helper_method :only_user_signed_in?
+  helper_method :only_user_signed_in?, :pending_invitations_count
 
   # 403
   rescue_from Authorization::NotAuthorizedError, with: :render_forbidden
 
   def only_user_signed_in?
     user_signed_in? && !moderator_signed_in?
+  end
+
+  def pending_invitations_count
+    return 0 unless user_signed_in?
+
+    current_user.pending_invitations.count
   end
 
   private

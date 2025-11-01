@@ -1,0 +1,12 @@
+---
+en:
+  my:
+    invitations:
+      index:
+        accept: Accept Invitation
+        invited_at: Invited on %{date}
+        invited_by: Invited by %{inviter}
+        no_invitations: No invitations
+        reject: Reject
+        reject_confirm: Are you sure you want to reject this invitation?
+        title: Received Invitations

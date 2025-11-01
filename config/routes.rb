@@ -46,6 +46,16 @@ Rails.application.routes.draw do
   resources :reports, only: %i[index new create]
   resources :decisions, only: %i[index new create]
 
+  namespace :my do
+    resources :invitations, only: %i[index] do
+      member do
+        get :accept
+        post :accept, action: :create_acceptance
+        post :reject
+      end
+    end
+  end
+
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   root to: 'tenants#index'
@@ -54,5 +64,10 @@ Rails.application.routes.draw do
 
     get 'profile', to: 'tenant_profiles#edit', as: :users_profile
     patch 'profile', to: 'tenant_profiles#update'
+
+    scope module: 'tenants' do
+      resources :users, only: %i[show]
+      resources :invitations, only: %i[new create]
+    end
   end
 end

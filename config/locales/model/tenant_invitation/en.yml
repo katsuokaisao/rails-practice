@@ -1,0 +1,24 @@
+---
+en:
+  activerecord:
+    attributes:
+      tenant_invitation:
+        created_at: Created At
+        invited_user: Invited User
+        invited_user_id: User ID
+        inviter: Inviter
+        inviter_id: Inviter
+        status: Status
+        tenant: Tenant
+        tenant_id: Tenant
+        updated_at: Updated At
+    errors:
+      models:
+        tenant_invitation:
+          attributes:
+            invited_user_id:
+              already_member: is already a member
+              invalid_self: cannot be yourself
+              taken: has already been invited
+    models:
+      tenant_invitation: Invitation

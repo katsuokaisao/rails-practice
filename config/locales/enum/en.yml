@@ -15,3 +15,9 @@ en:
       reportable_type:
         Comment: Comment
         User: User
+    tenant_invitation:
+      status:
+        accepted: Accepted
+        canceled: Canceled
+        pending: Pending
+        rejected: Rejected

@@ -1,0 +1,27 @@
+---
+en:
+  my:
+    invitations:
+      accept:
+        display_name_hint: Enter the display name you want to use in this tenant (you
+          can change it later)
+        display_name_placeholder: e.g., John Doe
+        invited_at: Invited At
+        inviter: Inviter
+        submit: Join
+        title: Invitation to Tenant "%{tenant_name}"
+      create_acceptance:
+        success: You have joined %{tenant_name}
+      errors:
+        already_member: You are already a member of this tenant
+        invalid_invitation: This invitation is invalid
+      index:
+        accept: Accept Invitation
+        invited_at: Invited on %{date}
+        invited_by: Invited by %{inviter}
+        no_invitations: No invitations
+        reject: Reject
+        reject_confirm: Are you sure you want to reject this invitation?
+        title: Received Invitations
+      reject:
+        success: Invitation rejected

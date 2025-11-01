@@ -1,0 +1,26 @@
+---
+ja:
+  my:
+    invitations:
+      accept:
+        display_name_hint: このテナント内での表示名を入力してください（後から変更できます）
+        display_name_placeholder: '例: 山田太郎'
+        invited_at: 招待日時
+        inviter: 招待者
+        submit: 参加する
+        title: テナント「%{tenant_name}」への招待
+      create_acceptance:
+        success: "%{tenant_name}に参加しました"
+      errors:
+        already_member: 既にこのテナントに参加しています
+        invalid_invitation: この招待は無効です
+      index:
+        accept: 招待を受ける
+        invited_at: "%{date}に招待"
+        invited_by: "%{inviter}さんから招待されました"
+        no_invitations: 招待はありません
+        reject: 拒否する
+        reject_confirm: 本当にこの招待を拒否しますか？
+        title: 受け取った招待
+      reject:
+        success: 招待を拒否しました

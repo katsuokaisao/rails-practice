@@ -5,7 +5,7 @@ module Authorization
 
   private
 
-  def authorize_action!(record)
+  def authorize_action!(record = nil)
     policy = policy(record)
     return true if policy.public_send("#{action_name}?")
 
@@ -26,7 +26,7 @@ module Authorization
 
   def policy(record)
     policy_class = find_policy_class
-    policy_class.new(current_user, current_moderator, record)
+    policy_class.new(current_user, current_moderator, current_tenant, record)
   end
 
   def find_policy_class

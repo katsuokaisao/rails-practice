@@ -2,9 +2,9 @@
 
 module Pagination
   Result = Data.define(:records, :page, :per, :ahead, :window_numbers, :out_of_bounds) do
-    def page_path(base_path:, page_num: page, query_params: {})
+    def page_path(base_path:, page_num: page, query_params: {}, page_param: :page)
       uri = URI.parse(base_path)
-      query = URI.encode_www_form(query_params.merge(page: page_num, per: per))
+      query = URI.encode_www_form(query_params.merge(page_param => page_num, per: per))
       "#{uri.path}?#{query}"
     end
   end

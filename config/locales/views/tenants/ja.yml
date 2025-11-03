@@ -2,7 +2,9 @@
 ja:
   tenants:
     index:
+      member_tenants: 所属テナント
       no_tenants: テナントが登録されていません
+      other_tenants: その他のテナント
       title: テナント一覧
     show:
       back_to_list: テナント一覧に戻る

@@ -1,13 +1,16 @@
-<% unless @pagination.page == 1 and @pagination.ahead == 0 %>
+<% pagination = local_assigns.fetch(:pagination, @pagination) %>
+<% page_param = local_assigns.fetch(:page_param, :page) %>
+<% unless pagination.page == 1 and pagination.ahead == 0 %>
   <nav class="pagination">
-    <% @pagination.window_numbers.each do |num| %>
-      <% if num == @pagination.page %>
+    <% pagination.window_numbers.each do |num| %>
+      <% if num == pagination.page %>
         <span class="is-current"><%= num %></span>
       <% else %>
-        <%= link_to num, @pagination.page_path(
+        <%= link_to num, pagination.page_path(
           base_path: request.path,
           page_num: num,
-          query_params: local_assigns.fetch(:query_params, {})
+          query_params: local_assigns.fetch(:query_params, {}),
+          page_param: page_param
         ) %>
       <% end %>
     <% end %>

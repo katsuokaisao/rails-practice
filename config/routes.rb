@@ -51,5 +51,9 @@ Rails.application.routes.draw do
   root to: 'tenants#index'
   scope '/:tenant_slug', as: :tenant do
     get '/', to: 'tenants#show', as: :root
+
+    scope module: 'tenants' do
+      resource :membership, only: %i[edit update]
+    end
   end
 end

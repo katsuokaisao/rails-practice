@@ -16,13 +16,13 @@
     <tbody>
         <% pagination.records.each do |report| %>
             <tr>
-                <td><%= report.reporter.nickname %></td>
+                <td><%= report.reporter.login_id %></td>
                 <td><%= report.enum_i18n(:reason_type) %></td>
                 <td><%= truncate(report.reason_text, length: 1000) %></td>
                 <td><%= report.reportable.topic.title %></td>
                 <td><%= truncate(report.reportable.content, length: 1000) %></td>
                 <td><%= l(report.reportable.created_at, format: :default) %></td>
-                <td><%= report.reportable.author.nickname %></td>
+                <td><%= report.reportable.author.login_id %></td>
                 <td><%= report.reportable.current_version_no %></td>
                 <td><%= l(report.created_at, format: :default) %></td>
                 <td>

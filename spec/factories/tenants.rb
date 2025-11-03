@@ -21,5 +21,27 @@ FactoryBot.define do
     sequence(:name) { |n| "テナント#{n}" }
     sequence(:identifier) { |n| "tenant-#{n}" }
     description { Faker::Lorem.sentence }
+
+    trait :with_members do
+      transient do
+        member_count { 5 }
+        members { [] }
+      end
+
+      after(:create) do |tenant, evaluator|
+        users_to_add = if evaluator.members.any?
+                         evaluator.members
+                       else
+                         create_list(:user, evaluator.member_count)
+                       end
+
+        users_to_add.each_with_index do |user, index|
+          create(:tenant_membership,
+                 tenant: tenant,
+                 user: user,
+                 display_name: "メンバー#{index + 1}")
+        end
+      end
+    end
   end
 end

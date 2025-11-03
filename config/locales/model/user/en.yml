@@ -3,7 +3,7 @@ en:
   activerecord:
     attributes:
       user:
-        nickname: Nickname
+        login_id: Login ID
         time_zone: Time Zone
     errors:
       models:

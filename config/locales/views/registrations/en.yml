@@ -9,8 +9,12 @@ en:
           characters_minimum: characters minimum
         title: Change Password
       profile:
-        actions:
-          update: Update Profile
+        memberships:
+          display_name_label: 'Display Name:'
+          empty: You are not a member of any tenants
+          title: Tenant Memberships
+        timezone:
+          help: This setting is shared across all tenants
         title: Edit Profile
       shared:
         messages:

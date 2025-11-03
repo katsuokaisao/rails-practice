@@ -19,7 +19,7 @@
           </tr>
           <tr>
             <th><%= t('.reporter_nickname') %></th>
-            <td><%= report.reporter.nickname %></td>
+            <td><%= report.reporter.login_id %></td>
           </tr>
           <tr>
             <th><%= t('activerecord.attributes.report.reportable_type') %></th>
@@ -44,12 +44,12 @@
             </tr>
             <tr>
               <th><%= t('.comment_author_nickname') %></th>
-              <td><%= report.reportable.author.nickname %></td>
+              <td><%= report.reportable.author.login_id %></td>
             </tr>
           <% elsif report.reportable_type_user? %>
             <tr>
               <th><%= t('.reportable_user_nickname') %></th>
-              <td><%= report.reportable.nickname %></td>
+              <td><%= report.reportable.login_id %></td>
             </tr>
           <% end %>
           <tr>

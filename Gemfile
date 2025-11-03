@@ -32,6 +32,7 @@ group :development, :test do
   gem 'erb_lint', require: false
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'faker-japanese'
 end
 
 group :test do

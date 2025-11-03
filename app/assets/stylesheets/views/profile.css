@@ -1,0 +1,81 @@
+.users_registrations_controller {
+    .form-card {
+        hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid var(--color-gray-200);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .form-text {
+            display: block;
+            margin-top: var(--spacing-2xs);
+            font-size: var(--font-size-xs);
+            color: var(--color-gray-500);
+            line-height: 1.4;
+        }
+
+        .memberships-section {
+            width: 100%;
+
+            h3 {
+                font-size: var(--font-size-lg);
+                font-weight: var(--font-weight-semibold);
+                margin-bottom: var(--spacing-md);
+                color: var(--color-text-primary);
+            }
+
+            .text-muted {
+                font-size: var(--font-size-sm);
+                color: var(--color-gray-400);
+                text-align: center;
+                padding: var(--spacing-xl) var(--spacing-md);
+            }
+        }
+
+        .memberships-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            width: 100%;
+        }
+
+        .membership-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            background: var(--color-gray-50);
+            border: 1px solid var(--color-gray-200);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+
+            &:hover {
+                background: var(--color-white);
+                box-shadow: var(--shadow-sm);
+            }
+        }
+
+        .membership-info {
+            flex: 1;
+
+            h4 {
+                font-size: var(--font-size-base);
+                font-weight: var(--font-weight-semibold);
+                margin-bottom: var(--spacing-2xs);
+                color: var(--color-text-primary);
+            }
+
+            p {
+                font-size: var(--font-size-sm);
+                color: var(--color-text-secondary);
+                margin: 0;
+
+                strong {
+                    font-weight: var(--font-weight-semibold);
+                    color: var(--color-text-primary);
+                }
+            }
+        }
+    }
+}

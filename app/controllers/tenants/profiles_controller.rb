@@ -10,7 +10,7 @@ module Tenants
     def update
       if @membership.update(membership_params)
         redirect_to edit_tenant_profile_path(tenant_slug: @membership.tenant.identifier),
-                    notice: t('flash.actions.update.notice', resource: Tenant.model_name.human)
+                    notice: t('flash.actions.update.notice', resource: TenantMembership.model_name.human)
       else
         render :edit, status: :unprocessable_entity
       end

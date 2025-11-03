@@ -4,8 +4,8 @@ ja:
     attributes:
       tenant_invitation:
         created_at: 作成日時
-        invited_user: 招待されたユーザー
-        invited_user_id: ユーザーID
+        invited_user: 招待するユーザー
+        invited_user_id: 招待するユーザー
         inviter: 招待者
         inviter_id: 招待者
         status: ステータス
@@ -19,6 +19,7 @@ ja:
             invited_user_id:
               already_member: は既にメンバーです
               invalid_self: は自分自身を指定できません
+              not_exist: 存在しないユーザです
               taken: には既に招待を送信しています
     models:
       tenant_invitation: 招待

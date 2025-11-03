@@ -31,7 +31,7 @@ class TenantInvitation < ApplicationRecord
 
   belongs_to :tenant
   belongs_to :inviter, class_name: 'User'
-  belongs_to :invited_user, class_name: 'User'
+  belongs_to :invited_user, class_name: 'User', optional: true
 
   validates :invited_user_id, uniqueness: {
     scope: :tenant_id,
@@ -44,10 +44,19 @@ class TenantInvitation < ApplicationRecord
   private
 
   def validate_invited_user
-    if inviter == invited_user
-      errors.add(:invited_user_id, :invalid_self)
-    elsif status_pending? && tenant.tenant_memberships.exists?(user_id: invited_user_id)
-      errors.add(:invited_user_id, :already_member)
-    end
+    return errors.add(:invited_user_id, :required) if invited_user_id.blank?
+    return errors.add(:invited_user_id, :not_exist) unless User.exists?(id: invited_user_id)
+    return errors.add(:invited_user_id, :invalid_self) if self_invitation?
+    return unless status_pending?
+
+    errors.add(:invited_user_id, :already_member) if already_member?
+  end
+
+  def self_invitation?
+    inviter == invited_user
+  end
+
+  def already_member?
+    tenant.tenant_memberships.exists?(user_id: invited_user_id)
   end
 end

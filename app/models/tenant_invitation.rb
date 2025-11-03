@@ -46,7 +46,7 @@ class TenantInvitation < ApplicationRecord
   def validate_invited_user
     if inviter == invited_user
       errors.add(:invited_user_id, :invalid_self)
-    elsif tenant.tenant_memberships.exists?(user_id: invited_user_id)
+    elsif status_pending? && tenant.tenant_memberships.exists?(user_id: invited_user_id)
       errors.add(:invited_user_id, :already_member)
     end
   end

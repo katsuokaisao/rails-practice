@@ -24,11 +24,13 @@
 
   <div class="divider--thick"></div>
 
-  <div class="tenant-detail-actions">
-    <%= link_to t('.invite_member'),
-                new_tenant_invitation_path(tenant_slug: @tenant.identifier),
-                class: "btn-link" %>
-  </div>
+  <% if can_access?('tenants/invitations', 'new') %>
+    <div class="tenant-detail-actions">
+      <%= link_to t('.invite_member'),
+                  new_tenant_invitation_path(tenant_slug: @tenant.identifier),
+                  class: "btn-link" %>
+    </div>
+  <% end %>
 
   <div class="tenant-detail-back divider">
     <%= link_to root_path, class: "text-link" do %>

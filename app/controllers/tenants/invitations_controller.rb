@@ -2,9 +2,8 @@
 
 module Tenants
   class InvitationsController < ApplicationController
-    include TenantScoped
-
     before_action :require_tenant
+    before_action -> { authorize_action! }
 
     def new
       @invitation = current_tenant.tenant_invitations.build

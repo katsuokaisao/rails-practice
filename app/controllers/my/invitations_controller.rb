@@ -3,6 +3,7 @@
 module My
   class InvitationsController < ApplicationController
     before_action :set_invitation, except: %i[index]
+    before_action -> { authorize_action!(@invitation) }
     before_action :verify_invitation_status, except: %i[index]
     before_action :verify_not_member, except: %i[index]
 

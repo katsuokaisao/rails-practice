@@ -22,34 +22,11 @@ class SampleCreator
   private
 
   def create_tenants
-    tenants_data = [
-      {
-        name: '社内フォーラム',
-        identifier: 'company-forum',
-        description: '社員向けの情報共有・質問・議論のための掲示板です。'
-      },
-      {
-        name: 'アイドルファンコミュニティ',
-        identifier: 'idol-community',
-        description: 'アイドルファンが集まるコミュニティ掲示板です。'
-      },
-      {
-        name: 'ゲーム攻略掲示板',
-        identifier: 'game-strategy',
-        description: 'ゲームの攻略情報を共有する掲示板です。'
-      },
-      {
-        name: 'プログラミング学習',
-        identifier: 'programming-study',
-        description: 'プログラミング学習者のための質問・共有掲示板です。'
-      }
-    ]
-
-    tenants_data.each do |data|
+    200.times do |i|
       Tenant.create!(
-        name: data[:name],
-        identifier: data[:identifier],
-        description: data[:description]
+        name: Faker::Company.name,
+        identifier: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
+        description: Faker::Lorem.sentence(word_count: 10)
       )
     end
   end
@@ -72,36 +49,11 @@ class SampleCreator
     tenants = Tenant.all.to_a
     users = User.all.to_a
 
-    # 各テナントに10〜15人のメンバーを追加
-    tenants.each do |tenant|
-      member_count = rand(10..15)
-      selected_users = users.sample(member_count)
-      used_names = []
-
-      selected_users.each do |user|
-        display_name = generate_unique_display_name(used_names)
-
-        TenantMembership.create!(
-          tenant: tenant,
-          user: user,
-          display_name: display_name
-        )
-
-        used_names << display_name
-      end
-    end
-
-    # 一部のユーザーは複数のテナントに所属させる
-    multi_tenant_users = users.sample(10)
-    multi_tenant_users.each do |user|
-      # 既に所属しているテナント以外から1〜2個選択
-      current_tenant_ids = user.tenant_memberships.pluck(:tenant_id)
-      available_tenants = tenants.reject { |t| current_tenant_ids.include?(t.id) }
-
-      next if available_tenants.empty?
-
-      additional_tenant_count = rand(1..2)
-      selected_tenants = available_tenants.sample(additional_tenant_count)
+    # 各ユーザーをランダムに複数のテナントに所属させる
+    users.each do |user|
+      # ユーザーごとに5〜30個のテナントに所属
+      membership_count = rand(5..30)
+      selected_tenants = tenants.sample(membership_count)
 
       selected_tenants.each do |tenant|
         used_names = TenantMembership.where(tenant: tenant).pluck(:display_name)

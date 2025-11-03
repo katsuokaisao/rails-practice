@@ -37,4 +37,14 @@ module ApplicationHelper
 
     policy.public_send("#{action}?")
   end
+
+  def only_user_signed_in?
+    user_signed_in? && !moderator_signed_in?
+  end
+
+  def pending_invitations_count
+    return 0 unless user_signed_in?
+
+    current_user.pending_invitations.count
+  end
 end

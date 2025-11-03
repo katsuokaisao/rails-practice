@@ -33,7 +33,7 @@ module ApplicationHelper
     policy_class_name = "#{controller.to_s.camelize}Policy"
 
     policy_class = policy_class_name.constantize
-    policy = policy_class.new(current_user, current_moderator, record)
+    policy = policy_class.new(current_user, current_moderator, current_tenant, record)
 
     policy.public_send("#{action}?")
   end

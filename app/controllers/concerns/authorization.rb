@@ -5,7 +5,7 @@ module Authorization
 
   private
 
-  def authorize_action!(record)
+  def authorize_action!(record = nil)
     policy = policy(record)
     return true if policy.public_send("#{action_name}?")
 

@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Authorization
+  include TenantScoped
 
   before_action :set_time_zone
 

@@ -2,8 +2,6 @@
 
 module Tenants
   class UsersController < ApplicationController
-    include TenantScoped
-
     before_action :require_tenant
     before_action :set_user
 

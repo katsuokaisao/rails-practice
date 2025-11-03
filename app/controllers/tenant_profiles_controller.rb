@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TenantProfilesController < ApplicationController
-  include TenantScoped
   include Authorization
 
   before_action :require_tenant

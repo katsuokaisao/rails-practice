@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'テナントプロフィール', type: :system do
+RSpec.describe '所属テナント', type: :system do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
   let(:tenant) { create(:tenant, identifier: 'test-tenant', name: 'テストテナント') }

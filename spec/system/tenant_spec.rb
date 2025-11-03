@@ -63,23 +63,88 @@ RSpec.describe 'テナント', type: :system do
   end
 
   describe 'ページネーション' do
-    scenario 'テナント一覧でページネーションが機能する' do
-      create_list(:tenant, 30, description: 'テストテナントの説明です。')
+    context '未ログイン時' do
+      scenario 'テナント一覧でページネーションが機能する' do
+        create_list(:tenant, 30, description: 'テストテナントの説明です。')
 
-      visit root_path
-      expect(page).to have_selector('.pagination')
+        visit root_path
+        expect(page).to have_content('テナント一覧')
+        expect(page).to have_selector('.pagination')
 
-      click_link '2'
-      tenant = Tenant.order(created_at: :desc).offset(20).first
-      expect(page).to have_content(tenant.name)
-      expect(page).to have_content("@#{tenant.identifier}")
+        # 2ページ目に移動
+        click_link '2'
+
+        # 2ページ目のテナントが表示されることを確認
+        tenant = Tenant.order(id: :desc).offset(10).first
+        expect(page).to have_content(tenant.name)
+        expect(page).to have_content("@#{tenant.identifier}")
+      end
+
+      scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
+        create_list(:tenant, 30, description: 'テストテナントの説明です。')
+        visit root_path(other_page: 999)
+        expect(page).to have_current_path(root_path)
+        expect(page).to have_content('範囲外のリクエストです。')
+      end
     end
 
-    scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
-      create_list(:tenant, 30, description: 'テストテナントの説明です。')
-      visit root_path(page: 999)
-      expect(page).to have_current_path(root_path)
-      expect(page).to have_content('範囲外のリクエストです。')
+    context 'ログイン時' do
+      before do
+        login_as user
+      end
+
+      scenario '所属テナントでページネーションが機能する' do
+        tenants = create_list(:tenant, 30, description: 'テストテナントの説明です。')
+        # ユーザーを最初の25個のテナントに所属させる
+        tenants.first(25).each do |tenant|
+          create(:tenant_membership, user: user, tenant: tenant)
+        end
+
+        visit root_path
+        expect(page).to have_content('所属テナント')
+        expect(page).to have_selector('.pagination')
+
+        # 所属テナントセクションの2ページ目に移動
+        within('.tenant-section', text: '所属テナント') do
+          click_link '2'
+        end
+
+        # 2ページ目のテナントが表示されることを確認
+        member_tenant = user.tenants.order(id: :desc).offset(10).first
+        expect(page).to have_content(member_tenant.name)
+      end
+
+      scenario 'その他のテナントでページネーションが機能する' do
+        tenants = create_list(:tenant, 30, description: 'テストテナントの説明です。')
+        # ユーザーを最初の5個のテナントだけに所属させる
+        tenants.first(5).each do |tenant|
+          create(:tenant_membership, user: user, tenant: tenant)
+        end
+
+        visit root_path
+        expect(page).to have_content('その他のテナント')
+
+        # その他のテナントセクションの2ページ目に移動
+        within('.tenant-section', text: 'その他のテナント') do
+          click_link '2'
+        end
+
+        # 2ページ目のテナントが表示されることを確認（所属していないテナント）
+        other_tenant_ids = Tenant.where.not(id: user.tenants.pluck(:id)).order(id: :desc).offset(10).limit(1).pluck(:id)
+        other_tenant = Tenant.find(other_tenant_ids.first)
+
+        # その他のテナントセクション内で確認
+        within('.tenant-section', text: 'その他のテナント') do
+          expect(page).to have_content(other_tenant.name)
+        end
+      end
+
+      scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
+        create_list(:tenant, 30, description: 'テストテナントの説明です。')
+        visit root_path(member_page: 999)
+        expect(page).to have_current_path(root_path)
+        expect(page).to have_content('範囲外のリクエストです。')
+      end
     end
   end
 end

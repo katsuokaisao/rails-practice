@@ -33,8 +33,6 @@ class Tenant < ApplicationRecord
 
   validates :description, presence: true, length: { maximum: 500 }
 
-  scope :recent, -> { order(created_at: :desc) }
-
   def member?(user)
     return false if user.nil?
 

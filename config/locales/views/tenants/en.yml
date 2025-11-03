@@ -2,7 +2,9 @@
 en:
   tenants:
     index:
+      member_tenants: Member Tenants
       no_tenants: No tenants registered
+      other_tenants: Other Tenants
       title: Tenant List
     show:
       back_to_list: Back to Tenant List

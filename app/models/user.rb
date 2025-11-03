@@ -10,15 +10,15 @@
 #
 #  id                 :bigint           not null, primary key
 #  encrypted_password :string(255)      not null
-#  nickname           :string(255)      not null
 #  suspended_until    :datetime
 #  time_zone          :string(255)      default("Tokyo"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  login_id           :string(255)      not null
 #
 # Indexes
 #
-#  idx_users_nickname  (nickname) UNIQUE
+#  idx_users_login_id  (login_id) UNIQUE
 #
 class User < ApplicationRecord
   include AuthenticatableAccount

@@ -233,7 +233,7 @@ class SampleCreator
 
   def puts_users
     User.find_each do |user|
-      puts "User: #{user.nickname}, Suspended: #{user.suspended? ? 'Yes' : 'No'}"
+      puts "User: #{user.login_id}, Suspended: #{user.suspended? ? 'Yes' : 'No'}"
     end
   end
 
@@ -242,7 +242,7 @@ class SampleCreator
     Tenant.includes(tenant_memberships: :user).find_each do |tenant|
       puts "テナント: #{tenant.name}"
       tenant.tenant_memberships.each do |membership|
-        puts "  - #{membership.display_name} (#{membership.user.nickname})"
+        puts "  - #{membership.display_name} (#{membership.user.login_id})"
       end
       puts "  合計: #{tenant.tenant_memberships.count}人"
       puts ''
@@ -255,7 +255,7 @@ class SampleCreator
         .having('COUNT(tenant_memberships.id) > 1')
         .includes(tenant_memberships: :tenant)
         .find_each do |user|
-      puts "ユーザー: #{user.nickname}"
+      puts "ユーザー: #{user.login_id}"
       user.tenant_memberships.each do |membership|
         puts "  - #{membership.tenant.name}: #{membership.display_name}"
       end
@@ -265,21 +265,21 @@ class SampleCreator
 
   def puts_moderators
     Moderator.find_each do |moderator|
-      puts "Moderator: #{moderator.nickname}"
+      puts "Moderator: #{moderator.login_id}"
     end
   end
 
   def puts_topics
     puts 'Topics sample'
     Topic.take(10).each do |topic|
-      puts "Topic: #{topic.title}, Author: #{topic.author.nickname}"
+      puts "Topic: #{topic.title}, Author: #{topic.author.login_id}"
     end
   end
 
   def puts_comments
     puts 'Comments sample'
     Comment.take(10).each do |comment|
-      puts "Topic: #{comment.topic.title}, Author: #{comment.author.nickname}, Comment: #{comment.content}"
+      puts "Topic: #{comment.topic.title}, Author: #{comment.author.login_id}, Comment: #{comment.content}"
     end
   end
 
@@ -288,7 +288,7 @@ class SampleCreator
     CommentHistory.take(10).each do |comment_history|
       puts <<~MSG
         Comment: #{comment_history.comment.content},
-        Author: #{comment_history.author.nickname},
+        Author: #{comment_history.author.login_id},
         Version: #{comment_history.version_no}
       MSG
     end
@@ -298,7 +298,7 @@ class SampleCreator
     puts 'Reports sample'
     Report.take(10).each do |report|
       puts <<~MSG
-        Reporter: #{report.reporter.nickname},
+        Reporter: #{report.reporter.login_id},
         Reportable Type: #{report.reportable_type},
         Reason Type: #{report.reason_type},
         Reason Text: #{report.reason_text}
@@ -311,7 +311,7 @@ class SampleCreator
     Decision.take(10).each do |decision|
       puts <<~MSG
         Report: #{decision.report.id},
-        Decided By: #{decision.decider.nickname},
+        Decided By: #{decision.decider.login_id},
         Decision Type: #{decision.decision_type},
         Note: #{decision.note}
       MSG
@@ -327,7 +327,7 @@ class SampleCreator
       puts "テナント: #{tenant.name}"
       puts "  招待数: #{invitations.count}件"
       invitations.first(3).each do |invitation|
-        puts "    - #{invitation.inviter.nickname} → #{invitation.invited_user.nickname} [#{invitation.status}]"
+        puts "    - #{invitation.inviter.login_id} → #{invitation.invited_user.login_id} [#{invitation.status}]"
       end
       puts ''
     end

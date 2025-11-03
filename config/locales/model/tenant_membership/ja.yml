@@ -17,4 +17,4 @@ ja:
             user_id:
               taken: は既にこのテナントのメンバーです
     models:
-      tenant_membership: テナントメンバーシップ
+      tenant_membership: 所属テナント情報

@@ -93,7 +93,7 @@ module Users
     def account_update_params
       permitted =
         case update_kind
-        when :profile  then %i[time_zone]
+        when :profile  then %i[login_id time_zone]
         when :password then %i[current_password password password_confirmation]
         else []
         end
@@ -108,7 +108,7 @@ module Users
     end
 
     def configure_account_update_params
-      devise_parameter_sanitizer.permit(:account_update, keys: %i[time_zone])
+      devise_parameter_sanitizer.permit(:account_update, keys: %i[login_id time_zone])
     end
 
     def after_sign_up_path_for(_resource)

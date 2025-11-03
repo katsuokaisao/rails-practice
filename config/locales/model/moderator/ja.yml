@@ -3,6 +3,7 @@ ja:
   activerecord:
     attributes:
       moderator:
+        login_id: ログインID
         time_zone: タイムゾーン
     errors:
       models:

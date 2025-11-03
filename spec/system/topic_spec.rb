@@ -26,7 +26,7 @@ RSpec.describe 'トピック', type: :system do
 
       within('.topic-show') do
         expect(page).to have_content('テストトピック')
-        expect(page).to have_content("作成者: #{user.nickname}")
+        expect(page).to have_content("作成者: #{user.login_id}")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
 
@@ -59,7 +59,7 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_content('お題が作成されました。')
       within('.topic-show') do
         expect(page).to have_content('新しいトピック')
-        expect(page).to have_content("作成者: #{user.nickname}")
+        expect(page).to have_content("作成者: #{user.login_id}")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
@@ -75,7 +75,7 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_content('お題が更新されました。')
       within('.topic-show') do
         expect(page).to have_content('編集されたトピック')
-        expect(page).to have_content("作成者: #{user.nickname}")
+        expect(page).to have_content("作成者: #{user.login_id}")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
@@ -150,7 +150,7 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_selector('.pagination')
       click_link '2'
       expect(page).to have_content(topic.title)
-      expect(page).to have_content("作成者: #{topic.author.nickname}")
+      expect(page).to have_content("作成者: #{topic.author.login_id}")
       expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       visit topics_path(page: 999)
       expect(page).to have_content('範囲外のリクエストです。')
@@ -164,7 +164,7 @@ RSpec.describe 'トピック', type: :system do
       click_link '2'
       comment = topic.comments.order(created_at: :desc).last
       expect(page).to have_content(comment.content)
-      expect(page).to have_content(comment.author.nickname)
+      expect(page).to have_content(comment.author.login_id)
       expect(page).to have_content("作成日: #{comment.created_at.strftime('%Y/%m/%d %H:%M')}")
       visit topic_path(topic, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')

@@ -62,12 +62,10 @@ Rails.application.routes.draw do
   scope '/:tenant_slug', as: :tenant do
     get '/', to: 'tenants#show', as: :root
 
-    get 'profile', to: 'tenant_profiles#edit', as: :users_profile
-    patch 'profile', to: 'tenant_profiles#update'
-
     scope module: 'tenants' do
       resources :users, only: %i[show]
       resources :invitations, only: %i[new create]
+      resource :membership, only: %i[edit update]
     end
   end
 end

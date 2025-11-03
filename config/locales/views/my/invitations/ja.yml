@@ -13,7 +13,7 @@ ja:
         success: "%{tenant_name}に参加しました"
       errors:
         already_member: 既にこのテナントに参加しています
-        invalid_invitation: この招待は無効です
+        already_processed: この招待は既に処理されています
       index:
         accept: 招待を受ける
         invited_at: "%{date}に招待"

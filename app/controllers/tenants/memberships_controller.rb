@@ -9,8 +9,8 @@ module Tenants
 
     def update
       if @membership.update(membership_params)
-        redirect_to edit_tenant_membership_path(tenant_slug: @membership.tenant.identifier),
-                    notice: t('flash.actions.update.notice', resource: TenantMembership.model_name.human)
+        flash[:notice] = t('flash.actions.update.notice', resource: TenantMembership.model_name.human)
+        redirect_to edit_tenant_membership_path(tenant_slug: @membership.tenant.identifier)
       else
         render :edit, status: :unprocessable_entity
       end
@@ -21,7 +21,7 @@ module Tenants
     def set_membership
       return unless current_user
 
-      @membership = current_user.tenant_memberships.find_by(tenant: current_tenant)
+      @membership = current_user.tenant_memberships.find_by!(tenant: current_tenant)
     end
 
     def membership_params

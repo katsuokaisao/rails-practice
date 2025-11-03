@@ -18,6 +18,6 @@ class TenantsController < ApplicationController
   private
 
   def tenants
-    Tenant.order(created_at: :desc)
+    Tenant.recent
   end
 end

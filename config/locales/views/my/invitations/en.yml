@@ -14,7 +14,7 @@ en:
         success: You have joined %{tenant_name}
       errors:
         already_member: You are already a member of this tenant
-        invalid_invitation: This invitation is invalid
+        already_processed: This invitation has already been processed
       index:
         accept: Accept Invitation
         invited_at: Invited on %{date}

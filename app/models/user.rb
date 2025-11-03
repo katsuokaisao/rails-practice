@@ -80,6 +80,10 @@ class User < ApplicationRecord
     pending_invitations.exists?
   end
 
+  def memberships_ordered_by_tenant_name
+    tenant_memberships.includes(:tenant).order('tenants.name')
+  end
+
   private
 
   def suspended_until_future

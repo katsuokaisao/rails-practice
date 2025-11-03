@@ -41,6 +41,24 @@ class TenantInvitation < ApplicationRecord
 
   scope :recent, -> { order(created_at: :desc) }
 
+  def accept!(display_name:)
+    ActiveRecord::Base.transaction do
+      invited_user.tenant_memberships.create!(
+        tenant: tenant,
+        display_name: display_name
+      )
+      status_accepted!
+    end
+  end
+
+  def reject!
+    status_rejected!
+  end
+
+  def already_member?
+    tenant.tenant_memberships.exists?(user_id: invited_user_id)
+  end
+
   private
 
   def validate_invited_user
@@ -54,9 +72,5 @@ class TenantInvitation < ApplicationRecord
 
   def self_invitation?
     inviter == invited_user
-  end
-
-  def already_member?
-    tenant.tenant_memberships.exists?(user_id: invited_user_id)
   end
 end

@@ -2,8 +2,6 @@
 
 module Tenants
   class ProfilesController < BaseController
-    include Authorization
-
     before_action :set_membership
     before_action -> { authorize_action!(@membership) }
 

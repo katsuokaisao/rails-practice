@@ -9,7 +9,7 @@ RSpec.describe 'Rack::Attack', type: :request do
 
   describe 'サインインのレートリミット' do
     let(:sign_in_path) { '/users/sign_in' }
-    let(:params) { { user: { nickname: 'testuser', password: 'password123' } } }
+    let(:params) { { user: { login_id: 'testuser', password: 'password123' } } }
 
     it '制限回数内のリクエストは成功すること' do
       5.times do

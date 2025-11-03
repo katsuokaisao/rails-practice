@@ -17,16 +17,16 @@
   <tbody>
     <% pagination.records.each do |decision| %>
       <tr>
-        <td><%= decision.report.reporter.nickname %></td>
+        <td><%= decision.report.reporter.login_id %></td>
         <td><%= decision.report.enum_i18n(:reason_type) %></td>
         <td><%= decision.report.reason_text %></td>
         <td><%= decision.report.reportable.topic.title %></td>
         <td><%= truncate(decision.report.reportable.content, length: 500) %></td>
-        <td><%= decision.report.reportable.author.nickname %></td>
+        <td><%= decision.report.reportable.author.login_id %></td>
         <td><%= l(decision.report.reportable.created_at, format: :default) %></td>
         <td><%= decision.enum_i18n(:decision_type) %></td>
         <td><%= truncate(decision.note, length: 100) %></td>
-        <td><%= decision.decider.nickname %></td>
+        <td><%= decision.decider.login_id %></td>
         <td><%= l(decision.created_at, format: :default) %></td>
       </tr>
     <% end %>

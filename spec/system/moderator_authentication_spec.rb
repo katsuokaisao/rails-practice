@@ -9,7 +9,7 @@ RSpec.describe 'モデレーター認証', type: :system do
     it '正しい認証情報でログインできる' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
@@ -20,11 +20,11 @@ RSpec.describe 'モデレーター認証', type: :system do
     it '間違ったパスワードではログインできない' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'wrong_password'
       click_button 'ログイン'
 
-      expect(page).to have_content('ニックネームまたはパスワードが違います')
+      expect(page).to have_content('ログインIDまたはパスワードが違います')
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe 'モデレーター認証', type: :system do
     it 'ログイン後にログアウトできる' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
@@ -50,11 +50,11 @@ RSpec.describe 'モデレーター認証', type: :system do
 
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: user.nickname
+      fill_in 'moderator_login_id', with: user.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
-      expect(page).to have_content('ニックネームまたはパスワードが違います')
+      expect(page).to have_content('ログインIDまたはパスワードが違います')
     end
   end
 end

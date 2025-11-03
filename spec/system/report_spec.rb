@@ -75,13 +75,13 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_css('li.active a', text: 'コメント通報')
 
     within('.reports-table') do
-      expect(page).to have_content(comment_report.reporter.nickname)
+      expect(page).to have_content(comment_report.reporter.login_id)
       expect(page).to have_content('嫌がらせ')
       expect(page).to have_content(comment_report.reason_text)
       expect(page).to have_content(comment_report.reportable.topic.title)
       expect(page).to have_content(comment_report.reportable.created_at.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_content(comment_report.reportable.current_version_no)
-      expect(page).to have_content(comment_report.reportable.author.nickname)
+      expect(page).to have_content(comment_report.reportable.author.login_id)
       expect(page).to have_link('審査')
     end
   end
@@ -96,10 +96,10 @@ RSpec.describe '通報', type: :system do
 
     click_link 'ユーザー通報'
     within('.reports-table') do
-      expect(page).to have_content(user_report.reporter.nickname)
+      expect(page).to have_content(user_report.reporter.login_id)
       expect(page).to have_content('スパム')
       expect(page).to have_content(user_report.reason_text)
-      expect(page).to have_content(user_report.reportable.nickname)
+      expect(page).to have_content(user_report.reportable.login_id)
       expect(page).to have_content(user_report.created_at.strftime('%Y/%m/%d %H:%M'))
       expect(page).to have_link('審査')
     end
@@ -149,8 +149,8 @@ RSpec.describe '通報', type: :system do
     visit reports_path
     expect(page).to have_content('最初のユーザーからの報告')
     expect(page).to have_content('別のユーザーからの報告')
-    expect(page).to have_content(user.nickname)
-    expect(page).to have_content(other_user.nickname)
+    expect(page).to have_content(user.login_id)
+    expect(page).to have_content(other_user.login_id)
   end
 
   scenario '既に審査済みの通報が通報一覧に表示されない' do

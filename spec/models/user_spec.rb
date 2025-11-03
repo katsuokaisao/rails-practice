@@ -6,15 +6,15 @@
 #
 #  id                 :bigint           not null, primary key
 #  encrypted_password :string(255)      not null
-#  nickname           :string(255)      not null
 #  suspended_until    :datetime
 #  time_zone          :string(255)      default("Tokyo"), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  login_id           :string(255)      not null
 #
 # Indexes
 #
-#  idx_users_nickname  (nickname) UNIQUE
+#  idx_users_login_id  (login_id) UNIQUE
 #
 require 'rails_helper'
 
@@ -30,28 +30,28 @@ RSpec.describe User, type: :model do
         expect(user).to be_valid
       end
 
-      it 'nickname が必須' do
-        user = build(:user, nickname: nil)
+      it 'login_id が必須' do
+        user = build(:user, login_id: nil)
         expect(user).to be_invalid
-        expect(user.errors[:nickname]).to be_present
+        expect(user.errors[:login_id]).to be_present
       end
 
-      it 'nickname は一意' do
-        create(:user, nickname: 'dup')
-        user = build(:user, nickname: 'dup')
+      it 'login_id は一意' do
+        create(:user, login_id: 'dup')
+        user = build(:user, login_id: 'dup')
         expect(user).to be_invalid
-        expect(user.errors[:nickname]).to be_present
+        expect(user.errors[:login_id]).to be_present
       end
 
-      it 'nickname の長さが範囲外だと無効' do
-        too_short = build(:user, nickname: '')
-        too_long  = build(:user, nickname: 'a' * 51)
+      it 'login_id の長さが範囲外だと無効' do
+        too_short = build(:user, login_id: '')
+        too_long  = build(:user, login_id: 'a' * 51)
 
         expect(too_short).to be_invalid
-        expect(too_short.errors[:nickname]).to be_present
+        expect(too_short.errors[:login_id]).to be_present
 
         expect(too_long).to be_invalid
-        expect(too_long.errors[:nickname]).to be_present
+        expect(too_long.errors[:login_id]).to be_present
       end
 
       it 'password は必須' do
@@ -105,7 +105,7 @@ RSpec.describe User, type: :model do
       let!(:user) { create(:user) }
 
       it 'password を変更しない更新は password がなくても更新できる' do
-        expect(user.update(nickname: 'renamed', password: '', password_confirmation: '')).to be true
+        expect(user.update(login_id: 'renamed', password: '', password_confirmation: '')).to be true
       end
 
       it 'password_confirmation だけは無効' do

@@ -21,7 +21,7 @@ module Tenants
     def set_membership
       return unless current_user
 
-      @membership = current_user.tenant_memberships.find_by!(tenant: current_tenant)
+      @membership = current_user.tenant_memberships.find_by(tenant: current_tenant)
     end
 
     def membership_params

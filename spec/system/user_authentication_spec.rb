@@ -138,4 +138,42 @@ RSpec.describe 'ユーザー認証', type: :system do
       expect(page).to have_content('パスワードは8文字以上で入力してください')
     end
   end
+
+  describe '所属テナント' do
+    let(:first_tenant) { create(:tenant, identifier: 'tenant-1', name: 'テナント1') }
+    let(:second_tenant) { create(:tenant, identifier: 'tenant-2', name: 'テナント2') }
+
+    it 'プロフィール画面で所属テナント一覧が表示される' do
+      create(:tenant_membership, user: user, tenant: first_tenant, display_name: 'ユーザー1のテナント1での表示名')
+      create(:tenant_membership, user: user, tenant: second_tenant, display_name: 'ユーザー1のテナント2での表示名')
+
+      login_as user
+      visit edit_user_profile_path
+
+      # 所属テナント情報が表示されている
+      expect(page).to have_content('テナント1')
+      expect(page).to have_content('ユーザー1のテナント1での表示名')
+      expect(page).to have_content('テナント2')
+      expect(page).to have_content('ユーザー1のテナント2での表示名')
+    end
+
+    it '所属テナントがない場合、空のメッセージが表示される' do
+      login_as user
+      visit edit_user_profile_path
+
+      # 所属テナントがない旨のメッセージが表示される
+      expect(page).not_to have_css('.membership-item')
+    end
+
+    it '所属テナントの編集リンクをクリックすると、テナントプロフィール編集画面に遷移する' do
+      create(:tenant_membership, user: user, tenant: first_tenant, display_name: '元の表示名')
+
+      login_as user
+      visit edit_user_profile_path
+
+      click_link '編集する'
+      expect(page).to have_field('表示名', with: '元の表示名')
+      expect(current_path).to eq(edit_tenant_profile_path(tenant_slug: first_tenant.identifier))
+    end
+  end
 end

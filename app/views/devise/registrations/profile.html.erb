@@ -9,6 +9,11 @@
       <%= f.hidden_field :update_kind, value: "profile" %>
 
       <div class="field">
+        <%= f.label :nickname %>
+        <%= f.text_field :nickname %>
+      </div>
+
+      <div class="field">
         <%= f.label :time_zone %>
         <%= f.time_zone_select :time_zone,
                               ActiveSupport::TimeZone.all.sort,
@@ -37,7 +42,7 @@
               </div>
               <div class="membership-actions">
                 <%= link_to t('action.edit'),
-                            tenant_users_profile_path(membership.tenant.identifier),
+                            edit_tenant_profile_path(tenant_slug: membership.tenant.identifier),
                             class: 'btn-link' %>
               </div>
             </div>

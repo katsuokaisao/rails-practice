@@ -95,7 +95,7 @@ RSpec.describe 'ユーザー認証', type: :system do
       visit edit_user_profile_path
 
       fill_in 'ニックネーム', with: 'updated_nickname'
-      click_button 'プロフィールを更新'
+      click_button '更新する'
 
       expect(page).to have_content('アカウント情報を変更しました。')
       expect(current_path).to eq(edit_user_profile_path)
@@ -106,7 +106,7 @@ RSpec.describe 'ユーザー認証', type: :system do
       visit edit_user_profile_path
 
       fill_in 'ニックネーム', with: ''
-      click_button 'プロフィールを更新'
+      click_button '更新する'
 
       expect(page).to have_content('ニックネームを入力してください')
     end

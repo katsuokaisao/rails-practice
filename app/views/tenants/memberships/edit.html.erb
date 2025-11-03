@@ -7,7 +7,7 @@
     </div>
 
     <%= form_with model: @membership,
-                  url: tenant_profile_path(tenant_slug: @membership.tenant.identifier),
+                  url: tenant_membership_path(tenant_slug: @membership.tenant.identifier),
                   method: :patch,
                   html: { "data-turbo": "false" } do |f| %>
 

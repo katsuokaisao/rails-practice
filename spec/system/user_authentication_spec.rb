@@ -173,7 +173,7 @@ RSpec.describe 'ユーザー認証', type: :system do
 
       click_link '編集する'
       expect(page).to have_field('表示名', with: '元の表示名')
-      expect(current_path).to eq(edit_tenant_profile_path(tenant_slug: first_tenant.identifier))
+      expect(current_path).to eq(edit_tenant_membership_path(tenant_slug: first_tenant.identifier))
     end
   end
 end

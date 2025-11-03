@@ -11,7 +11,7 @@ RSpec.describe 'テナントプロフィール', type: :system do
 
   scenario 'テナントメンバーが自分のプロフィールを正常に編集できる' do
     login_as user
-    visit edit_tenant_profile_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
 
     # 現在の表示名が表示されている
     expect(page).to have_field('表示名', with: '元の表示名')
@@ -21,8 +21,8 @@ RSpec.describe 'テナントプロフィール', type: :system do
     click_button '更新'
 
     # 成功メッセージが表示される
-    expect(page).to have_content('テナントが更新されました')
-    expect(page).to have_current_path(edit_tenant_profile_path(tenant_slug: tenant.identifier))
+    expect(page).to have_content('所属テナント情報が更新されました。')
+    expect(page).to have_current_path(edit_tenant_membership_path(tenant_slug: tenant.identifier))
 
     find('.back-button').click
 
@@ -32,7 +32,7 @@ RSpec.describe 'テナントプロフィール', type: :system do
 
   scenario '空の表示名では更新できない' do
     login_as user
-    visit edit_tenant_profile_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
 
     fill_in '表示名', with: ''
     click_button '更新'
@@ -42,7 +42,7 @@ RSpec.describe 'テナントプロフィール', type: :system do
   end
 
   scenario '未ログインユーザーは編集ページにアクセスできない' do
-    visit edit_tenant_profile_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
 
     # 403エラーページが表示される
     expect(page).to have_content('アクセスが禁止されています')
@@ -52,7 +52,7 @@ RSpec.describe 'テナントプロフィール', type: :system do
     non_member_user = create(:user)
     login_as non_member_user
 
-    visit edit_tenant_profile_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
 
     expect(page).to have_content('権限がありません')
   end

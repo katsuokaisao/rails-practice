@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Tenants
-  class ProfilesPolicy < ApplicationPolicy
+  class MembershipsPolicy < ApplicationPolicy
     def edit?
       membership_owner?
     end

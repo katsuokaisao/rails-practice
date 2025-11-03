@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Tenants
-  class ProfilesController < BaseController
+  class MembershipsController < BaseController
     before_action :set_membership
     before_action -> { authorize_action!(@membership) }
 
@@ -9,7 +9,7 @@ module Tenants
 
     def update
       if @membership.update(membership_params)
-        redirect_to edit_tenant_profile_path(tenant_slug: @membership.tenant.identifier),
+        redirect_to edit_tenant_membership_path(tenant_slug: @membership.tenant.identifier),
                     notice: t('flash.actions.update.notice', resource: TenantMembership.model_name.human)
       else
         render :edit, status: :unprocessable_entity

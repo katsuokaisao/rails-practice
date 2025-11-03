@@ -53,10 +53,7 @@ Rails.application.routes.draw do
     get '/', to: 'tenants#show', as: :root
 
     scope module: 'tenants' do
-      resource :profile,
-               only: %i[edit update],
-               controller: 'profiles',
-               path: 'profile'
+      resource :membership, only: %i[edit update]
     end
   end
 end

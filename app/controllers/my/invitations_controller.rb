@@ -25,7 +25,8 @@ module My
 
       flash[:notice] = t('.success', tenant_name: @invitation.tenant.name)
       redirect_to tenant_root_path(tenant_slug: @invitation.tenant.identifier)
-    rescue ActiveRecord::RecordInvalid
+    rescue ActiveRecord::RecordInvalid => e
+      @tenant_membership = e.record
       render :accept, status: :unprocessable_entity
     end
 

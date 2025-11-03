@@ -10,6 +10,7 @@ class SampleCreator
     create_users
     create_suspend_users
     create_tenant_memberships
+    create_tenant_invitations
     create_moderators
     create_topics
     create_comments
@@ -183,10 +184,38 @@ class SampleCreator
     end
   end
 
+  def create_tenant_invitations
+    tenants = Tenant.all.to_a
+    users = User.all.to_a
+
+    tenants.each do |tenant|
+      invitation_count = rand(3..5)
+      members = tenant.members.to_a
+      non_members = users - members
+
+      next if members.empty? || non_members.empty?
+
+      invite_users = non_members.first(invitation_count)
+
+      invitation_count.times do |i|
+        inviter = members.sample
+        invited_user = invite_users[i]
+
+        TenantInvitation.create!(
+          tenant: tenant,
+          inviter: inviter,
+          invited_user: invited_user,
+          status: :pending
+        )
+      end
+    end
+  end
+
   def put_records
     puts_tenants
     puts_users
     puts_tenant_memberships
+    puts_tenant_invitations
     puts_moderators
     puts_topics
     puts_comments
@@ -286,6 +315,21 @@ class SampleCreator
         Decision Type: #{decision.decision_type},
         Note: #{decision.note}
       MSG
+    end
+  end
+
+  def puts_tenant_invitations
+    puts 'Tenant Invitations'
+    Tenant.includes(tenant_invitations: %i[inviter invited_user]).find_each do |tenant|
+      invitations = tenant.tenant_invitations
+      next if invitations.empty?
+
+      puts "テナント: #{tenant.name}"
+      puts "  招待数: #{invitations.count}件"
+      invitations.first(3).each do |invitation|
+        puts "    - #{invitation.inviter.nickname} → #{invitation.invited_user.nickname} [#{invitation.status}]"
+      end
+      puts ''
     end
   end
 end

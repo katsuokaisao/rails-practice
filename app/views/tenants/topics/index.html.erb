@@ -2,13 +2,14 @@
   <div class="topic-header">
     <h2><%= t('title.index', resource: Topic.model_name.human) %></h2>
     <div class="topic-actions">
-      <% if can_access?('topics', 'new') %>
-        <%= link_to new_topic_path do %>
+      <% if can_access?('tenants/topics', 'new') %>
+        <%= link_to new_tenant_topic_path(tenant_slug: current_tenant.identifier) do %>
           <%= t('.action.new', resource: Topic.model_name.human) %>
         <% end %>
       <% end %>
     </div>
   </div>
+
   <ul class="topics-list">
     <%= render partial: 'item', collection: @pagination.records, as: :topic %>
   </ul>

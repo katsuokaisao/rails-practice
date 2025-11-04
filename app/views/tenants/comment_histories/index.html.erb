@@ -1,5 +1,5 @@
 <section>
-    <%= render 'shared/back_button', url: topic_path(@comment.topic) %>
+    <%= render 'shared/back_button', url: tenant_topic_path(tenant_slug: current_tenant.identifier, id: @comment.topic.id) %>
     <h2><%= t('.title') %></h2>
     <% if @pagination.records.length > 1 %>
         <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>

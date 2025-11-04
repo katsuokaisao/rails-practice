@@ -1,0 +1,7 @@
+<% if can_access?('tenants/topics', 'edit', topic) %>
+    <div class="edit-actions">
+        <%= link_to edit_tenant_topic_path(tenant_slug: current_tenant.identifier, id: topic.id) do %>
+            <span class="material-icons">edit</span>
+        <% end %>
+    </div>
+<% end %>

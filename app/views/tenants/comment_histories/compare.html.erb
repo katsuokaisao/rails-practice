@@ -1,5 +1,5 @@
 <section class="compare-view">
-  <%= render 'shared/back_button', url: comment_histories_path(@comment) %>
+  <%= render 'shared/back_button', url: tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id) %>
   <h2><%= t('.title') %></h2>
   <%= render 'compare_form', comment: @comment, versions: @versions, from: @from, to: @to %>
 

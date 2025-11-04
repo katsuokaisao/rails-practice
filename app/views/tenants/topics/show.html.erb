@@ -1,5 +1,5 @@
 <article>
-  <%= render 'shared/back_button', url: topics_path %>
+  <%= render 'shared/back_button', url: tenant_topics_path(tenant_slug: current_tenant.identifier) %>
   <section class="topic-show">
     <h3><%= @topic.title %></h3>
     <div class="topic-details">
@@ -13,16 +13,16 @@
     <section class="topic-comments">
       <h4><%= t('.comment') %></h4>
       <div id="comment-list" class="comment-list">
-        <%= render partial: 'comments/comment', collection: @pagination.records.to_a.reverse %>
+        <%= render partial: 'tenants/comments/comment', collection: @pagination.records.to_a.reverse %>
       </div>
       <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
     </section>
   <% end %>
-  <% if can_access?('comments', 'create') %>
+  <% if can_access?('tenants/comments', 'create') %>
     <section class="form-card">
       <h3><%= t('.new_comment') %></h3>
       <div id="comment-form-errors"></div>
-      <%= form_with(model: [@topic, Comment.new], local: false) do |f| %>
+      <%= form_with(model: [@topic, Comment.new], url: tenant_topic_comments_path(tenant_slug: current_tenant.identifier, topic_id: @topic.id), local: false) do |f| %>
         <div class="field">
           <%= f.label :content %>
           <%= f.text_area :content, rows: 5 %>

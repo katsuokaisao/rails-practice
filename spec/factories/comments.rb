@@ -12,22 +12,26 @@
 #  updated_at               :datetime         not null
 #  author_id                :bigint           not null
 #  hidden_cause_decision_id :bigint
+#  tenant_id                :bigint           not null
 #  topic_id                 :bigint           not null
 #
 # Indexes
 #
 #  idx_comments_author_id            (author_id)
+#  idx_comments_tenant_id            (tenant_id)
 #  idx_comments_topic_id_created_at  (topic_id,created_at)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (author_id => users.id)
+#  fk_rails_...  (tenant_id => tenants.id)
 #  fk_rails_...  (topic_id => topics.id)
 #
 FactoryBot.define do
   factory :comment do
     association :topic
     association :author, factory: :user
+    tenant { topic.tenant }
 
     content { Faker::Lorem.paragraphs(number: 3).join("\n") }
     current_version_no { 1 }

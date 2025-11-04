@@ -3,30 +3,42 @@
 require 'rails_helper'
 
 RSpec.describe 'コメント', type: :system do
+  let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
   let!(:suspended_user) { create(:user, :suspended) }
   let!(:moderator) { create(:moderator) }
-  let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
-  let!(:suspended_user_topic) { create(:topic, author: suspended_user, title: '停止ユーザーのトピック') }
+
+  let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
+  let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }
+  let!(:suspended_user_membership) do
+    create(:tenant_membership, tenant: tenant, user: suspended_user, display_name: '停止ユーザー')
+  end
+
+  let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
+  let!(:suspended_user_topic) do
+    create(:topic, tenant: tenant, author: suspended_user, title: '停止ユーザーのトピック')
+  end
   let!(:comment) { create(:comment, topic: topic, author: user, content: 'テストコメント') }
   let!(:other_comment) { create(:comment, topic: topic, author: other_user, content: '他のユーザーのコメント') }
 
   scenario '未ログインユーザーがコメントを投稿できない' do
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('投稿する')
   end
 
   scenario '未ログインユーザーはコメントを編集できない' do
-    visit topic_path(topic)
-    expect(page).not_to have_link('編集', href: edit_topic_comment_path(comment.topic, comment))
-    visit edit_topic_comment_path(comment.topic, comment)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    expect(page).not_to have_link('編集',
+                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                                       topic_id: comment.topic.id, id: comment.id))
+    visit edit_tenant_topic_comment_path(tenant_slug: tenant.identifier, topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'ログインユーザーがコメントを投稿できる' do
     login_as(user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('コメントを投稿する')
     fill_in 'コメント', with: '新しいコメント'
     click_button '投稿する'
@@ -36,8 +48,10 @@ RSpec.describe 'コメント', type: :system do
 
   scenario 'ログインユーザーが自分のコメントを編集できる' do
     login_as(user)
-    visit topic_path(topic)
-    click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    click_link '編集',
+               href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                    topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'
@@ -48,15 +62,19 @@ RSpec.describe 'コメント', type: :system do
   end
 
   scenario 'ログインユーザーは他のユーザーのコメントを編集できない' do
-    visit topic_path(topic)
-    expect(page).not_to have_link('edit', href: edit_topic_comment_path(other_comment.topic, other_comment))
-    visit edit_topic_comment_path(other_comment.topic, other_comment)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    expect(page).not_to have_link('edit',
+                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                                       topic_id: other_comment.topic.id,
+                                                                       id: other_comment.id))
+    visit edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                         topic_id: other_comment.topic.id, id: other_comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'コメント投稿時の入力バリデーションが機能する' do
     login_as(user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('コメントを投稿する')
 
     fill_in 'コメント', with: ''
@@ -74,8 +92,10 @@ RSpec.describe 'コメント', type: :system do
 
   scenario 'コメント編集時の入力バリデーションが機能する' do
     login_as(user)
-    visit topic_path(topic)
-    click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    click_link '編集',
+               href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                    topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('編集')
 
     sleep(1)
@@ -94,53 +114,56 @@ RSpec.describe 'コメント', type: :system do
 
   scenario '停止されたユーザーはコメントを投稿できない' do
     login_as(suspended_user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('コメントを投稿する')
   end
 
   scenario '停止されたユーザーは自分のコメントを編集できない' do
     login_as(suspended_user)
-    visit topic_path(suspended_user_topic)
-    expect(page).not_to have_link('edit', href: edit_topic_comment_path(comment.topic, comment))
-    visit edit_topic_comment_path(comment.topic, comment)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: suspended_user_topic.id)
+    expect(page).not_to have_link('edit',
+                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                                       topic_id: comment.topic.id, id: comment.id))
+    visit edit_tenant_topic_comment_path(tenant_slug: tenant.identifier, topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '長い文字と特殊文字を含むコメントが正しく表示される' do
     create(:comment, topic: topic, author: user, content: "#{'a' * 4998}👉＠")
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content("#{'a' * 4998}👉＠")
   end
 
   scenario 'コメントを複数回編集した後も公開画面では常に最新版のみが表示されることの確認' do
     login_as(user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストコメント')
 
-    click_link '編集', href: edit_topic_comment_path(topic, comment)
+    click_link '編集',
+               href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier, topic_id: topic.id, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント', with: '1回目の編集'
     click_button '更新する'
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('1回目の編集')
 
-    visit edit_topic_comment_path(topic, comment)
+    visit edit_tenant_topic_comment_path(tenant_slug: tenant.identifier, topic_id: topic.id, id: comment.id)
     fill_in 'コメント', with: '2回目の編集'
     click_button '更新する'
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('1回目の編集')
     expect(page).to have_content('2回目の編集')
 
-    visit edit_topic_comment_path(topic, comment)
+    visit edit_tenant_topic_comment_path(tenant_slug: tenant.identifier, topic_id: topic.id, id: comment.id)
     fill_in 'コメント', with: '3回目の編集（最新版）'
     click_button '更新する'
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('3回目の編集（最新版）')
     expect(page).not_to have_content('1回目の編集')
     expect(page).not_to have_content('2回目の編集')
 
-    visit comment_histories_path(comment)
+    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('1回目の編集')
     expect(page).to have_content('2回目の編集')
@@ -171,13 +194,13 @@ RSpec.describe 'コメント', type: :system do
     logout
 
     login_as(user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('規約違反の可能性があるため、アカウントが停止されています。')
 
     user.reload.enforce_release_suspension!
 
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストコメント')
   end
 
@@ -218,7 +241,7 @@ RSpec.describe 'コメント', type: :system do
     login_as(other_user)
 
     # アカウント停止中かつコメント非表示のため、コメントの内容が非表示になっていることを確認
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('このコメントは非表示です。')
 
@@ -226,23 +249,24 @@ RSpec.describe 'コメント', type: :system do
     expect(user.reload).not_to be_suspended
 
     # アカウントの停止が解除されたが、コメント非表示は継続されていることを確認
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('このコメントは非表示です。')
   end
 
   scenario 'コメント数が正しく表示されることの確認' do
-    topic = create(:topic, author: user, title: 'テストトピック1')
+    topic = create(:topic, tenant: tenant, author: user, title: 'テストトピック1')
 
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('コメント数: 0件')
 
     Comment.create!(
+      tenant: topic.tenant,
       topic: topic,
       author: user,
       content: 'テストコメント1'
     )
 
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('コメント数: 1件')
   end
 end

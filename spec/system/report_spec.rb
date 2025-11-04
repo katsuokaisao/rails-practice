@@ -3,21 +3,26 @@
 require 'rails_helper'
 
 RSpec.describe '通報', type: :system do
+  let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
   let!(:moderator) { create(:moderator) }
-  let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
+
+  let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
+  let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }
+
+  let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, content: '通報対象コメント') }
 
   scenario '未ログインユーザーが通報を作成できない' do
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_link('違法ユーザ')
     expect(page).not_to have_link('コメントを非表示')
   end
 
   scenario 'ログインユーザーがコメントを通報できる' do
     login_as user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -30,7 +35,7 @@ RSpec.describe '通報', type: :system do
 
   scenario 'ログインユーザーがユーザーを通報できる' do
     login_as user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link '違法ユーザ'
     expect(page).to have_content('通報の申請')
@@ -43,7 +48,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '通報作成時の入力バリデーションが機能する' do
     login_as user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -124,7 +129,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '既に報告済みのコメントを再度報告しようとした場合の処理' do
     login_as user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -135,7 +140,7 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as other_user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -174,7 +179,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '通報モーダルのキャンセルボタンが機能する' do
     login_as user
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -203,14 +208,14 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(other_user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
 
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('このコメントは非表示です。')
     logout
 
     login_as(user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
   end
@@ -235,11 +240,13 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(other_user)
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
-    click_link '編集', href: edit_topic_comment_path(comment.topic, comment)
+    click_link '編集',
+               href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+                                                    topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'
@@ -248,7 +255,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('変更後のコメント')
 
-    visit topic_path(topic)
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 

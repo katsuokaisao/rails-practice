@@ -14,7 +14,7 @@ module Tenants
       return unless @pagination.out_of_bounds
 
       flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_topics_path(tenant_slug: current_tenant.identifier)
+      redirect_to tenant_path(tenant_slug: current_tenant.identifier)
     end
 
     def compare

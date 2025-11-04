@@ -20,7 +20,7 @@ RSpec.describe 'トピック', type: :system do
 
   context '未ログインユーザー' do
     it 'トピック一覧を閲覧できる' do
-      visit tenant_topics_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.identifier)
 
       expect(page).to have_content('テストトピック')
       expect(page).to have_content('他のユーザーのトピック')
@@ -58,7 +58,7 @@ RSpec.describe 'トピック', type: :system do
   context 'ログインユーザ' do
     scenario 'ログインユーザーが新規トピックを作成し、編集できる' do
       login_as(user)
-      visit tenant_topics_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.identifier)
       expect(page).to have_content('お題 一覧')
       click_link 'お題を投稿する'
       expect(page).to have_content('お題 新規作成')
@@ -134,7 +134,7 @@ RSpec.describe 'トピック', type: :system do
   context '停止されたユーザー' do
     it '停止されたユーザーは新規トピックを作成できない' do
       login_as(suspended_user)
-      visit tenant_topics_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.identifier)
       expect(page).not_to have_link('お題を投稿する')
       visit new_tenant_topic_path(tenant_slug: tenant.identifier)
       expect(page).to have_content('アクセスが禁止されています。')
@@ -154,13 +154,13 @@ RSpec.describe 'トピック', type: :system do
       create_list(:topic, 30, tenant: tenant, author: user)
 
       topic = tenant.topics.order(created_at: :desc).last
-      visit tenant_topics_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.identifier)
       expect(page).to have_selector('.pagination')
       click_link '2'
       expect(page).to have_content(topic.title)
       expect(page).to have_content("作成者: #{topic.author.login_id}")
       expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
-      visit tenant_topics_path(tenant_slug: tenant.identifier, page: 999)
+      visit tenant_path(tenant_slug: tenant.identifier, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')
     end
 
@@ -182,7 +182,7 @@ RSpec.describe 'トピック', type: :system do
   it '長いタイトルや特殊文字を含むトピックが正しく表示される' do
     long_x_special_char_topic
 
-    visit tenant_topics_path(tenant_slug: tenant.identifier)
+    visit tenant_path(tenant_slug: tenant.identifier)
     expect(page).to have_content(long_x_special_char_topic.title)
 
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: long_x_special_char_topic.id)

@@ -1,5 +1,5 @@
 <article>
-  <%= render 'shared/back_button', url: tenant_topics_path(tenant_slug: current_tenant.identifier) %>
+  <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.identifier) %>
   <section class="topic-show">
     <h3><%= @topic.title %></h3>
     <div class="topic-details">

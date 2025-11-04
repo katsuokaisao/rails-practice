@@ -1,36 +1,38 @@
-.tenants_topics_controller.index_action {
-    article {
-        width: stretch;
+.tenants_controller.show_action {
+    width: stretch;
 
-        .topic-header {
-            padding-inline: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+    .topic-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-            .topic-actions {
-                padding: 8px;
-                font-weight: 600;
-            }
+        h2 {
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-lg);
         }
 
-        .topic-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 1px solid #eee;
+        .topic-actions {
+            padding: 8px;
+            font-weight: 600;
+        }
+    }
 
-            .topic-details p {
-                font-size: 0.9rem;
-                color: #4b5563;
-            }
+    .topic-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0px;
+        border-bottom: 1px solid #eee;
 
-            .edit-actions {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column-reverse;
-            }
+        .topic-details p {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .edit-actions {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column-reverse;
         }
     }
 }

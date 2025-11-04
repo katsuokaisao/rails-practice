@@ -9,5 +9,5 @@
             <p><%= t('comment_count') %> <%= topic.total_comment %><%= t('.count_suffix') %></p>
         </div>
     </div>
-    <%= render partial: 'edit_action', locals: { topic: topic } %>
+    <%= render partial: 'tenants/topics/edit_action', locals: { topic: topic } %>
 </li>

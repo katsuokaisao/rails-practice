@@ -50,14 +50,14 @@ Rails.application.routes.draw do
 
   root to: 'tenants#index'
   scope '/:tenant_slug', as: :tenant do
-    get '/', to: 'tenants#show', as: :root
+    get '/', to: 'tenants#show', as: ''
 
     scope module: 'tenants' do
       resources :users, only: %i[show]
       resources :invitations, only: %i[new create]
       resource :membership, only: %i[edit update]
 
-      resources :topics, except: %i[destroy] do
+      resources :topics, except: %i[index destroy] do
         resources :comments, only: %i[create edit update]
       end
 

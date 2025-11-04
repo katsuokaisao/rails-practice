@@ -15,7 +15,7 @@ module Tenants
 
       if @invitation.save
         flash[:notice] = t('.success', resource: TenantInvitation.model_name.human)
-        redirect_to tenant_root_path(tenant_slug: current_tenant.identifier)
+        redirect_to tenant_path(tenant_slug: current_tenant.identifier)
       else
         render :new, status: :unprocessable_entity
       end

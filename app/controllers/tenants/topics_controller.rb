@@ -5,17 +5,6 @@ module Tenants
     before_action :set_topic, only: %i[show edit update]
     before_action -> { authorize_action!(@topic) }
 
-    def index
-      @pagination = Pagination::Paginator.new(
-        relation: topics, page: params[:page], per: params[:per]
-      ).call
-
-      return unless @pagination.out_of_bounds
-
-      flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_topics_path(tenant_slug: current_tenant.identifier)
-    end
-
     def show
       @pagination = Pagination::Paginator.new(
         relation: comments, page: params[:page], per: params[:per]
@@ -60,12 +49,6 @@ module Tenants
 
     def topic_params
       params.expect(topic: [:title])
-    end
-
-    def topics
-      current_tenant.topics
-        .order(created_at: :desc, id: :desc)
-        .eager_load(:author)
     end
 
     def comments

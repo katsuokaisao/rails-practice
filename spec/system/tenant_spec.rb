@@ -38,7 +38,7 @@ RSpec.describe 'テナント', type: :system do
 
         # テナントカードをクリックして詳細ページに遷移
         click_link '社内フォーラム'
-        expect(page).to have_current_path(tenant_root_path(tenant_slug: 'company-forum'))
+        expect(page).to have_current_path(tenant_path(tenant_slug: 'company-forum'))
 
         # テナント詳細ページでテナント情報が正しく表示される
         expect(page).to have_content('社内フォーラム')

@@ -33,6 +33,9 @@ class TenantInvitation < ApplicationRecord
   belongs_to :inviter, class_name: 'User'
   belongs_to :invited_user, class_name: 'User', optional: true
 
+  counter_culture :invited_user,
+                  column_name: proc { |model| model.status_pending? ? 'pending_invitations_count' : nil }
+
   validates :invited_user_id, uniqueness: {
     scope: :tenant_id,
     conditions: -> { status_pending }
@@ -42,7 +45,17 @@ class TenantInvitation < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   def accept!(display_name:)
-    ActiveRecord::Base.transaction do
+    with_lock do
+      unless status_pending?
+        errors.add(:status, :already_not_pending)
+        raise ActiveRecord::RecordInvalid, self
+      end
+
+      if already_member?
+        errors.add(:invited_user_id, :already_member)
+        raise ActiveRecord::RecordInvalid, self
+      end
+
       invited_user.tenant_memberships.create!(
         tenant: tenant,
         display_name: display_name
@@ -52,7 +65,19 @@ class TenantInvitation < ApplicationRecord
   end
 
   def reject!
-    status_rejected!
+    with_lock do
+      unless status_pending?
+        errors.add(:status, :already_not_pending)
+        raise ActiveRecord::RecordInvalid, self
+      end
+
+      if already_member?
+        errors.add(:invited_user_id, :already_member)
+        raise ActiveRecord::RecordInvalid, self
+      end
+
+      status_rejected!
+    end
   end
 
   def already_member?

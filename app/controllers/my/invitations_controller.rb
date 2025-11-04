@@ -36,7 +36,8 @@ module My
       flash[:notice] = t('.success')
       redirect_to my_invitations_path
     rescue ActiveRecord::RecordInvalid
-      render :accept, status: :unprocessable_entity
+      flash[:alert] = t('flash.actions.create.alert', resource: TenantInvitation.model_name.human)
+      redirect_to my_invitations_path
     end
 
     private

@@ -45,6 +45,6 @@ module ApplicationHelper
   def pending_invitations_count
     return 0 unless user_signed_in?
 
-    current_user.pending_invitations.count
+    current_user.pending_invitations_count
   end
 end

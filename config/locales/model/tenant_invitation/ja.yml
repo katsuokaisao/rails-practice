@@ -21,5 +21,7 @@ ja:
               invalid_self: は自分自身を指定できません
               not_exist: 存在しないユーザです
               taken: には既に招待を送信しています
+            status:
+              already_not_pending: はすでに保留中ではありません
     models:
       tenant_invitation: 招待

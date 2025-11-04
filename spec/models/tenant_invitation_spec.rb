@@ -154,6 +154,54 @@ RSpec.describe TenantInvitation, type: :model do
           # ステータスも変更されていないことを確認
           expect(invitation.reload.status).to eq('pending')
         end
+
+        it 'ステータスがpending以外の場合はエラーが発生する' do
+          invitation.update!(status: :accepted)
+
+          expect do
+            invitation.accept!(display_name: '表示名')
+          end.to raise_error(ActiveRecord::RecordInvalid)
+
+          expect(invitation.errors[:status]).to include('はすでに保留中ではありません')
+        end
+
+        it '既にメンバーの場合はエラーが発生する' do
+          invitation
+
+          create(:tenant_membership, tenant: tenant, user: invited_user, display_name: 'メンバー')
+
+          expect do
+            invitation.accept!(display_name: '表示名')
+          end.to raise_error(ActiveRecord::RecordInvalid)
+
+          expect(invitation.errors[:invited_user_id]).to include('は既にメンバーです')
+        end
+      end
+
+      context '同時処理' do
+        it '同時に受け入れようとした場合、片方だけが成功する' do
+          threads = []
+          results = []
+
+          2.times do |i|
+            threads << Thread.new do
+              sleep 0.01 * i
+              begin
+                invitation.accept!(display_name: "表示名#{i}")
+                results << :success
+              rescue ActiveRecord::RecordInvalid
+                results << :error
+              end
+            end
+          end
+
+          threads.each(&:join)
+
+          expect(results.count(:success)).to eq(1)
+          expect(results.count(:error)).to eq(1)
+
+          expect(TenantMembership.where(tenant: tenant, user: invited_user).count).to eq(1)
+        end
       end
     end
 
@@ -165,9 +213,49 @@ RSpec.describe TenantInvitation, type: :model do
         create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
       end
 
-      it 'ステータスがrejectedに変更される' do
-        invitation.reject!
-        expect(invitation.reload.status).to eq('rejected')
+      context '正常系' do
+        it 'ステータスがrejectedに変更される' do
+          invitation.reject!
+          expect(invitation.reload.status).to eq('rejected')
+        end
+      end
+
+      context '異常系' do
+        it 'ステータスがpending以外の場合はエラーが発生する' do
+          invitation.update!(status: :accepted)
+
+          expect do
+            invitation.reject!
+          end.to raise_error(ActiveRecord::RecordInvalid)
+
+          expect(invitation.errors[:status]).to include('はすでに保留中ではありません')
+        end
+      end
+
+      context '同時処理' do
+        it '同時に拒否しようとした場合、片方だけが成功する' do
+          threads = []
+          results = []
+
+          2.times do |i|
+            threads << Thread.new do
+              sleep 0.01 * i
+              begin
+                invitation.reject!
+                results << :success
+              rescue ActiveRecord::RecordInvalid
+                results << :error
+              end
+            end
+          end
+
+          threads.each(&:join)
+
+          expect(results.count(:success)).to eq(1)
+          expect(results.count(:error)).to eq(1)
+
+          expect(invitation.reload.status).to eq('rejected')
+        end
       end
     end
 
@@ -188,6 +276,62 @@ RSpec.describe TenantInvitation, type: :model do
 
         expect(invitation.already_member?).to be false
       end
+    end
+  end
+
+  describe 'counter_culture' do
+    let(:tenant) { create(:tenant) }
+    let(:inviter) { create(:user) }
+    let(:invited_user) { create(:user) }
+
+    before do
+      create(:tenant_membership, tenant: tenant, user: inviter, display_name: '招待者')
+    end
+
+    it '招待作成時にpending_invitations_countがインクリメントされる' do
+      expect do
+        create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
+      end.to change { invited_user.reload.pending_invitations_count }.by(1)
+    end
+
+    it '招待受け入れ時にpending_invitations_countがデクリメントされる' do
+      invitation = create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user,
+                                              status: :pending)
+
+      expect do
+        invitation.accept!(display_name: '表示名')
+      end.to change { invited_user.reload.pending_invitations_count }.by(-1)
+    end
+
+    it '招待拒否時にpending_invitations_countがデクリメントされる' do
+      invitation = create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user,
+                                              status: :pending)
+
+      expect do
+        invitation.reject!
+      end.to change { invited_user.reload.pending_invitations_count }.by(-1)
+    end
+
+    it '複数の招待がある場合、正しくカウントされる' do
+      tenant2 = create(:tenant)
+      create(:tenant_membership, tenant: tenant2, user: inviter, display_name: '招待者2')
+
+      create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
+      create(:tenant_invitation, tenant: tenant2, inviter: inviter, invited_user: invited_user, status: :pending)
+
+      expect(invited_user.reload.pending_invitations_count).to eq(2)
+    end
+
+    it 'accepted状態の招待はカウントされない' do
+      create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :accepted)
+
+      expect(invited_user.reload.pending_invitations_count).to eq(0)
+    end
+
+    it 'rejected状態の招待はカウントされない' do
+      create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :rejected)
+
+      expect(invited_user.reload.pending_invitations_count).to eq(0)
     end
   end
 end

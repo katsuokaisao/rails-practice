@@ -12,8 +12,16 @@ en:
         hidden_reason_text: Hidden Reason Text
         hidden_reason_type: Hidden Reason Type
         id: ID
+        tenant: Tenant
+        tenant_id: Tenant ID
         topic: Topic
         topic_id: Topic ID
         updated_at: Updated At
+    errors:
+      models:
+        comment:
+          attributes:
+            tenant_id:
+              must_match_topic_tenant: must match the topic's tenant
     models:
       comment: Comment

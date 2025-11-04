@@ -5,6 +5,8 @@ en:
       topic:
         author: Author
         created_at: Created At
+        tenant: Tenant
+        tenant_id: Tenant ID
         title: Title
         updated_at: Updated At
     models:

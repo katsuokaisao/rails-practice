@@ -5,6 +5,8 @@ ja:
       topic:
         author: 作成者
         created_at: 作成日時
+        tenant: テナント
+        tenant_id: テナントID
         title: タイトル
         updated_at: 更新日時
     models:

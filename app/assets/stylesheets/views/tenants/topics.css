@@ -1,4 +1,4 @@
-.topics_controller.index_action {
+.tenants_topics_controller.index_action {
     article {
         width: stretch;
 
@@ -36,7 +36,7 @@
 }
 
 
-.topics_controller.show_action {
+.tenants_topics_controller.show_action {
     article {
         display: flex;
         flex-direction: column;
@@ -112,6 +112,15 @@
             h4 {
                 margin-bottom: 8px;
             }
+        }
+
+        .tenant-notice {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 16px;
+            color: #6c757d;
+            text-align: center;
         }
     }
 

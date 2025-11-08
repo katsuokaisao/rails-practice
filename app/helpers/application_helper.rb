@@ -47,4 +47,8 @@ module ApplicationHelper
 
     current_user.pending_invitations_count
   end
+
+  def display_name(user)
+    user.display_name_for(current_tenant)
+  end
 end

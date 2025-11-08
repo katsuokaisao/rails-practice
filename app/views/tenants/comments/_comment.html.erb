@@ -1,6 +1,6 @@
 <div class="comment" id="comment-<%= comment.id %>">
   <div class="comment-header">
-    <p><strong><%= comment.author.login_id %></strong></p>
+    <p><strong><%= display_name(comment.author) %></strong></p>
   </div>
   <%= render_comment_content(comment) %>
   <div class="comment-footer">

@@ -133,7 +133,7 @@ class SampleCreator
         next
       end
 
-      comments, topics_count = create_comments_for_topics(tenant, topics, members)
+      comments, topics_count = create_comments_for_topics(topics, members)
       total_comments += comments
       total_topics += topics_count
 
@@ -319,8 +319,7 @@ class SampleCreator
     puts 'Comments sample (showing 10 comments)'
     puts '=' * 50
 
-    Comment.includes(:tenant, :topic, :author).order('RAND()').limit(10).each do |comment|
-      puts "💬 Tenant: #{comment.tenant.name} (@#{comment.tenant.identifier})"
+    Comment.includes(:topic, :author).order('RAND()').limit(10).each do |comment|
       puts "   Topic: #{comment.topic.title}"
       puts "   Author: #{comment.author.login_id}"
       puts "   Content: #{comment.content.truncate(100)}"

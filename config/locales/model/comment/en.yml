@@ -12,8 +12,6 @@ en:
         hidden_reason_text: Hidden Reason Text
         hidden_reason_type: Hidden Reason Type
         id: ID
-        tenant: Tenant
-        tenant_id: Tenant ID
         topic: Topic
         topic_id: Topic ID
         updated_at: Updated At

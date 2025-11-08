@@ -12,8 +12,6 @@ ja:
         hidden_reason_text: 非表示理由詳細
         hidden_reason_type: 非表示理由種別
         id: ID
-        tenant: テナント
-        tenant_id: テナントID
         topic: お題
         topic_id: お題ID
         updated_at: 更新日時

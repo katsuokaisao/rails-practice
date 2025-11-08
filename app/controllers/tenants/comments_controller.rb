@@ -9,8 +9,7 @@ module Tenants
     def edit; end
 
     def create
-      @comment = current_tenant.comments.create!(
-        topic: @topic,
+      @comment = @topic.comments.create!(
         author: current_user,
         **comment_params
       )
@@ -54,7 +53,7 @@ module Tenants
     end
 
     def set_comment
-      @comment = current_tenant.comments.find(params[:id])
+      @comment = @topic.comments.find(params[:id])
     end
   end
 end

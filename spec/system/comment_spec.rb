@@ -260,7 +260,6 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('コメント数: 0件')
 
     Comment.create!(
-      tenant: topic.tenant,
       topic: topic,
       author: user,
       content: 'テストコメント1'

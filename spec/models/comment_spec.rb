@@ -12,19 +12,16 @@
 #  updated_at               :datetime         not null
 #  author_id                :bigint           not null
 #  hidden_cause_decision_id :bigint
-#  tenant_id                :bigint           not null
 #  topic_id                 :bigint           not null
 #
 # Indexes
 #
 #  idx_comments_author_id            (author_id)
-#  idx_comments_tenant_id            (tenant_id)
 #  idx_comments_topic_id_created_at  (topic_id,created_at)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (author_id => users.id)
-#  fk_rails_...  (tenant_id => tenants.id)
 #  fk_rails_...  (topic_id => topics.id)
 #
 require 'rails_helper'
@@ -41,7 +38,6 @@ RSpec.describe Comment, type: :model do
 
         expect do
           comment = described_class.create!(
-            tenant: topic.tenant,
             topic: topic,
             author: author,
             content: content
@@ -73,7 +69,6 @@ RSpec.describe Comment, type: :model do
 
         expect do
           described_class.create!(
-            tenant: topic.tenant,
             topic: topic,
             author: author,
             content: content
@@ -96,7 +91,6 @@ RSpec.describe Comment, type: :model do
             ActiveRecord::Base.connection_pool.with_connection do
               ActiveRecord::Base.transaction do
                 created_comments << described_class.create!(
-                  tenant: topic.tenant,
                   topic: topic,
                   author: author,
                   content: content

@@ -42,7 +42,7 @@ module Tenants
     private
 
     def set_comment
-      @comment = current_tenant.comments.find(params[:comment_id])
+      @comment = Comment.find(params[:comment_id])
     end
 
     def histories

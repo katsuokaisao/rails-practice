@@ -12,31 +12,26 @@
 #  updated_at               :datetime         not null
 #  author_id                :bigint           not null
 #  hidden_cause_decision_id :bigint
-#  tenant_id                :bigint           not null
 #  topic_id                 :bigint           not null
 #
 # Indexes
 #
 #  idx_comments_author_id            (author_id)
-#  idx_comments_tenant_id            (tenant_id)
 #  idx_comments_topic_id_created_at  (topic_id,created_at)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (author_id => users.id)
-#  fk_rails_...  (tenant_id => tenants.id)
 #  fk_rails_...  (topic_id => topics.id)
 #
 class Comment < ApplicationRecord
   include Reportable
   include CommentSharedBehavior
 
-  belongs_to :tenant
   belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
   has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
 
   validates :current_version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validate :tenant_matches_topic
 
   counter_culture :topic, column_name: 'total_comment'
 
@@ -86,11 +81,5 @@ class Comment < ApplicationRecord
       content: content,
       version_no: current_version_no
     )
-  end
-
-  def tenant_matches_topic
-    return if topic.nil? || tenant.nil?
-
-    errors.add(:tenant_id, :must_match_topic_tenant) if tenant_id != topic.tenant_id
   end
 end

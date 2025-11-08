@@ -143,7 +143,7 @@ class SampleCreator
     puts "\n✅ Created #{total_comments} comments for #{total_topics} topics in #{tenants.count} tenants"
   end
 
-  def create_comments_for_topics(tenant, topics, members)
+  def create_comments_for_topics(topics, members)
     comments_count = 0
     topics_count = 0
 
@@ -153,8 +153,7 @@ class SampleCreator
       comment_count.times do
         created_at = rand(topic.created_at..Time.current)
 
-        tenant.comments.create!(
-          topic: topic,
+        topic.comments.create!(
           author: members.sample,
           content: Faker::Lorem.paragraphs(number: rand(1..3)).join("\n"),
           created_at: created_at,

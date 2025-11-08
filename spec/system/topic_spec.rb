@@ -34,7 +34,8 @@ RSpec.describe 'トピック', type: :system do
 
       within('.topic-show') do
         expect(page).to have_content('テストトピック')
-        expect(page).to have_content("作成者: #{user.display_name_for(tenant)}")
+        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content("(ID: #{user.id})")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
 
@@ -67,7 +68,8 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_content('お題が作成されました。')
       within('.topic-show') do
         expect(page).to have_content('新しいトピック')
-        expect(page).to have_content("作成者: #{user.display_name_for(tenant)}")
+        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content("(ID: #{user.id})")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
@@ -83,7 +85,8 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_content('お題が更新されました。')
       within('.topic-show') do
         expect(page).to have_content('編集されたトピック')
-        expect(page).to have_content("作成者: #{user.display_name_for(tenant)}")
+        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content("(ID: #{user.id})")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
@@ -158,7 +161,8 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_selector('.pagination')
       click_link '2'
       expect(page).to have_content(topic.title)
-      expect(page).to have_content("作成者: #{topic.author.display_name_for(tenant)}")
+      expect(page).to have_content(topic.author.display_name_for(tenant))
+      expect(page).to have_content("(ID: #{topic.author.id})")
       expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       visit tenant_path(tenant_slug: tenant.identifier, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')

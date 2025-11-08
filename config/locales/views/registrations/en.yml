@@ -9,6 +9,10 @@ en:
           characters_minimum: characters minimum
         title: Change Password
       profile:
+        invitation_guide:
+          description: By sharing this User ID with other users, you can receive invitations
+            to tenants.
+          title: About Invitation
         memberships:
           display_name_label: 'Display Name:'
           empty: You are not a member of any tenants
@@ -16,6 +20,7 @@ en:
         timezone:
           help: This setting is shared across all tenants
         title: Edit Profile
+        user_id_label: User ID
       shared:
         messages:
           current_password_help: We need your current password to confirm your changes

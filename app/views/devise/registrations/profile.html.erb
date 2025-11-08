@@ -3,6 +3,24 @@
     <%= render 'shared/back_button', url: root_path %>
     <h2><%= t('.title') %></h2>
 
+    <div class="user-info-card">
+      <div class="user-id-section">
+        <span class="text-caption"><%= t('.user_id_label') %>: <%= resource.id %></span>
+        <button type="button" class="icon-btn"
+                data-controller="clipboard"
+                data-clipboard-text-value="<%= resource.id %>"
+                data-action="click->clipboard#copy">
+          <span class="material-icons" data-clipboard-target="icon">content_copy</span>
+          <span class="material-icons hidden" data-clipboard-target="successIcon">check</span>
+        </button>
+      </div>
+
+      <div class="invitation-guide-section">
+        <h3 class="text-heading"><%= t('.invitation_guide.title') %></h3>
+        <p class="text-body"><%= t('.invitation_guide.description') %></p>
+      </div>
+    </div>
+
     <%= form_with(model: resource, as: resource_name, url: user_registration_path, html: { "data-turbo": "false" }) do |f| %>
       <%= render partial: "shared/form_errors", locals: { model: resource } %>
 

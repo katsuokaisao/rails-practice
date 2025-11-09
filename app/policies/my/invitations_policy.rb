@@ -7,15 +7,15 @@ module My
     end
 
     def accept?
-      unsuspended_user? && invitation_recipient?
+      user? && invitation_recipient?
     end
 
     def create_acceptance?
-      unsuspended_user? && invitation_recipient?
+      user? && invitation_recipient?
     end
 
     def reject?
-      unsuspended_user? && invitation_recipient?
+      user? && invitation_recipient?
     end
 
     private

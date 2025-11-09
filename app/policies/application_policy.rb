@@ -28,7 +28,7 @@ class ApplicationPolicy
   def logged_in? = !!user || !!moderator
   def user? = !!user
   def moderator? = !!moderator
-  def unsuspended_user? = user? && !user.suspended?
+  def unsuspended_user? = user? && tenant && !user.suspended?(tenant)
   def only_user? = !!user && !moderator?
   def only_moderator? = !!moderator && !user?
 
@@ -52,6 +52,12 @@ class ApplicationPolicy
     return false unless user? && tenant
 
     user.member_of?(tenant)
+  end
+
+  def moderator_tenant_member?
+    return false unless moderator? && tenant
+
+    moderator.member_of?(tenant)
   end
 
   def membership_owner?

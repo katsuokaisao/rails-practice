@@ -22,9 +22,7 @@ module Tenants
 
     def new
       @user_time_zone_identifier = user_time_zone_identifier
-      respond_to do |format|
-        format.turbo_stream
-      end
+      respond_to(&:turbo_stream)
     end
 
     def create
@@ -64,17 +62,44 @@ module Tenants
     end
 
     def decisions
-      base = current_tenant.decisions
-      .includes(:decider, report: %i[reporter reportable])
-      .joins(:report).where(reports: { reportable_type: reportable_type })
+      current_tenant.decisions
+        .includes(includes_list_for_decisions)
+        .joins(:report)
+        .where(reports: { reportable_type: reportable_type })
+        .order(created_at: :desc)
+    end
 
-      decisions = case reportable_type
-                  when 'comment'
-                    base.includes(report: { reportable: %i[topic author] })
-                  when 'user'
-                    base
-                  end
-      decisions.order(created_at: :desc)
+    def includes_list_for_decisions
+      case reportable_type
+      when 'comment'
+        comment_decision_includes
+      when 'user'
+        user_decision_includes
+      end
+    end
+
+    def comment_decision_includes
+      [
+        :decider,
+        {
+          report: [
+            { reporter: :tenant_memberships },
+            { reportable: [:topic, { author: :tenant_memberships }] }
+          ]
+        }
+      ]
+    end
+
+    def user_decision_includes
+      [
+        :decider,
+        {
+          report: [
+            { reporter: :tenant_memberships },
+            { reportable: :tenant_memberships }
+          ]
+        }
+      ]
     end
 
     def redirect_to_reports_page
@@ -92,11 +117,8 @@ module Tenants
 
     def handle_invalid_record(exception)
       @decision = exception.record
-
       respond_to do |format|
-        format.turbo_stream do
-          render :create_error, status: :unprocessable_content
-        end
+        format.turbo_stream { render :create_error, status: :unprocessable_content }
       end
     end
   end

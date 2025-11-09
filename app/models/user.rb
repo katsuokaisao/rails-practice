@@ -62,7 +62,11 @@ class User < ApplicationRecord
   end
 
   def display_name_for(tenant)
-    membership = tenant_memberships.find_by(tenant: tenant)
+    membership = if association(:tenant_memberships).loaded?
+                   tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
+                 else
+                   tenant_memberships.find_by(tenant: tenant)
+                 end
     membership&.display_name || ''
   end
 

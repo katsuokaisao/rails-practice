@@ -61,7 +61,7 @@ FactoryBot.define do
       decision_type { 'hide_comment' }
 
       after(:build) do |decision|
-        decision.report = create(:report, :for_comment, tenant: decision.tenant)
+        decision.report = create(:report, :for_comment, tenant: decision.tenant) if decision.report.nil?
       end
     end
 
@@ -70,7 +70,7 @@ FactoryBot.define do
       suspended_until { [7, 14, 30, 90].sample.days.from_now }
 
       after(:build) do |decision|
-        decision.report = create(:report, :for_user, tenant: decision.tenant)
+        decision.report = create(:report, :for_user, tenant: decision.tenant) if decision.report.nil?
       end
     end
   end

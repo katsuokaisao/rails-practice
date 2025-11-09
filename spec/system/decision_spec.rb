@@ -44,11 +44,11 @@ RSpec.describe '審査', type: :system do
 
     expect(page).to have_css('li.active a', text: 'コメント通報審査')
     within('.decisions-container') do
-      expect(page).to have_content(comment_report_decision.report.reporter.login_id)
+      expect(page).to have_content(user_membership.display_name)
       expect(page).to have_content(comment_report_decision.report.enum_i18n(:reason_type))
       expect(page).to have_content(comment_report_decision.report.reason_text)
       expect(page).to have_content(comment_report_decision.report.reportable.topic.title)
-      expect(page).to have_content(comment_report_decision.report.reportable.author.login_id)
+      expect(page).to have_content(reported_user_membership.display_name)
       expect(page).to have_content(comment_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(comment_report_decision.note)
       expect(page).to have_content(comment_report_decision.decider.login_id)
@@ -58,10 +58,10 @@ RSpec.describe '審査', type: :system do
     click_link 'ユーザー通報審査'
     expect(page).to have_css('li.active a', text: 'ユーザー通報審査')
     within('.decisions-container') do
-      expect(page).to have_content(user_report_decision.report.reporter.login_id)
+      expect(page).to have_content(user_membership.display_name)
       expect(page).to have_content(user_report_decision.report.enum_i18n(:reason_type))
       expect(page).to have_content(user_report_decision.report.reason_text)
-      expect(page).to have_content(user_report_decision.report.reportable.login_id)
+      expect(page).to have_content(reported_user_membership.display_name)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
       expect(page).to have_content(user_report_decision.suspended_until.strftime('%Y/%m/%d %H:%M'))

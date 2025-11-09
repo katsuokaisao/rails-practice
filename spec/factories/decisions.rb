@@ -11,10 +11,11 @@
 #  suspended_until                                                   :datetime
 #  created_at                                                        :datetime         not null
 #  report_id                                                         :bigint           not null
+#  tenant_id                                                         :bigint           not null
 #
 # Indexes
 #
-#  idx_decisions_created_at_report_id  (created_at,report_id)
+#  idx_decisions_created_at_report_id  (tenant_id,created_at,report_id)
 #  idx_decisions_decided_by            (decided_by)
 #  idx_decisions_report_id             (report_id) UNIQUE
 #
@@ -22,9 +23,11 @@
 #
 #  fk_rails_...  (decided_by => moderators.id)
 #  fk_rails_...  (report_id => reports.id)
+#  fk_rails_...  (tenant_id => tenants.id)
 #
 FactoryBot.define do
   factory :decision do
+    association :tenant
     association :decider, factory: :moderator
 
     decision_type do
@@ -47,7 +50,7 @@ FactoryBot.define do
     end
 
     after(:build) do |decision|
-      decision.report = build(:report, :for_comment) if decision.report.nil?
+      decision.report = build(:report, :for_comment, tenant: decision.tenant) if decision.report.nil?
     end
 
     trait :reject do
@@ -58,7 +61,7 @@ FactoryBot.define do
       decision_type { 'hide_comment' }
 
       after(:build) do |decision|
-        decision.report = create(:report, :for_comment)
+        decision.report = create(:report, :for_comment, tenant: decision.tenant)
       end
     end
 
@@ -67,7 +70,7 @@ FactoryBot.define do
       suspended_until { [7, 14, 30, 90].sample.days.from_now }
 
       after(:build) do |decision|
-        decision.report = create(:report, :for_user)
+        decision.report = create(:report, :for_user, tenant: decision.tenant)
       end
     end
   end

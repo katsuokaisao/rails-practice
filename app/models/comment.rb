@@ -65,7 +65,7 @@ class Comment < ApplicationRecord
   end
 
   def invisible?
-    hidden? || author.suspended?
+    hidden? || author.suspended?(topic.tenant)
   end
 
   private

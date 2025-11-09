@@ -22,6 +22,9 @@ class Tenant < ApplicationRecord
   has_many :tenant_invitations, dependent: :destroy
 
   has_many :topics, dependent: :destroy
+  has_many :reports, dependent: :destroy
+  has_many :decisions, dependent: :destroy
+  has_many :moderators, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 100 }
 

@@ -11,7 +11,6 @@
 #  id                        :bigint           not null, primary key
 #  encrypted_password        :string(255)      not null
 #  pending_invitations_count :integer          default(0), not null
-#  suspended_until           :datetime
 #  time_zone                 :string(255)      default("Tokyo"), not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -38,30 +37,24 @@ class User < ApplicationRecord
            class_name: 'TenantInvitation', foreign_key: :invited_user_id, dependent: :destroy,
            inverse_of: :invited_user
 
-  validate :suspended_until_future
-
   def apply_decision!(decision)
-    suspend!(decision.suspended_until)
+    suspend!(decision.tenant, decision.suspended_until) if decision.decision_type_suspend_user?
   end
 
-  def suspend!(suspended_until)
-    update!(suspended_until: suspended_until)
+  def suspended?(tenant)
+    tenant_memberships.find_by(tenant: tenant)&.suspended? || false
   end
 
-  def suspended?
-    suspended_until.present? && suspended_until.future?
+  def suspend!(tenant, suspended_until)
+    tenant_memberships.find_by!(tenant: tenant).suspend!(suspended_until)
   end
 
-  def suspended_until_date
-    return unless suspended?
-
-    suspended_until.to_date
+  def suspended_until_date(tenant)
+    tenant_memberships.find_by(tenant: tenant)&.suspended_until_date
   end
 
-  def enforce_release_suspension!
-    return unless suspended?
-
-    update!(suspended_until: nil)
+  def enforce_release_suspension!(tenant)
+    tenant_memberships.find_by!(tenant: tenant).enforce_release_suspension!
   end
 
   def member_of?(tenant)
@@ -83,13 +76,5 @@ class User < ApplicationRecord
 
   def memberships_ordered_by_tenant_name
     tenant_memberships.includes(:tenant).order('tenants.name')
-  end
-
-  private
-
-  def suspended_until_future
-    return if suspended_until.nil?
-
-    errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
   end
 end

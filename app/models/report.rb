@@ -12,12 +12,17 @@
 #  updated_at                                  :datetime         not null
 #  reportable_id                               :bigint
 #  reporter_id                                 :bigint           not null
+#  tenant_id                                   :bigint           not null
 #
 # Indexes
 #
-#  idx_reports_reportable_type_created_at     (reportable_type,created_at)
-#  idx_reports_reportable_type_reportable_id  (reportable_type,reportable_id)
-#  idx_reports_reporter_id                    (reporter_id)
+#  idx_reports_reportable_type_created_at     (tenant_id,reportable_type,created_at)
+#  idx_reports_reportable_type_reportable_id  (tenant_id,reportable_type,reportable_id)
+#  idx_reports_reporter_id                    (tenant_id,reporter_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (tenant_id => tenants.id)
 #
 class Report < ApplicationRecord
   REPORTABLE_CLASSES = [Comment, User].freeze
@@ -26,12 +31,15 @@ class Report < ApplicationRecord
   POLYMORPHIC_FLAG_CLASSES = REPORTABLE_CLASSES
   include PolymorphicTypeCheck
 
+  belongs_to :tenant
   belongs_to :reporter, class_name: 'User'
   belongs_to :reportable, polymorphic: true
   has_one :decision, dependent: :restrict_with_error
 
   scope :similar_reports, lambda { |report|
-    where(reportable: report.reportable).where.not(id: report.id)
+    where(tenant_id: report.tenant_id)
+    .where(reportable: report.reportable)
+    .where.not(id: report.id)
   }
 
   validates :reason_type, presence: true

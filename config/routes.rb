@@ -33,9 +33,6 @@ Rails.application.routes.draw do
     get 'moderators/password', to: 'moderators/registrations#password', as: :edit_moderator_password
   end
 
-  resources :reports, only: %i[index new create]
-  resources :decisions, only: %i[index new create]
-
   namespace :my do
     resources :invitations, only: %i[index] do
       member do
@@ -66,6 +63,9 @@ Rails.application.routes.draw do
           get 'compare', on: :collection
         end
       end
+
+      resources :reports, only: %i[index new create]
+      resources :decisions, only: %i[index new create]
     end
   end
 end

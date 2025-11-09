@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'モデレーター認証', type: :system do
-  let(:moderator) { create(:moderator, password: 'password123', password_confirmation: 'password123') }
+  let(:tenant) { create(:tenant) }
+  let(:moderator) { create(:moderator, tenant: tenant, password: 'password123', password_confirmation: 'password123') }
 
   describe 'モデレーターログイン' do
     it '正しい認証情報でログインできる' do
@@ -14,7 +15,7 @@ RSpec.describe 'モデレーター認証', type: :system do
       click_button 'ログイン'
 
       expect(page).to have_content('ログインしました')
-      expect(current_path).to eq(reports_path)
+      expect(current_path).to eq(tenant_reports_path(tenant_slug: tenant.identifier))
     end
 
     it '間違ったパスワードではログインできない' do

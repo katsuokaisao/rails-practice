@@ -6,7 +6,7 @@ RSpec.describe 'コメント履歴', type: :system do
   let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:moderator) { create(:moderator) }
+  let!(:moderator) { create(:moderator, tenant: tenant) }
 
   let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
   let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }

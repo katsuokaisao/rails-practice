@@ -6,13 +6,10 @@ RSpec.describe 'トピック', type: :system do
   let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:suspended_user) { create(:user, :suspended) }
+  let!(:suspended_user) { create(:user, :suspended_in, tenant: tenant, display_name: '停止ユーザー') }
 
   let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
   let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }
-  let!(:suspended_user_membership) do
-    create(:tenant_membership, tenant: tenant, user: suspended_user, display_name: '停止ユーザー')
-  end
 
   let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:other_topic) { create(:topic, tenant: tenant, author: other_user, title: '他のユーザーのトピック') }

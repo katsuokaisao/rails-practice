@@ -4,12 +4,13 @@
 #
 # Table name: tenant_memberships
 #
-#  id           :bigint           not null, primary key
-#  display_name :string(255)      not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  tenant_id    :bigint           not null
-#  user_id      :bigint           not null
+#  id              :bigint           not null, primary key
+#  display_name    :string(255)      not null
+#  suspended_until :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  tenant_id       :bigint           not null
+#  user_id         :bigint           not null
 #
 # Indexes
 #

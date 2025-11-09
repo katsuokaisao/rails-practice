@@ -6,7 +6,7 @@ RSpec.describe '通報', type: :system do
   let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:moderator) { create(:moderator) }
+  let!(:moderator) { create(:moderator, tenant: tenant) }
 
   let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
   let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }
@@ -60,22 +60,22 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '未ログインユーザーが通報一覧を閲覧できない' do
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '一般ユーザーが通報一覧を閲覧できない' do
     login_as user
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'モデレーターが通報一覧を閲覧できる' do
-    comment_report = create(:report, :for_comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    comment_report = create(:report, :for_comment, tenant: tenant, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
 
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('通報 一覧')
     expect(page).to have_css('li.active a', text: 'コメント通報')
 
@@ -92,11 +92,11 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '通報のタブ切り替えが機能する' do
-    user_report = create(:report, :for_user, reason_type: 'spam', reason_text: 'スパムユーザーです')
+    user_report = create(:report, :for_user, tenant: tenant, reason_type: 'spam', reason_text: 'スパムユーザーです')
 
     login_as(moderator, scope: :moderator)
 
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('通報 一覧')
 
     click_link 'ユーザー通報'
@@ -111,19 +111,19 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '通報のページネーションが機能する' do
-    create_list(:report, 21, :for_comment)
+    create_list(:report, 21, :for_comment, tenant: tenant)
     comment_report = Report.order(created_at: :desc).last
 
     login_as(moderator, scope: :moderator)
 
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('通報 一覧')
 
     click_link '2'
     expect(page).to have_content('通報 一覧')
     expect(page).to have_content(comment_report.reason_text)
 
-    visit reports_path(page: 999)
+    visit tenant_reports_path(tenant_slug: tenant.identifier, page: 999)
     expect(page).to have_content('範囲外のリクエストです。')
   end
 
@@ -151,7 +151,7 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('最初のユーザーからの報告')
     expect(page).to have_content('別のユーザーからの報告')
     expect(page).to have_content(user.login_id)
@@ -159,10 +159,10 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '既に審査済みの通報が通報一覧に表示されない' do
-    report = create(:report, :for_comment)
+    report = create(:report, :for_comment, tenant: tenant)
 
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content(report.reason_text)
 
     click_link '審査'
@@ -173,7 +173,7 @@ RSpec.describe '通報', type: :system do
       click_button '確定'
     end
 
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).not_to have_content(report.reason_text)
   end
 
@@ -192,10 +192,11 @@ RSpec.describe '通報', type: :system do
 
   scenario '非表示コメントが公開画面に表示されないことの確認' do
     comment = create(:comment, topic: topic, author: user, content: 'テスト用の非表示コメント')
-    create(:report, :for_comment, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment,
+           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('嫌がらせコメントです')
     click_link '審査'
     expect(page).to have_content('審査')
@@ -222,10 +223,11 @@ RSpec.describe '通報', type: :system do
 
   scenario '非表示コメントを編集しても公開画面には表示されないことの確認' do
     comment = create(:comment, topic: topic, author: other_user, content: 'テスト用の非表示コメント')
-    create(:report, :for_comment, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment,
+           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     expect(page).to have_content('嫌がらせコメントです')
 
     click_link '審査'

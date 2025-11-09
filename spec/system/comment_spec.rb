@@ -6,14 +6,11 @@ RSpec.describe 'コメント', type: :system do
   let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:suspended_user) { create(:user, :suspended) }
-  let!(:moderator) { create(:moderator) }
+  let!(:suspended_user) { create(:user, :suspended_in, tenant: tenant, display_name: '停止ユーザー') }
+  let!(:moderator) { create(:moderator, tenant: tenant) }
 
   let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
   let!(:other_user_membership) { create(:tenant_membership, tenant: tenant, user: other_user, display_name: 'ユーザー2') }
-  let!(:suspended_user_membership) do
-    create(:tenant_membership, tenant: tenant, user: suspended_user, display_name: '停止ユーザー')
-  end
 
   let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:suspended_user_topic) do
@@ -171,9 +168,9 @@ RSpec.describe 'コメント', type: :system do
   end
 
   scenario 'ユーザーを停止が解除された後のコメント表示状態の確認' do
-    create(:report, :for_user, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, tenant: tenant, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
 
     expect(page).to have_content('通報 一覧')
     click_link 'ユーザー通報'
@@ -198,17 +195,18 @@ RSpec.describe 'コメント', type: :system do
     expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('規約違反の可能性があるため、アカウントが停止されています。')
 
-    user.reload.enforce_release_suspension!
+    user.reload.enforce_release_suspension!(tenant)
 
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('テストコメント')
   end
 
   scenario '停止中ユーザーの非表示コメントの状態確認（二重制約の確認）' do
-    create(:report, :for_comment, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    create(:report, :for_comment,
+           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
 
     click_link '審査'
     expect(page).to have_content('審査')
@@ -220,9 +218,9 @@ RSpec.describe 'コメント', type: :system do
     end
     expect(page).to have_content('審査が作成されました。')
 
-    create(:report, :for_user, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, tenant: tenant, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
 
-    visit reports_path
+    visit tenant_reports_path(tenant_slug: tenant.identifier)
     click_link 'ユーザー通報'
 
     expect(page).to have_css('li.active > a', text: 'ユーザー通報')
@@ -245,8 +243,8 @@ RSpec.describe 'コメント', type: :system do
     expect(page).not_to have_content('通報対象コメント')
     expect(page).to have_content('このコメントは非表示です。')
 
-    user.reload.enforce_release_suspension!
-    expect(user.reload).not_to be_suspended
+    user.reload.enforce_release_suspension!(tenant)
+    expect(user.reload.suspended?(tenant)).to be false
 
     # アカウントの停止が解除されたが、コメント非表示は継続されていることを確認
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)

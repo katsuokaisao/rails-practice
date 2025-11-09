@@ -88,4 +88,33 @@ RSpec.describe '審査', type: :system do
     visit tenant_decisions_path(tenant_slug: tenant.identifier, page: 999)
     expect(page).to have_content('範囲外のリクエストです。')
   end
+
+  context 'マルチテナントのデータ分離' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
+    let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
+    let!(:user_a) { create(:user) }
+    let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_a, display_name: 'ユーザーA') }
+    let!(:topic_a) { create(:topic, tenant: tenant_a, author: user_a) }
+    let!(:comment_a) { create(:comment, topic: topic_a, author: user_a) }
+    let!(:report_a) { create(:report, :for_comment, tenant: tenant_a, reportable: comment_a) }
+    let!(:decision_a) do
+      create(:decision, :hide_comment, tenant: tenant_a, report: report_a, decider: moderator_a, note: 'テナントAの審査')
+    end
+
+    scenario 'テナントAの審査結果がテナントBの審査一覧に表示されない' do
+      login_as(moderator_b, scope: :moderator)
+
+      visit tenant_decisions_path(tenant_slug: tenant_b.identifier)
+      expect(page).not_to have_content('テナントAの審査')
+    end
+
+    scenario 'モデレーターAはテナントBにアクセスできない' do
+      login_as(moderator_a, scope: :moderator)
+
+      visit tenant_decisions_path(tenant_slug: tenant_b.identifier)
+      expect(page).to have_content('アクセスが禁止されています')
+    end
+  end
 end

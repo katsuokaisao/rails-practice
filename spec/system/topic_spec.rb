@@ -189,4 +189,71 @@ RSpec.describe 'トピック', type: :system do
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: long_x_special_char_topic.id)
     expect(page).to have_content(long_x_special_char_topic.title)
   end
+
+  context 'マルチテナントのデータ分離' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
+    let!(:user_multi) { create(:user) }
+    let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_multi, display_name: 'ユーザーA') }
+    let!(:membership_b) { create(:tenant_membership, tenant: tenant_b, user: user_multi, display_name: 'ユーザーB') }
+    let!(:topic_a) { create(:topic, tenant: tenant_a, author: user_multi, title: 'テナントAのトピック') }
+    let!(:topic_b) { create(:topic, tenant: tenant_b, author: user_multi, title: 'テナントBのトピック') }
+
+    scenario 'テナントAのトピックがテナントBの一覧に表示されない' do
+      login_as(user_multi)
+
+      visit tenant_path(tenant_slug: tenant_a.identifier)
+      expect(page).to have_content('テナントAのトピック')
+      expect(page).not_to have_content('テナントBのトピック')
+
+      visit tenant_path(tenant_slug: tenant_b.identifier)
+      expect(page).to have_content('テナントBのトピック')
+      expect(page).not_to have_content('テナントAのトピック')
+    end
+
+    scenario 'テナントAのトピックIDをテナントBのURLで指定してもアクセスできない' do
+      login_as(user_multi)
+
+      visit tenant_topic_path(tenant_slug: tenant_b.identifier, id: topic_a.id)
+      expect(page).to have_content('ActiveRecord::RecordNotFound')
+    end
+
+    scenario '同じユーザーでもテナントごとに異なる表示名が使用される' do
+      login_as(user_multi)
+
+      visit tenant_topic_path(tenant_slug: tenant_a.identifier, id: topic_a.id)
+      within('.topic-show') do
+        expect(page).to have_content('ユーザーA')
+        expect(page).not_to have_content('ユーザーB')
+      end
+
+      visit tenant_topic_path(tenant_slug: tenant_b.identifier, id: topic_b.id)
+      within('.topic-show') do
+        expect(page).to have_content('ユーザーB')
+        expect(page).not_to have_content('ユーザーA')
+      end
+    end
+  end
+
+  context '非所属テナントでのアクセス制限' do
+    let!(:member_tenant) { create(:tenant, identifier: 'member-tenant', name: 'メンバーテナント') }
+    let!(:non_member_tenant) { create(:tenant, identifier: 'non-member-tenant', name: '非メンバーテナント') }
+    let!(:multi_user) { create(:user) }
+    let!(:member_membership) do
+      create(:tenant_membership, tenant: member_tenant, user: multi_user, display_name: 'メンバー')
+    end
+
+    scenario '非所属テナントではトピック作成ボタンが表示されず、作成もできない' do
+      login_as(multi_user)
+
+      visit tenant_path(tenant_slug: non_member_tenant.identifier)
+      expect(page).not_to have_link('お題を投稿する')
+
+      visit new_tenant_topic_path(tenant_slug: non_member_tenant.identifier)
+      expect(page).to have_content('アクセスが禁止されています')
+
+      visit tenant_path(tenant_slug: member_tenant.identifier)
+      expect(page).to have_link('お題を投稿する')
+    end
+  end
 end

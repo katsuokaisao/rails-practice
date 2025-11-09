@@ -263,4 +263,59 @@ RSpec.describe '通報', type: :system do
 
     logout
   end
+
+  context 'マルチテナントのデータ分離' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
+    let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
+    let!(:user_a) { create(:user) }
+    let!(:user_b) { create(:user) }
+    let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_a, display_name: 'ユーザーA') }
+    let!(:membership_b) { create(:tenant_membership, tenant: tenant_b, user: user_b, display_name: 'ユーザーB') }
+    let!(:topic_a) { create(:topic, tenant: tenant_a, author: user_a) }
+    let!(:topic_b) { create(:topic, tenant: tenant_b, author: user_b) }
+    let!(:comment_a) { create(:comment, topic: topic_a, author: user_a, content: 'テナントAのコメント') }
+    let!(:comment_b) { create(:comment, topic: topic_b, author: user_b, content: 'テナントBのコメント') }
+    let!(:report_a) do
+      create(:report, :for_comment, tenant: tenant_a, reportable: comment_a, reason_text: 'テナントAの通報')
+    end
+    let!(:report_b) do
+      create(:report, :for_comment, tenant: tenant_b, reportable: comment_b, reason_text: 'テナントBの通報')
+    end
+
+    scenario 'モデレーターAはテナントAの通報のみ閲覧でき、テナントBの通報は閲覧できない' do
+      login_as(moderator_a, scope: :moderator)
+
+      visit tenant_reports_path(tenant_slug: tenant_a.identifier)
+      expect(page).to have_content('テナントAの通報')
+      expect(page).not_to have_content('テナントBの通報')
+
+      visit tenant_reports_path(tenant_slug: tenant_b.identifier)
+      expect(page).to have_content('アクセスが禁止されています')
+    end
+  end
+
+  context '非所属テナントでのアクセス制限' do
+    let!(:member_tenant) { create(:tenant, identifier: 'member-tenant') }
+    let!(:non_member_tenant) { create(:tenant, identifier: 'non-member-tenant') }
+    let!(:multi_user) { create(:user) }
+    let!(:other_user_multi) { create(:user) }
+    let!(:member_membership) do
+      create(:tenant_membership, tenant: member_tenant, user: multi_user, display_name: 'メンバー')
+    end
+    let!(:other_membership) do
+      create(:tenant_membership, tenant: non_member_tenant, user: other_user_multi, display_name: '他のユーザー')
+    end
+    let!(:non_member_topic) { create(:topic, tenant: non_member_tenant, author: other_user_multi) }
+    let!(:non_member_comment) { create(:comment, topic: non_member_topic, author: other_user_multi) }
+
+    scenario '非所属テナントでは通報ボタンが表示されず、通報もできない' do
+      login_as(multi_user)
+
+      visit tenant_topic_path(tenant_slug: non_member_tenant.identifier, id: non_member_topic.id)
+      expect(page).not_to have_link('コメントを非表示')
+      expect(page).not_to have_link('違法ユーザ')
+    end
+  end
 end

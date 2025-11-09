@@ -266,4 +266,49 @@ RSpec.describe 'コメント', type: :system do
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     expect(page).to have_content('コメント数: 1件')
   end
+
+  context 'マルチテナントのデータ分離' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:user_multi) { create(:user) }
+    let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_multi, display_name: 'ユーザーA') }
+    let!(:membership_b) { create(:tenant_membership, tenant: tenant_b, user: user_multi, display_name: 'ユーザーB') }
+    let!(:topic_a) { create(:topic, tenant: tenant_a, author: user_multi) }
+    let!(:topic_b) { create(:topic, tenant: tenant_b, author: user_multi) }
+    let!(:comment_a) { create(:comment, topic: topic_a, author: user_multi, content: 'テナントAのコメント') }
+    let!(:comment_b) { create(:comment, topic: topic_b, author: user_multi, content: 'テナントBのコメント') }
+
+    scenario 'テナントAのコメントがテナントBのトピックに表示されない' do
+      login_as(user_multi)
+
+      visit tenant_topic_path(tenant_slug: tenant_a.identifier, id: topic_a.id)
+      expect(page).to have_content('テナントAのコメント')
+      expect(page).not_to have_content('テナントBのコメント')
+
+      visit tenant_topic_path(tenant_slug: tenant_b.identifier, id: topic_b.id)
+      expect(page).to have_content('テナントBのコメント')
+      expect(page).not_to have_content('テナントAのコメント')
+    end
+  end
+
+  context '非所属テナントでのアクセス制限' do
+    let!(:member_tenant) { create(:tenant, identifier: 'member-tenant') }
+    let!(:non_member_tenant) { create(:tenant, identifier: 'non-member-tenant') }
+    let!(:multi_user) { create(:user) }
+    let!(:other_user_multi) { create(:user) }
+    let!(:member_membership) do
+      create(:tenant_membership, tenant: member_tenant, user: multi_user, display_name: 'メンバー')
+    end
+    let!(:other_membership) do
+      create(:tenant_membership, tenant: non_member_tenant, user: other_user_multi, display_name: '他のユーザー')
+    end
+    let!(:non_member_topic) { create(:topic, tenant: non_member_tenant, author: other_user_multi) }
+
+    scenario '非所属テナントではコメント投稿フォームが表示されず、投稿もできない' do
+      login_as(multi_user)
+
+      visit tenant_topic_path(tenant_slug: non_member_tenant.identifier, id: non_member_topic.id)
+      expect(page).not_to have_content('コメントを投稿する')
+    end
+  end
 end

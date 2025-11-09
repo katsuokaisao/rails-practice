@@ -116,4 +116,35 @@ RSpec.describe 'テナント招待機能', type: :system do
 
     expect(page).to have_content('は50文字以内で入力してください')
   end
+
+  context '招待のテナント分離' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
+    let!(:inviter_multi) { create(:user) }
+    let!(:invited_user_multi) { create(:user) }
+
+    before do
+      create(:tenant_membership, tenant: tenant_a, user: inviter_multi, display_name: '招待者')
+    end
+
+    scenario 'テナントAからの招待を受諾してもテナントBのメンバーにはならない' do
+      create(:tenant_invitation, tenant: tenant_a, inviter: inviter_multi, invited_user: invited_user_multi,
+                                 status: :pending)
+
+      login_as invited_user_multi
+      visit my_invitations_path
+
+      click_link '招待を受ける'
+      fill_in '表示名', with: '新メンバー'
+      click_button '参加する'
+
+      expect(page).to have_content('テナントA')
+
+      visit tenant_path(tenant_slug: tenant_a.identifier)
+      expect(page).to have_link('お題を投稿する')
+
+      visit tenant_path(tenant_slug: tenant_b.identifier)
+      expect(page).not_to have_link('お題を投稿する')
+    end
+  end
 end

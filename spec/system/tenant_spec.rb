@@ -149,4 +149,41 @@ RSpec.describe 'テナント', type: :system do
       end
     end
   end
+
+  describe 'テナント識別子の検証' do
+    scenario '存在しないテナント識別子でアクセスすると404エラーになる' do
+      visit tenant_path(tenant_slug: 'non-existent-tenant')
+      expect(page).to have_content('ActiveRecord::RecordNotFound')
+    end
+  end
+
+  describe 'テナント一覧の分類（ログイン時）' do
+    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
+    let!(:tenant_c) { create(:tenant, identifier: 'tenant-c', name: 'テナントC') }
+    let!(:user_multi) { create(:user) }
+
+    before do
+      create(:tenant_membership, tenant: tenant_a, user: user_multi, display_name: 'ユーザーA')
+      create(:tenant_membership, tenant: tenant_b, user: user_multi, display_name: 'ユーザーB')
+      # tenant_cには所属していない
+    end
+
+    scenario '所属テナントとその他のテナントが正しく分類される' do
+      login_as user_multi
+      visit root_path
+
+      within('.tenant-section', text: '所属テナント') do
+        expect(page).to have_content('テナントA')
+        expect(page).to have_content('テナントB')
+        expect(page).not_to have_content('テナントC')
+      end
+
+      within('.tenant-section', text: 'その他のテナント') do
+        expect(page).to have_content('テナントC')
+        expect(page).not_to have_content('テナントA')
+        expect(page).not_to have_content('テナントB')
+      end
+    end
+  end
 end

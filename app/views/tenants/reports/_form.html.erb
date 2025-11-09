@@ -1,5 +1,5 @@
 <%= form_with model: report,
-              url: reports_path,
+              url: tenant_reports_path(tenant_slug: current_tenant.identifier),
               method: :post do |f| %>
   <div id="report-form-errors"></div>
 

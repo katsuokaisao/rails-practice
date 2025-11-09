@@ -20,10 +20,11 @@
           <%= link_to t('history'), tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: comment.id), class: "history-link" %>
         </p>
       <% end %>
-      <% if !comment.invisible? && can_access?('reports', 'new', comment) %>
+      <% if !comment.invisible? && can_access?('tenants/reports', 'new', comment) %>
         <p>
           <span class="material-icons">flag</span>
-          <%= link_to t('.report_user'), new_report_path(
+          <%= link_to t('.report_user'), new_tenant_report_path(
+            tenant_slug: current_tenant.identifier,
             format: :turbo_stream,
             reportable_type: "user",
             reportable_id: comment.author.id,
@@ -32,7 +33,8 @@
         </p>
         <p>
           <span class="material-icons">flag</span>
-          <%= link_to t('.hide_comment'), new_report_path(
+          <%= link_to t('.hide_comment'), new_tenant_report_path(
+            tenant_slug: current_tenant.identifier,
             format: :turbo_stream,
             reportable_type: "comment",
             reportable_id: comment.id,

@@ -21,8 +21,9 @@ module ApplicationHelper
 
     return content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info']) if comment.author != current_user
 
-    if comment.author.suspended?
-      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date}です。",
+    tenant = comment.topic.tenant
+    if comment.author.suspended?(tenant)
+      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date(tenant)}です。",
                   class: ['hidden-comment-warning'])
     else
       content_tag(:p, '規約違反の可能性があるため、あなたのコメントは非表示になりました。', class: ['hidden-comment-warning'])

@@ -6,14 +6,8 @@ class ApplicationController < ActionController::Base
 
   before_action :set_time_zone
 
-  helper_method :only_user_signed_in?
-
   # 403
   rescue_from Authorization::NotAuthorizedError, with: :render_forbidden
-
-  def only_user_signed_in?
-    user_signed_in? && !moderator_signed_in?
-  end
 
   private
 

@@ -1,0 +1,7 @@
+---
+ja:
+  shared:
+    invitation_banner:
+      message:
+        one: 招待が%{count}件あります
+        other: 招待が%{count}件あります

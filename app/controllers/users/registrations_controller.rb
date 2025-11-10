@@ -20,7 +20,7 @@ module Users
 
     # GET /resource/profile
     def profile
-      @memberships = current_user.tenant_memberships.includes(:tenant).order('tenants.name')
+      @memberships = current_user.memberships_ordered_by_tenant_name
       render :profile
     end
 
@@ -43,11 +43,7 @@ module Users
         respond_with resource, location: after_update_path_for(resource)
       else
         clean_up_passwords resource
-        if update_kind == :profile
-          @memberships = current_user.tenant_memberships
-                                     .includes(:tenant)
-                                     .order('tenants.name')
-        end
+        @memberships = current_user.memberships_ordered_by_tenant_name if update_kind == :profile
         render update_kind
       end
     end

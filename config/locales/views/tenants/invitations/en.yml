@@ -1,0 +1,11 @@
+---
+en:
+  tenants:
+    invitations:
+      create:
+        success: Invitation sent successfully
+      new:
+        submit: Send Invitation
+        title: Invite Member to Tenant
+        user_id_hint: Please enter the ID of the user you want to invite
+        user_id_placeholder: e.g., 12345

@@ -8,13 +8,14 @@
 #
 # Table name: users
 #
-#  id                 :bigint           not null, primary key
-#  encrypted_password :string(255)      not null
-#  suspended_until    :datetime
-#  time_zone          :string(255)      default("Tokyo"), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  login_id           :string(255)      not null
+#  id                        :bigint           not null, primary key
+#  encrypted_password        :string(255)      not null
+#  pending_invitations_count :integer          default(0), not null
+#  suspended_until           :datetime
+#  time_zone                 :string(255)      default("Tokyo"), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  login_id                  :string(255)      not null
 #
 # Indexes
 #
@@ -30,6 +31,12 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :tenant_memberships, dependent: :destroy
   has_many :tenants, through: :tenant_memberships
+  has_many :sent_invitations,
+           class_name: 'TenantInvitation', foreign_key: :inviter_id, dependent: :destroy,
+           inverse_of: :inviter
+  has_many :received_invitations,
+           class_name: 'TenantInvitation', foreign_key: :invited_user_id, dependent: :destroy,
+           inverse_of: :invited_user
 
   validate :suspended_until_future
 
@@ -64,6 +71,18 @@ class User < ApplicationRecord
   def display_name_for(tenant)
     membership = tenant_memberships.find_by(tenant: tenant)
     membership&.display_name || ''
+  end
+
+  def pending_invitations
+    received_invitations.status_pending
+  end
+
+  def pending_invitations?
+    pending_invitations.exists?
+  end
+
+  def memberships_ordered_by_tenant_name
+    tenant_memberships.includes(:tenant).order('tenants.name')
   end
 
   private

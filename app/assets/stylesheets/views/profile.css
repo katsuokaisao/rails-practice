@@ -1,5 +1,23 @@
 .users_registrations_controller {
     .form-card {
+        .user-id-section {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .invitation-guide-section {
+            .text-heading {
+                font-size: var(--font-size-md);
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .text-body {
+                line-height: 1.6;
+            }
+        }
+
         hr {
             width: 100%;
             border: none;

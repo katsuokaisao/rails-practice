@@ -46,6 +46,16 @@ Rails.application.routes.draw do
   resources :reports, only: %i[index new create]
   resources :decisions, only: %i[index new create]
 
+  namespace :my do
+    resources :invitations, only: %i[index] do
+      member do
+        get :accept
+        post :accept, action: :create_acceptance
+        post :reject
+      end
+    end
+  end
+
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   root to: 'tenants#index'
@@ -53,6 +63,7 @@ Rails.application.routes.draw do
     get '/', to: 'tenants#show', as: :root
 
     scope module: 'tenants' do
+      resources :invitations, only: %i[new create]
       resource :membership, only: %i[edit update]
     end
   end

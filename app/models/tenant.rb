@@ -19,6 +19,7 @@
 class Tenant < ApplicationRecord
   has_many :tenant_memberships, dependent: :destroy
   has_many :members, through: :tenant_memberships, source: :user
+  has_many :tenant_invitations, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 100 }
 

@@ -1,0 +1,7 @@
+---
+en:
+  shared:
+    invitation_banner:
+      message:
+        one: You have %{count} invitation
+        other: You have %{count} invitations

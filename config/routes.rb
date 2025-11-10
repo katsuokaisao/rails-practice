@@ -33,16 +33,6 @@ Rails.application.routes.draw do
     get 'moderators/password', to: 'moderators/registrations#password', as: :edit_moderator_password
   end
 
-  resources :topics, except: %i[destroy] do
-    resources :comments, only: %i[create edit update]
-  end
-
-  resources :comments, only: %i[] do
-    resources :histories, controller: 'comment_histories', only: %i[index] do
-      get 'compare', on: :collection
-    end
-  end
-
   resources :reports, only: %i[index new create]
   resources :decisions, only: %i[index new create]
 
@@ -60,11 +50,21 @@ Rails.application.routes.draw do
 
   root to: 'tenants#index'
   scope '/:tenant_slug', as: :tenant do
-    get '/', to: 'tenants#show', as: :root
+    get '/', to: 'tenants#show', as: ''
 
     scope module: 'tenants' do
       resources :invitations, only: %i[new create]
       resource :membership, only: %i[edit update]
+
+      resources :topics, except: %i[index destroy] do
+        resources :comments, only: %i[create edit update]
+      end
+
+      resources :comments, only: %i[] do
+        resources :histories, controller: 'comment_histories', only: %i[index] do
+          get 'compare', on: :collection
+        end
+      end
     end
   end
 end

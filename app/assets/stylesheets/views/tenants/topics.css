@@ -1,42 +1,44 @@
-.topics_controller.index_action {
-    article {
-        width: stretch;
+.tenants_controller.show_action {
+    width: stretch;
 
-        .topic-header {
-            padding-inline: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+    .topic-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-            .topic-actions {
-                padding: 8px;
-                font-weight: 600;
-            }
+        h2 {
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-lg);
         }
 
-        .topic-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 1px solid #eee;
+        .topic-actions {
+            padding: 8px;
+            font-weight: 600;
+        }
+    }
 
-            .topic-details p {
-                font-size: 0.9rem;
-                color: #4b5563;
-            }
+    .topic-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0px;
+        border-bottom: 1px solid #eee;
 
-            .edit-actions {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column-reverse;
-            }
+        .topic-details p {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .edit-actions {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column-reverse;
         }
     }
 }
 
 
-.topics_controller.show_action {
+.tenants_topics_controller.show_action {
     article {
         display: flex;
         flex-direction: column;
@@ -112,6 +114,15 @@
             h4 {
                 margin-bottom: 8px;
             }
+        }
+
+        .tenant-notice {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 16px;
+            color: #6c757d;
+            text-align: center;
         }
     }
 

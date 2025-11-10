@@ -18,7 +18,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     fill_in '招待するユーザー', with: invited_user.id
     click_button '招待を送信'
 
-    expect(page).to have_current_path(tenant_root_path(tenant_slug: tenant.identifier))
+    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.identifier))
 
     logout
     login_as invited_user
@@ -31,7 +31,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     fill_in '表示名', with: '新メンバー'
     click_button '参加する'
 
-    expect(page).to have_current_path(tenant_root_path(tenant_slug: tenant.identifier))
+    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.identifier))
     expect(page).to have_content('テストテナント')
   end
 

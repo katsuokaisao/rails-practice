@@ -64,7 +64,15 @@
    ======================================== */
 
 .tenant-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
+}
+
+.tenant-detail-title-wrapper {
+  flex: 1;
 }
 
 .tenant-detail-identifier-wrapper {
@@ -72,6 +80,10 @@
   align-items: center;
   gap: var(--spacing-xs);
   margin-top: var(--spacing-sm);
+}
+
+.tenant-detail-actions {
+  flex-shrink: 0;
 }
 
 .tenant-detail-section {
@@ -94,11 +106,6 @@
   }
 }
 
-.tenant-detail-actions {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-xl);
-}
 
 .tenant-detail-back {
   margin-top: var(--spacing-3xl);

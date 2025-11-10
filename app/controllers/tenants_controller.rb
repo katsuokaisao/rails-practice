@@ -26,11 +26,27 @@ class TenantsController < ApplicationController
 
     return unless @member_pagination.out_of_bounds || @other_pagination.out_of_bounds
 
-    redirect_to root_path,
-                alert: t('flash.actions.out_of_bounds')
+    redirect_to root_path, alert: t('flash.actions.out_of_bounds')
   end
 
   def show
     @tenant = current_tenant
+
+    @pagination = Pagination::Paginator.new(
+      relation: topics, page: params[:page], per: params[:per]
+    ).call
+
+    return unless @pagination.out_of_bounds
+
+    flash[:alert] = t('flash.actions.out_of_bounds')
+    redirect_to tenant_path(tenant_slug: current_tenant.identifier)
+  end
+
+  private
+
+  def topics
+    current_tenant.topics
+      .order(created_at: :desc, id: :desc)
+      .eager_load(:author)
   end
 end

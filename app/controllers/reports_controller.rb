@@ -36,7 +36,8 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         if @report.save
-          redirect_to topic_path(@topic), notice: t('flash.actions.create.notice', resource: Report.model_name.human)
+          flash[:notice] = t('flash.actions.create.notice', resource: Report.model_name.human)
+          redirect_to tenant_topic_path(tenant_slug: @topic.tenant.identifier, id: @topic)
         else
           render :create_error, status: :unprocessable_content
         end

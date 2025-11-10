@@ -47,4 +47,18 @@ module ApplicationHelper
 
     current_user.pending_invitations_count
   end
+
+  def display_name(user)
+    user.display_name_for(current_tenant)
+  end
+
+  def display_name_with_id(user)
+    name = display_name(user)
+
+    content_tag(:span, class: 'user-info') do
+      concat(content_tag(:span, name, class: 'user-name'))
+      concat(' ')
+      concat(content_tag(:span, "(ID: #{user.id})", class: 'user-id'))
+    end
+  end
 end

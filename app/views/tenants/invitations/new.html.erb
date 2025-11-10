@@ -1,6 +1,6 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: tenant_root_path(tenant_slug: current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.identifier) %>
 
     <h1><%= t('.title') %></h1>
 

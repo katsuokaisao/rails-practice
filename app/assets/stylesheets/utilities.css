@@ -127,3 +127,21 @@
         font-size: 16px;
     }
 }
+
+/* User Info - ユーザー情報表示 */
+.user-info {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    flex-wrap: wrap;
+}
+
+.user-info .user-name {
+    color: var(--color-gray-900);
+}
+
+.user-info .user-id {
+    color: var(--color-gray-500);
+    font-size: 0.9em;
+    font-weight: var(--font-weight-normal);
+}

@@ -1,0 +1,11 @@
+---
+en:
+  tenants:
+    topics:
+      item:
+        count_suffix: count
+      show:
+        comment: Comments
+        count_suffix: count
+        create: Post
+        new_comment: Post a Comment

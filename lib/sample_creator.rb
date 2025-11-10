@@ -77,32 +77,110 @@ class SampleCreator
   end
 
   def create_topics
-    users = User.all.to_a
-    200.times do
-      FactoryBot.create(:topic, title: Faker::Book.title, author: users.sample)
+    tenants = Tenant.order(created_at: :desc).limit(50).to_a
+    puts "Creating topics for #{tenants.count} tenants..."
+
+    total_topics = 0
+
+    tenants.each do |tenant|
+      members = tenant.members.to_a
+
+      if members.empty?
+        puts "  ⚠️  Tenant '#{tenant.name}' has no members, skipping..."
+        next
+      end
+
+      topic_count = rand(20..30)
+
+      topic_count.times do
+        created_at = rand(60.days.ago..Time.current)
+
+        Topic.create!(
+          tenant: tenant,
+          author: members.sample,
+          title: Faker::Book.title,
+          created_at: created_at,
+          updated_at: created_at
+        )
+
+        total_topics += 1
+      end
+
+      print '.'
     end
+
+    puts "\n✅ Created #{total_topics} topics across #{tenants.count} tenants"
   end
 
   def create_comments
-    topics = Topic.order(created_at: :desc).limit(20)
-    users = User.all.to_a
-    topics.each do |topic|
-      300.times do
-        Comment.create!(
-          topic: topic,
-          author: users.sample,
-          content: Faker::Lorem.paragraphs(number: 3).join("\n")
-        )
+    tenants = Tenant.order(created_at: :desc).limit(50).to_a
+    puts "Creating comments for latest topics in #{tenants.count} tenants..."
+
+    total_comments = 0
+    total_topics = 0
+
+    tenants.each do |tenant|
+      topics = tenant.topics.order(created_at: :desc).limit(10).to_a
+      members = tenant.members.to_a
+
+      if members.empty?
+        puts "  ⚠️  Tenant '#{tenant.name}' has no members, skipping..."
+        next
       end
+
+      if topics.empty?
+        puts "  ⚠️  Tenant '#{tenant.name}' has no topics, skipping..."
+        next
+      end
+
+      comments, topics_count = create_comments_for_topics(topics, members)
+      total_comments += comments
+      total_topics += topics_count
+
+      print '.'
     end
+
+    puts "\n✅ Created #{total_comments} comments for #{total_topics} topics in #{tenants.count} tenants"
+  end
+
+  def create_comments_for_topics(topics, members)
+    comments_count = 0
+    topics_count = 0
+
+    topics.each do |topic|
+      comment_count = rand(20..50)
+
+      comment_count.times do
+        created_at = rand(topic.created_at..Time.current)
+
+        topic.comments.create!(
+          author: members.sample,
+          content: Faker::Lorem.paragraphs(number: rand(1..3)).join("\n"),
+          created_at: created_at,
+          updated_at: created_at
+        )
+
+        comments_count += 1
+      end
+
+      topics_count += 1
+    end
+
+    [comments_count, topics_count]
   end
 
   def update_comments
-    Comment.first(100).each do |comment|
+    puts 'Updating comments to create histories...'
+
+    Comment.order('RAND()').limit(100).each do |comment|
       10.times do
-        comment.update_content!(Faker::Lorem.paragraphs(number: 3).join("\n"))
+        comment.update_content!(Faker::Lorem.paragraphs(number: rand(1..3)).join("\n"))
       end
+
+      print '.'
     end
+
+    puts "\n✅ Updated 100 comments (created ~1000 comment histories)"
   end
 
   def create_reports
@@ -222,27 +300,47 @@ class SampleCreator
   end
 
   def puts_topics
-    puts 'Topics sample'
-    Topic.take(10).each do |topic|
-      puts "Topic: #{topic.title}, Author: #{topic.author.login_id}"
+    puts "\n#{'=' * 50}"
+    puts 'Topics sample (showing 10 topics)'
+    puts '=' * 50
+
+    Topic.includes(:tenant, :author).order('RAND()').limit(10).each do |topic|
+      puts "📌 Tenant: #{topic.tenant.name} (@#{topic.tenant.identifier})"
+      puts "   Title: #{topic.title}"
+      puts "   Author: #{topic.author.login_id}"
+      puts "   Comments: #{topic.total_comment}"
+      puts "   Created: #{topic.created_at.strftime('%Y-%m-%d %H:%M')}"
+      puts ''
     end
   end
 
   def puts_comments
-    puts 'Comments sample'
-    Comment.take(10).each do |comment|
-      puts "Topic: #{comment.topic.title}, Author: #{comment.author.login_id}, Comment: #{comment.content}"
+    puts "\n#{'=' * 50}"
+    puts 'Comments sample (showing 10 comments)'
+    puts '=' * 50
+
+    Comment.includes(:topic, :author).order('RAND()').limit(10).each do |comment|
+      puts "   Topic: #{comment.topic.title}"
+      puts "   Author: #{comment.author.login_id}"
+      puts "   Content: #{comment.content.truncate(100)}"
+      puts "   Version: #{comment.current_version_no}"
+      puts "   Created: #{comment.created_at.strftime('%Y-%m-%d %H:%M')}"
+      puts ''
     end
   end
 
   def puts_comment_histories
-    puts 'Comment Histories sample'
-    CommentHistory.take(10).each do |comment_history|
-      puts <<~MSG
-        Comment: #{comment_history.comment.content},
-        Author: #{comment_history.author.login_id},
-        Version: #{comment_history.version_no}
-      MSG
+    puts "\n#{'=' * 50}"
+    puts 'Comment Histories sample (showing 10 histories)'
+    puts '=' * 50
+
+    CommentHistory.includes(:comment, :author).order('RAND()').limit(10).each do |history|
+      puts "   Comment ID: #{history.comment.id}"
+      puts "   Author: #{history.author.login_id}"
+      puts "   Version: #{history.version_no}"
+      puts "   Content: #{history.content.truncate(100)}"
+      puts "   Created: #{history.created_at.strftime('%Y-%m-%d %H:%M')}"
+      puts ''
     end
   end
 

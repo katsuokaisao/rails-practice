@@ -7,4 +7,5 @@ ja:
       new:
         submit: 招待を送信
         title: テナントにメンバーを招待
+        user_id_hint: 招待したいユーザーのIDを入力してください
         user_id_placeholder: '例: 12345'

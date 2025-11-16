@@ -5,12 +5,14 @@ create_table :tenant_memberships, options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb
   t.bigint   'user_id',         null: false
   t.string   'display_name',    null: false
   t.datetime 'suspended_until', null: true
+  t.datetime 'unsubscribed_at', null: true
   t.datetime 'created_at',      null: false
   t.datetime 'updated_at',      null: false
 
   t.index %i[tenant_id user_id], unique: true, name: 'idx_tenant_memberships_tenant_user'
   t.index %i[tenant_id display_name], unique: true, name: 'idx_tenant_memberships_tenant_display_name'
   t.index ['user_id'], name: 'idx_tenant_memberships_user_id'
+  t.index %w[tenant_id unsubscribed_at], name: 'idx_tenant_memberships_tenant_unsubscribed_at'
 end
 
 add_foreign_key 'tenant_memberships', 'tenants', column: 'tenant_id'

@@ -6,6 +6,12 @@ en:
         hide_comment: Hide comment
         reject: Reject
         suspend_user: Suspend user
+    job_execution:
+      status:
+        enqueued: Enqueued
+        running: Running
+        completed: Completed
+        failed: Failed
     report:
       reason_type:
         harassment: Harassment
@@ -15,6 +21,15 @@ en:
       reportable_type:
         Comment: Comment
         User: User
+    tenant:
+      unsubscribed_user_comment_policy:
+        keep_visible: Keep Visible
+        hide_content: Hide Content
+        delete: Delete
+      unsubscribed_user_topic_policy:
+        keep_visible: Keep Visible
+        lock: Lock
+        delete: Delete
     tenant_invitation:
       status:
         accepted: Accepted

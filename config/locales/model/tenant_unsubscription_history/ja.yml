@@ -1,0 +1,14 @@
+---
+ja:
+  activerecord:
+    attributes:
+      tenant_unsubscription_history:
+        comment_policy: コメントポリシー
+        created_at: 作成日時
+        tenant: テナント
+        topic_policy: トピックポリシー
+        unsubscribed_at: 退会日時
+        updated_at: 更新日時
+        user: ユーザー
+    models:
+      tenant_unsubscription_history: テナント退会履歴

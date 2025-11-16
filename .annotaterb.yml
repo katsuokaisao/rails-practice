@@ -34,7 +34,7 @@
 :timestamp: false
 :trace: false
 :with_comment: true
-:with_column_comments: true
+:with_column_comments: false
 :with_table_comments: true
 :position_of_column_comment: :with_name
 :active_admin: false

@@ -1,0 +1,5 @@
+---
+en:
+  errors:
+    messages:
+      no_active_memberships: No active memberships available for unsubscription

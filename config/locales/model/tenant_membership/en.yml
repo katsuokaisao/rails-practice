@@ -5,7 +5,9 @@ en:
       tenant_membership:
         created_at: Created at
         display_name: Display name
+        suspended_until: Suspended until
         tenant_id: Tenant
+        unsubscribed_at: Unsubscribed at
         updated_at: Updated at
         user_id: User
     errors:

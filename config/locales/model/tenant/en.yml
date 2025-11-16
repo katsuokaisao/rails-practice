@@ -8,6 +8,8 @@ en:
         description: Description
         identifier: Identifier
         name: Name
+        unsubscribed_user_comment_policy: Unsubscribed User Comment Policy
+        unsubscribed_user_topic_policy: Unsubscribed User Topic Policy
         updated_at: Updated At
     errors:
       models:

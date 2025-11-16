@@ -4,12 +4,14 @@
 #
 # Table name: tenants
 #
-#  id                          :bigint           not null, primary key
-#  description(テナントの説明) :text(65535)      not null
-#  identifier(テナント識別子)  :string(255)      not null
-#  name(テナント名（表示用）)  :string(255)      not null
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
+#  id                               :bigint           not null, primary key
+#  description                      :text(65535)      not null
+#  identifier                       :string(255)      not null
+#  name                             :string(255)      not null
+#  unsubscribed_user_comment_policy :string(255)      not null
+#  unsubscribed_user_topic_policy   :string(255)      not null
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
 #
 # Indexes
 #
@@ -21,6 +23,8 @@ FactoryBot.define do
     sequence(:name) { |n| "テナント#{n}" }
     sequence(:identifier) { |n| "tenant-#{n}" }
     description { Faker::Lorem.sentence }
+    unsubscribed_user_comment_policy { :hide_content }
+    unsubscribed_user_topic_policy { :lock }
 
     trait :with_members do
       transient do

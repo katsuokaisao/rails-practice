@@ -7,6 +7,7 @@
 #  id              :bigint           not null, primary key
 #  display_name    :string(255)      not null
 #  suspended_until :datetime
+#  unsubscribed_at :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  tenant_id       :bigint           not null
@@ -14,9 +15,10 @@
 #
 # Indexes
 #
-#  idx_tenant_memberships_tenant_display_name  (tenant_id,display_name) UNIQUE
-#  idx_tenant_memberships_tenant_user          (tenant_id,user_id) UNIQUE
-#  idx_tenant_memberships_user_id              (user_id)
+#  idx_tenant_memberships_tenant_display_name     (tenant_id,display_name) UNIQUE
+#  idx_tenant_memberships_tenant_unsubscribed_at  (tenant_id,unsubscribed_at)
+#  idx_tenant_memberships_tenant_user             (tenant_id,user_id) UNIQUE
+#  idx_tenant_memberships_user_id                 (user_id)
 #
 # Foreign Keys
 #
@@ -34,6 +36,9 @@ class TenantMembership < ApplicationRecord
   validates :user_id, uniqueness: { scope: :tenant_id }
 
   validate :suspended_until_future
+
+  scope :active, -> { where(unsubscribed_at: nil) }
+  scope :unsubscribed, -> { where.not(unsubscribed_at: nil) }
 
   def suspended?
     suspended_until.present? && suspended_until.future?
@@ -53,6 +58,10 @@ class TenantMembership < ApplicationRecord
     return unless suspended?
 
     update!(suspended_until: nil)
+  end
+
+  def unsubscribed?
+    unsubscribed_at.present?
   end
 
   private

@@ -5,6 +5,7 @@ en:
       user:
         login_id: Login ID
         time_zone: Time Zone
+        unsubscribed_user: Unsubscribed User
     errors:
       models:
         user:

@@ -1,0 +1,5 @@
+---
+ja:
+  errors:
+    messages:
+      no_active_memberships: 退会可能なアクティブなメンバーシップがありません

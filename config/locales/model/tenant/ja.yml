@@ -8,6 +8,8 @@ ja:
         description: 説明
         identifier: 識別子
         name: テナント名
+        unsubscribed_user_comment_policy: 退会ユーザーのコメント表示ポリシー
+        unsubscribed_user_topic_policy: 退会ユーザーのトピック表示ポリシー
         updated_at: 更新日時
     errors:
       models:

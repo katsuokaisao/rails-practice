@@ -2,7 +2,7 @@
 
 module Reportable
   def self.included(base)
-    base.has_many :received_reports, as: :reportable, dependent: :restrict_with_error
+    base.has_many :received_reports, as: :reportable, class_name: 'Report', dependent: :destroy
   end
 
   def apply_decision!(decision)

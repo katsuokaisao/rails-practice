@@ -4,15 +4,15 @@
 #
 # Table name: reports
 #
-#  id                                          :bigint           not null, primary key
-#  reason_text                                 :text(65535)      not null
-#  reason_type                                 :string(255)      not null
-#  reportable_type((enum: 'Comment' | 'User')) :string(255)      not null
-#  created_at                                  :datetime         not null
-#  updated_at                                  :datetime         not null
-#  reportable_id                               :bigint
-#  reporter_id                                 :bigint           not null
-#  tenant_id                                   :bigint           not null
+#  id              :bigint           not null, primary key
+#  reason_text     :text(65535)      not null
+#  reason_type     :string(255)      not null
+#  reportable_type :string(255)      not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  reportable_id   :bigint
+#  reporter_id     :bigint           not null
+#  tenant_id       :bigint           not null
 #
 # Indexes
 #

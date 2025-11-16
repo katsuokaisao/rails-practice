@@ -6,6 +6,12 @@ ja:
         hide_comment: コメントを非表示
         reject: 却下
         suspend_user: ユーザーを一時停止
+    job_execution:
+      status:
+        completed: 完了
+        enqueued: キュー登録済み
+        failed: 失敗
+        running: 実行中
     report:
       reason_type:
         harassment: 嫌がらせ
@@ -15,6 +21,15 @@ ja:
       reportable_type:
         Comment: コメント
         User: ユーザー
+    tenant:
+      unsubscribed_user_comment_policy:
+        delete: 完全削除
+        hide_content: 内容非表示
+        keep_visible: 表示維持
+      unsubscribed_user_topic_policy:
+        delete: 完全削除
+        keep_visible: 表示維持
+        lock: ロック
     tenant_invitation:
       status:
         accepted: 受諾済み

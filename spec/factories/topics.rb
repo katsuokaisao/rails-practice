@@ -5,6 +5,7 @@
 # Table name: topics
 #
 #  id            :bigint           not null, primary key
+#  locked_at     :datetime
 #  title         :string(255)      not null
 #  total_comment :integer          default(0), not null
 #  created_at    :datetime         not null
@@ -27,5 +28,10 @@ FactoryBot.define do
     association :tenant
     association :author, factory: :user
     sequence(:title) { |n| "タイトル#{n}" }
+    locked_at { nil }
+
+    trait :locked do
+      locked_at { 1.day.ago }
+    end
   end
 end

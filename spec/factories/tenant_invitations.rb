@@ -4,13 +4,13 @@
 #
 # Table name: tenant_invitations
 #
-#  id                                                               :bigint           not null, primary key
-#  status((enum: 'pending' | 'accepted' | 'rejected' | 'canceled')) :string(255)      default("pending"), not null
-#  created_at                                                       :datetime         not null
-#  updated_at                                                       :datetime         not null
-#  invited_user_id                                                  :bigint           not null
-#  inviter_id                                                       :bigint           not null
-#  tenant_id                                                        :bigint           not null
+#  id              :bigint           not null, primary key
+#  status          :string(255)      default("pending"), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  invited_user_id :bigint           not null
+#  inviter_id      :bigint           not null
+#  tenant_id       :bigint           not null
 #
 # Indexes
 #

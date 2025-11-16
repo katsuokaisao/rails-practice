@@ -67,7 +67,11 @@ class User < ApplicationRecord
                  else
                    tenant_memberships.find_by(tenant: tenant)
                  end
-    membership&.display_name || ''
+    if membership&.unsubscribed?
+      I18n.t('activerecord.attributes.user.unsubscribed_user')
+    else
+      membership&.display_name || ''
+    end
   end
 
   def pending_invitations
@@ -80,5 +84,15 @@ class User < ApplicationRecord
 
   def memberships_ordered_by_tenant_name
     tenant_memberships.includes(:tenant).order('tenants.name')
+  end
+
+  def comments_in_tenant(tenant)
+    comments.joins(:topic).where(
+      topics: { tenant_id: tenant.id }
+    )
+  end
+
+  def topics_in_tenant(tenant)
+    topics.where(tenant_id: tenant.id)
   end
 end

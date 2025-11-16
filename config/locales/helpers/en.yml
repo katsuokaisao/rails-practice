@@ -1,0 +1,5 @@
+---
+en:
+  helpers:
+    application:
+      hidden_comment_content: Content hidden (posted by unsubscribed user)

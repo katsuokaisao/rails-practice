@@ -43,6 +43,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :unsubscription, only: %i[new create]
+
+  namespace :admin do
+    resources :tenants, only: %i[edit update]
+    # TODO: reports, decisionsもこっちに移行する
+  end
+
   get 'up' => 'rails/health#show', as: :rails_health_check
 
   root to: 'tenants#index'

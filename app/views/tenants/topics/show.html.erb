@@ -18,7 +18,7 @@
       <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
     </section>
   <% end %>
-  <% if can_access?('tenants/comments', 'create') %>
+  <% if can_access?('tenants/comments', 'create') && !@topic.locked? %>
     <section class="form-card">
       <h3><%= t('.new_comment') %></h3>
       <div id="comment-form-errors"></div>
@@ -31,6 +31,12 @@
           <%= f.submit t('.create') %>
         </div>
       <% end %>
+    </section>
+  <% elsif @topic.locked? %>
+    <section class="notice-card">
+      <p class="notice">
+        <%= t('notices.topic_locked') %>
+      </p>
     </section>
   <% end %>
 </article>

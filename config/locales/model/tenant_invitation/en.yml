@@ -21,6 +21,7 @@ en:
               invalid_self: cannot be yourself
               not_exist: does not exist
               taken: has already been invited
+              unsubscribed: has unsubscribed and cannot be re-invited
             status:
               already_not_pending: is already not pending
     models:

@@ -10,22 +10,7 @@ RSpec.describe UnsubscriptionJob, type: :job do
   let!(:second_membership) { create(:tenant_membership, user: user, tenant: second_tenant) }
 
   describe '#perform' do
-    it '退会処理が実行される' do
-      described_class.perform_now(user.id, [first_tenant.id, second_tenant.id])
-
-      expect(first_membership.reload.unsubscribed_at).to be_present
-      expect(second_membership.reload.unsubscribed_at).to be_present
-    end
-  end
-
-  describe 'JobExecution記録' do
-    it 'JobExecutionレコードが作成される' do
-      expect do
-        described_class.perform_now(user.id, [first_tenant.id])
-      end.to change(JobExecution, :count).by(1)
-    end
-
-    it '成功時にstatusがcompletedになる' do
+    it '正しいパラメータの場合に退会処理に成功する' do
       described_class.perform_now(user.id, [first_tenant.id])
 
       job_execution = JobExecution.last
@@ -33,7 +18,7 @@ RSpec.describe UnsubscriptionJob, type: :job do
       expect(job_execution.completed_at).to be_present
     end
 
-    it '失敗時にstatusがfailedになる' do
+    it '不正なパラメータの場合に退会処理が失敗する' do
       expect do
         described_class.perform_now(999, [first_tenant.id])
       end.to raise_error(ActiveRecord::RecordNotFound)

@@ -175,5 +175,20 @@ RSpec.describe 'ユーザー認証', type: :system do
       expect(page).to have_field('表示名', with: '元の表示名')
       expect(current_path).to eq(edit_tenant_membership_path(tenant_slug: first_tenant.identifier))
     end
+
+    it '退会したテナントはプロフィール画面の所属テナント一覧に表示されない' do
+      create(:tenant_membership, user: user, tenant: first_tenant, display_name: 'アクティブメンバー')
+      create(:tenant_membership, user: user, tenant: second_tenant, display_name: '退会済みメンバー',
+                                 unsubscribed_at: Time.current)
+
+      login_as user
+      visit edit_user_profile_path
+
+      expect(page).to have_content('テナント1')
+      expect(page).to have_content('アクティブメンバー')
+
+      expect(page).not_to have_content('テナント2')
+      expect(page).not_to have_content('退会済みメンバー')
+    end
   end
 end

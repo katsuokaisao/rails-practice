@@ -20,7 +20,7 @@
 #  idx_tenants_name        (name)
 #
 class Tenant < ApplicationRecord
-  include Tenant::PolicyApplicable
+  include TenantPolicyApplicable
 
   has_many :tenant_memberships, dependent: :destroy
   has_many :members, through: :tenant_memberships, source: :user

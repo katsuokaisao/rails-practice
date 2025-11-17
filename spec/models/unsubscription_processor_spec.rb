@@ -11,14 +11,10 @@ RSpec.describe UnsubscriptionProcessor, type: :model do
   describe '#execute' do
     context '正常系' do
       it '退会履歴が作成される' do
+        membership.update!(unsubscribed_at: Time.current)
         expect do
           processor.execute
         end.to change(TenantUnsubscriptionHistory, :count).by(1)
-      end
-
-      it '退会日時が設定される' do
-        processor.execute
-        expect(membership.reload.unsubscribed_at).to be_present
       end
 
       context 'コメントポリシーがdeleteの場合' do

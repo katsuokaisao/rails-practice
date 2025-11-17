@@ -5,8 +5,8 @@
 # Table name: tenant_unsubscription_histories
 #
 #  id              :bigint           not null, primary key
-#  comment_policy  :integer          not null
-#  topic_policy    :integer          not null
+#  comment_policy  :string(255)      not null
+#  topic_policy    :string(255)      not null
 #  unsubscribed_at :datetime         not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

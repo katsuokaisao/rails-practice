@@ -6,68 +6,61 @@ RSpec.describe BulkUnsubscriptionProcessor, type: :model do
   let(:user) { create(:user) }
   let(:first_tenant) { create(:tenant) }
   let(:second_tenant) { create(:tenant) }
-  let!(:first_membership) { create(:tenant_membership, user: user, tenant: first_tenant) }
-  let!(:second_membership) { create(:tenant_membership, user: user, tenant: second_tenant) }
+  let!(:first_membership) { create(:tenant_membership, :unsubscribed, user: user, tenant: first_tenant) }
+  let!(:second_membership) { create(:tenant_membership, :unsubscribed, user: user, tenant: second_tenant) }
 
   describe '#execute' do
     context '正常系' do
-      let(:processor) { described_class.new(user, [first_tenant.id, second_tenant.id]) }
+      context '単一のテナントから退会できる' do
+        let(:processor) { described_class.new(user, [first_tenant.id]) }
 
-      it '複数のテナントから退会できる' do
-        processor.execute
+        it '正しいテナントの退会履歴が作成される' do
+          expect do
+            processor.execute
+          end.to change(TenantUnsubscriptionHistory, :count).by(1)
 
-        expect(first_membership.reload.unsubscribed_at).to be_present
-        expect(second_membership.reload.unsubscribed_at).to be_present
+          history = TenantUnsubscriptionHistory.find_by(user: user, tenant: first_tenant)
+          expect(history.comment_policy).to eq(first_tenant.unsubscribed_user_comment_policy)
+          expect(history.topic_policy).to eq(first_tenant.unsubscribed_user_topic_policy)
+        end
       end
 
-      it '退会履歴が複数作成される' do
-        expect do
-          processor.execute
-        end.to change(TenantUnsubscriptionHistory, :count).by(2)
+      context '複数のテナントから退会できる' do
+        let(:processor) { described_class.new(user, [first_tenant.id, second_tenant.id]) }
+
+        it '各テナントの退会履歴が作成される' do
+          expect do
+            processor.execute
+          end.to change(TenantUnsubscriptionHistory, :count).by(2)
+
+          expect(TenantUnsubscriptionHistory.where(user: user, tenant: first_tenant).count).to eq(1)
+          expect(TenantUnsubscriptionHistory.where(user: user, tenant: second_tenant).count).to eq(1)
+        end
       end
     end
 
     context '異常系' do
-      context 'アクティブなメンバーシップが1つもない場合' do
-        let(:processor) { described_class.new(user, [999]) }
+      context '不正なuser_idが指定された場合' do
+        it 'ジョブ実行履歴がfailedになる' do
+          expect do
+            UnsubscriptionJob.perform_now(999_999, [first_tenant.id])
+          end.to raise_error(ActiveRecord::RecordNotFound)
 
-        it 'バリデーションエラーになる' do
-          expect(processor).to be_invalid
-          expect(processor.errors[:base]).to be_present
+          job_execution = JobExecution.find_by(job_class: 'UnsubscriptionJob')
+          expect(job_execution).to be_present
+          expect(job_execution.status).to eq('failed')
+          expect(job_execution.error_class).to eq('ActiveRecord::RecordNotFound')
         end
+      end
 
-        it 'executeでActiveModel::ValidationErrorが発生する' do
+      context '不正なtenant_idが指定された場合' do
+        let(:processor) { described_class.new(user, [999_999]) }
+
+        it 'エラーが発生せず、処理がスキップされる' do
           expect do
             processor.execute
-          end.to raise_error(ActiveModel::ValidationError)
+          end.not_to change(TenantUnsubscriptionHistory, :count)
         end
-      end
-    end
-
-    context '冪等性' do
-      let(:processor) { described_class.new(user, [first_tenant.id, second_tenant.id]) }
-
-      it '既に退会済みのテナントはスキップされる' do
-        processor.execute
-        processor2 = described_class.new(user, [first_tenant.id, second_tenant.id])
-
-        expect(processor2).to be_invalid
-        expect do
-          processor2.execute
-        end.to raise_error(ActiveModel::ValidationError)
-      end
-
-      it '一部が退会済みの場合、アクティブなメンバーシップのみ処理される' do
-        processor1 = described_class.new(user, [first_tenant.id])
-        processor1.execute
-
-        processor2 = described_class.new(user, [first_tenant.id, second_tenant.id])
-
-        expect do
-          processor2.execute
-        end.to change(TenantUnsubscriptionHistory, :count).by(1)
-
-        expect(second_membership.reload.unsubscribed_at).to be_present
       end
     end
   end

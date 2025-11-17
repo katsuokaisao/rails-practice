@@ -8,6 +8,7 @@
 #  description                      :text(65535)      not null
 #  identifier                       :string(255)      not null
 #  name                             :string(255)      not null
+#  policy_application_status        :string(255)      default("idle"), not null
 #  unsubscribed_user_comment_policy :string(255)      not null
 #  unsubscribed_user_topic_policy   :string(255)      not null
 #  created_at                       :datetime         not null
@@ -21,6 +22,8 @@
 require 'rails_helper'
 
 RSpec.describe Tenant, type: :model do
+  include ActiveJob::TestHelper
+
   describe '#apply_topic_policy' do
     let(:tenant) { create(:tenant, unsubscribed_user_topic_policy: :keep_visible) }
     let(:user) { create(:user) }
@@ -29,7 +32,9 @@ RSpec.describe Tenant, type: :model do
 
     context 'keep_visible → lockに変更した場合' do
       it '退会済みユーザーのトピックがロックされる' do
-        tenant.update!(unsubscribed_user_topic_policy: :lock)
+        perform_enqueued_jobs do
+          tenant.update!(unsubscribed_user_topic_policy: :lock)
+        end
 
         expect(topic.reload.locked?).to be true
       end
@@ -38,7 +43,9 @@ RSpec.describe Tenant, type: :model do
         topic.update!(locked_at: 1.day.ago)
         original_locked_at = topic.locked_at
 
-        tenant.update!(unsubscribed_user_topic_policy: :lock)
+        perform_enqueued_jobs do
+          tenant.update!(unsubscribed_user_topic_policy: :lock)
+        end
 
         expect(topic.reload.locked_at).to eq(original_locked_at)
       end
@@ -49,7 +56,9 @@ RSpec.describe Tenant, type: :model do
       let!(:topic) { create(:topic, tenant: tenant, author: user, locked_at: Time.current) }
 
       it '退会済みユーザーのロックされたトピックがアンロックされる' do
-        tenant.update!(unsubscribed_user_topic_policy: :keep_visible)
+        perform_enqueued_jobs do
+          tenant.update!(unsubscribed_user_topic_policy: :keep_visible)
+        end
 
         expect(topic.reload.locked?).to be false
       end
@@ -58,7 +67,9 @@ RSpec.describe Tenant, type: :model do
     context 'keep_visible → deleteに変更した場合' do
       it '退会済みユーザーのトピックが削除される' do
         expect do
-          tenant.update!(unsubscribed_user_topic_policy: :delete)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_topic_policy: :delete)
+          end
         end.to change { Topic.exists?(topic.id) }.from(true).to(false)
       end
 
@@ -68,7 +79,9 @@ RSpec.describe Tenant, type: :model do
 
         it 'トピック削除時にコメントも削除される' do
           expect do
-            tenant.update!(unsubscribed_user_topic_policy: :delete)
+            perform_enqueued_jobs do
+              tenant.update!(unsubscribed_user_topic_policy: :delete)
+            end
           end.to change { Comment.exists?(comment.id) }.from(true).to(false)
         end
 
@@ -76,7 +89,9 @@ RSpec.describe Tenant, type: :model do
           comment_history_id = comment.histories.first.id
 
           expect do
-            tenant.update!(unsubscribed_user_topic_policy: :delete)
+            perform_enqueued_jobs do
+              tenant.update!(unsubscribed_user_topic_policy: :delete)
+            end
           end.to change { CommentHistory.exists?(comment_history_id) }.from(true).to(false)
         end
 
@@ -85,7 +100,9 @@ RSpec.describe Tenant, type: :model do
 
           it 'トピック削除時にReportも削除される' do
             expect do
-              tenant.update!(unsubscribed_user_topic_policy: :delete)
+              perform_enqueued_jobs do
+                tenant.update!(unsubscribed_user_topic_policy: :delete)
+              end
             end.to change { Report.exists?(report.id) }.from(true).to(false)
           end
         end
@@ -97,7 +114,9 @@ RSpec.describe Tenant, type: :model do
 
       it 'ポリシー変更しても何も起こらない' do
         expect do
-          tenant.update!(unsubscribed_user_topic_policy: :delete)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_topic_policy: :delete)
+          end
         end.not_to(change(Topic, :count))
       end
     end
@@ -114,7 +133,9 @@ RSpec.describe Tenant, type: :model do
     context 'keep_visible → deleteに変更した場合' do
       it '退会済みユーザーのコメントが削除される' do
         expect do
-          tenant.update!(unsubscribed_user_comment_policy: :delete)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_comment_policy: :delete)
+          end
         end.to change { Comment.exists?(comment.id) }.from(true).to(false)
       end
 
@@ -122,7 +143,9 @@ RSpec.describe Tenant, type: :model do
         comment_history_id = comment.histories.first.id
 
         expect do
-          tenant.update!(unsubscribed_user_comment_policy: :delete)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_comment_policy: :delete)
+          end
         end.to change { CommentHistory.exists?(comment_history_id) }.from(true).to(false)
       end
 
@@ -131,7 +154,9 @@ RSpec.describe Tenant, type: :model do
 
         it 'コメント削除時にReportも削除される' do
           expect do
-            tenant.update!(unsubscribed_user_comment_policy: :delete)
+            perform_enqueued_jobs do
+              tenant.update!(unsubscribed_user_comment_policy: :delete)
+            end
           end.to change { Report.exists?(report.id) }.from(true).to(false)
         end
       end
@@ -149,7 +174,9 @@ RSpec.describe Tenant, type: :model do
           expect(initial_count).to eq(1501) # 元のcomment + 1500件
 
           expect do
-            tenant.update!(unsubscribed_user_comment_policy: :delete)
+            perform_enqueued_jobs do
+              tenant.update!(unsubscribed_user_comment_policy: :delete)
+            end
           end.to change { Comment.where(author: user).count }.from(1501).to(0)
         end
       end
@@ -158,7 +185,9 @@ RSpec.describe Tenant, type: :model do
     context 'keep_visible → hide_contentに変更した場合' do
       it 'ポリシー変更しても削除処理は実行されない' do
         expect do
-          tenant.update!(unsubscribed_user_comment_policy: :hide_content)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_comment_policy: :hide_content)
+          end
         end.not_to(change(Comment, :count))
 
         expect(Comment.exists?(comment.id)).to be true
@@ -170,7 +199,9 @@ RSpec.describe Tenant, type: :model do
 
       it 'ポリシー変更しても何も起こらない' do
         expect do
-          tenant.update!(unsubscribed_user_comment_policy: :delete)
+          perform_enqueued_jobs do
+            tenant.update!(unsubscribed_user_comment_policy: :delete)
+          end
         end.not_to(change(Comment, :count))
       end
     end

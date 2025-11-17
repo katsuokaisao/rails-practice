@@ -3,7 +3,7 @@
 module Tenants
   class ReportsPolicy < ApplicationPolicy
     def index? = moderator? && moderator_tenant_member?
-    def new? = tenant_member? && unsuspended_user? && !owner?
-    def create? = tenant_member? && unsuspended_user? && !owner?
+    def new? = active_tenant_member? && unsuspended_user? && !owner?
+    def create? = active_tenant_member? && unsuspended_user? && !owner?
   end
 end

@@ -3,11 +3,11 @@
 module Tenants
   class InvitationsPolicy < ApplicationPolicy
     def new?
-      unsuspended_user? && tenant_member?
+      unsuspended_user? && active_tenant_member?
     end
 
     def create?
-      unsuspended_user? && tenant_member?
+      unsuspended_user? && active_tenant_member?
     end
   end
 end

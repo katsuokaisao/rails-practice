@@ -30,6 +30,10 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :tenant_memberships, dependent: :destroy
   has_many :tenants, through: :tenant_memberships
+  has_many :active_tenant_memberships, lambda {
+    active
+  }, class_name: 'TenantMembership', dependent: :destroy, inverse_of: :user
+  has_many :active_tenants, through: :active_tenant_memberships, source: :tenant
   has_many :sent_invitations,
            class_name: 'TenantInvitation', foreign_key: :inviter_id, dependent: :destroy,
            inverse_of: :inviter
@@ -61,6 +65,15 @@ class User < ApplicationRecord
     tenant_memberships.exists?(tenant: tenant)
   end
 
+  def unsubscribed_from?(tenant)
+    tenant_memberships.find_by(tenant: tenant)&.unsubscribed? || false
+  end
+
+  def active_member_of?(tenant)
+    membership = tenant_memberships.find_by(tenant: tenant)
+    membership&.active? || false
+  end
+
   def display_name_for(tenant)
     membership = if association(:tenant_memberships).loaded?
                    tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
@@ -83,7 +96,7 @@ class User < ApplicationRecord
   end
 
   def memberships_ordered_by_tenant_name
-    tenant_memberships.includes(:tenant).order('tenants.name')
+    active_tenant_memberships.includes(:tenant).order('tenants.name')
   end
 
   def comments_in_tenant(tenant)

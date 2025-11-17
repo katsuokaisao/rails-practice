@@ -1,0 +1,14 @@
+---
+ja:
+  unsubscriptions:
+    create:
+      invalid_tenant: 無効なテナントが含まれています
+      no_tenants_selected: 退会するテナントを選択してください
+      success: 退会処理を開始しました。処理が完了すると、選択したテナントから退会されます。
+    new:
+      confirm_message: 選択したテナントから退会します。よろしいですか？
+      description: 退会するテナントを選択してください。選択したテナントから退会します。
+      deselect_all: 全て解除
+      no_tenants: 所属しているテナントがありません
+      select_all: 全て選択
+      title: テナント退会

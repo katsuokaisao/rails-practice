@@ -1,0 +1,16 @@
+---
+en:
+  unsubscriptions:
+    create:
+      invalid_tenant: Invalid tenant(s) included
+      no_tenants_selected: Please select tenants to unsubscribe from
+      success: Unsubscription process has been started. You will be unsubscribed from
+        the selected tenants once the process is complete.
+    new:
+      confirm_message: You are about to unsubscribe from the selected tenants. Are
+        you sure?
+      description: Select the tenants you want to unsubscribe from.
+      deselect_all: Deselect All
+      no_tenants: You are not a member of any tenants
+      select_all: Select All
+      title: Unsubscribe from Tenants

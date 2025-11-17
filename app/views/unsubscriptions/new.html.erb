@@ -1,0 +1,68 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: root_path %>
+
+    <h1><%= t('.title') %></h1>
+
+    <p class="text-body"><%= t('.description') %></p>
+
+    <% if @active_memberships.any? %>
+      <%= form_with url: unsubscription_path,
+                    method: :post,
+                    data: {
+                      controller: "unsubscription",
+                      action: "submit->unsubscription#confirmSubmit",
+                      confirm_message: t('.confirm_message')
+                    } do |f| %>
+
+        <div class="unsubscription-controls">
+          <button type="button"
+                  class="btn btn-primary btn-sm"
+                  data-action="click->unsubscription#selectAll">
+            <%= t('.select_all') %>
+          </button>
+          <button type="button"
+                  class="btn btn-secondary btn-sm"
+                  data-action="click->unsubscription#deselectAll">
+            <%= t('.deselect_all') %>
+          </button>
+        </div>
+
+        <div class="tenant-list">
+          <% @active_memberships.each do |membership| %>
+            <div class="tenant-item">
+              <label class="tenant-item-label">
+                <%= check_box_tag 'tenant_ids[]',
+                                  membership.tenant_id,
+                                  false,
+                                  data: {
+                                    unsubscription_target: "checkbox",
+                                    action: "change->unsubscription#updateSubmitButton"
+                                  },
+                                  class: "tenant-checkbox" %>
+                <div class="tenant-info">
+                  <div class="tenant-name"><%= membership.tenant.name %></div>
+                  <div class="tenant-policies">
+                    <% policies = unsubscribed_user_policy_description(membership.tenant) %>
+                    <p class="policy-description"><%= policies[:comment] %></p>
+                    <p class="policy-description"><%= policies[:topic] %></p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit t('action.unsubscribe'),
+                      class: "btn btn-danger",
+                      data: { unsubscription_target: "submitButton" } %>
+          <%= link_to t('action.cancel'), root_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-body"><%= t('.no_tenants') %></p>
+      <%= link_to t('action.cancel'), root_path, class: "btn btn-secondary" %>
+    <% end %>
+  </section>
+</article>

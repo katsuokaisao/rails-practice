@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  # Sidekiq Web UI（Basic認証付き）
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    ActiveSupport::SecurityUtils.secure_compare(
+      ::Digest::SHA256.hexdigest(username),
+      ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_USERNAME', 'admin'))
+    ) &
+      ActiveSupport::SecurityUtils.secure_compare(
+        ::Digest::SHA256.hexdigest(password),
+        ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_PASSWORD', 'password'))
+      )
+  end
+  mount Sidekiq::Web => '/sidekiq'
+
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'

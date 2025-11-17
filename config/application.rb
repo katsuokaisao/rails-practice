@@ -44,5 +44,6 @@ module BoardApp
     config.i18n.available_locales = %i[ja en]
 
     config.middleware.use Rack::Attack
+    config.active_job.queue_adapter = :sidekiq
   end
 end

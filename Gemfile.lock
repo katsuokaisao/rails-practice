@@ -300,6 +300,8 @@ GEM
       psych (>= 4.0.0)
       tsort
     redis (4.6.0)
+    redis-client (0.26.1)
+      connection_pool
     regexp_parser (2.11.3)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -362,6 +364,12 @@ GEM
       rexml
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    sidekiq (7.3.9)
+      base64
+      connection_pool (>= 2.3.0)
+      logger
+      rack (>= 2.2.4)
+      redis-client (>= 0.22.2)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -454,6 +462,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  sidekiq (~> 7.0)
   simplecov
   sprockets-rails
   stimulus-rails

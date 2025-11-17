@@ -20,4 +20,9 @@ create_table 'job_executions', force: :cascade do |t|
 
   t.datetime 'created_at', null: false
   t.datetime 'updated_at', null: false
+
+  t.index ['job_id'], name: 'idx_job_executions_job_id', unique: true
+  t.index %w[job_class created_at], name: 'idx_job_executions_job_class_created_at'
+  t.index %w[job_class status created_at], name: 'idx_job_executions_job_class_status_created_at'
+  t.index %w[status created_at], name: 'idx_job_executions_status_created_at'
 end

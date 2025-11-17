@@ -18,3 +18,6 @@ application.register("dropdown", DropdownController)
 
 import FlashController from "./flash_controller"
 application.register("flash", FlashController)
+
+import UnsubscriptionController from "./unsubscription_controller"
+application.register("unsubscription", UnsubscriptionController)

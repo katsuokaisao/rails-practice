@@ -19,15 +19,14 @@ class UnsubscriptionProcessor
     raise ActiveModel::ValidationError, self unless valid?
 
     ActiveRecord::Base.transaction do
-      create_unsubscription_history
-      process_author_content
-      update_membership
+      record_unsubscription_history
+      handle_user_content
     end
   end
 
   private
 
-  def create_unsubscription_history
+  def record_unsubscription_history
     TenantUnsubscriptionHistory.create!(
       user_id: user.id,
       tenant_id: tenant.id,
@@ -37,12 +36,12 @@ class UnsubscriptionProcessor
     )
   end
 
-  def process_author_content
-    process_comments
-    process_topics
+  def handle_user_content
+    apply_comment_policy
+    apply_topic_policy
   end
 
-  def process_comments
+  def apply_comment_policy
     return unless tenant.comment_delete?
 
     comment_ids = user.comments_in_tenant(tenant).pluck(:id)
@@ -51,7 +50,7 @@ class UnsubscriptionProcessor
     Comment.delete_with_dependencies(comment_ids)
   end
 
-  def process_topics
+  def apply_topic_policy
     case tenant.unsubscribed_user_topic_policy
     when 'delete'
       topic_ids = user.topics_in_tenant(tenant).pluck(:id)
@@ -63,9 +62,5 @@ class UnsubscriptionProcessor
     when 'keep_visible'
       # 何もしない
     end
-  end
-
-  def update_membership
-    membership.update!(unsubscribed_at: Time.current) if membership.unsubscribed_at.nil?
   end
 end

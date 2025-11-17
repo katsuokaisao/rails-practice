@@ -1,0 +1,43 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: tenant_reports_path(tenant_slug: @current_tenant.identifier) %>
+
+    <h1><%= t('.title') %></h1>
+
+    <%= form_with model: current_tenant,
+                  url: admin_tenant_path(current_tenant),
+                  method: :patch do |f| %>
+
+      <%= render partial: "shared/form_errors", locals: { model: current_tenant } %>
+
+      <div class="field-section">
+        <h2 class="text-heading"><%= t('.unsubscribed_user_policies') %></h2>
+
+        <div class="field">
+          <%= f.label :unsubscribed_user_comment_policy,
+                      Tenant.human_attribute_name(:unsubscribed_user_comment_policy) %>
+          <%= f.select :unsubscribed_user_comment_policy,
+                      unsubscribed_user_policy_options(:comment),
+                      {},
+                      { class: "select-field" } %>
+        </div>
+
+        <div class="field">
+          <%= f.label :unsubscribed_user_topic_policy,
+                      Tenant.human_attribute_name(:unsubscribed_user_topic_policy) %>
+          <%= f.select :unsubscribed_user_topic_policy,
+                      unsubscribed_user_policy_options(:topic),
+                      {},
+                      { class: "select-field" } %>
+        </div>
+      </div>
+
+      <div class="actions">
+        <%= f.submit class: "btn btn-primary" %>
+        <%= link_to t('action.cancel'),
+                    tenant_path(tenant_slug: current_tenant.identifier),
+                    class: "btn btn-secondary" %>
+      </div>
+    <% end %>
+  </section>
+</article>

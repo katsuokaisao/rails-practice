@@ -8,8 +8,8 @@ en:
         description: Description
         identifier: Identifier
         name: Name
-        unsubscribed_user_comment_policy: Unsubscribed User Comment Policy
-        unsubscribed_user_topic_policy: Unsubscribed User Topic Policy
+        unsubscribed_user_comment_policy: Comment Display Policy
+        unsubscribed_user_topic_policy: Topic Display Policy
         updated_at: Updated At
     errors:
       models:
@@ -17,5 +17,9 @@ en:
           attributes:
             identifier:
               invalid: can only contain lowercase letters, numbers, and hyphens
+            unsubscribed_user_comment_policy:
+              policy_applying: cannot be changed while policy is being applied
+            unsubscribed_user_topic_policy:
+              policy_applying: cannot be changed while policy is being applied
     models:
       tenant: Tenant

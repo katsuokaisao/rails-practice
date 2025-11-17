@@ -8,6 +8,7 @@ en:
     select: Please, select
     settle: Confirm
     settle_confirm: Are you sure you want to confirm?
+    unsubscribe: Unsubscribe
   activerecord:
     errors:
       messages:
@@ -52,7 +53,12 @@ en:
     logout: Logout
     password: Password
     profile: Profile
+    tenant_settings: Tenant Settings
+    unsubscribe: Unsubscribe from Tenants
   history: History
+  locked: Locked
+  notices:
+    topic_locked: This topic is locked (no posting or editing allowed)
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
@@ -63,4 +69,24 @@ en:
     index: "%{resource} List"
     new: Create New %{resource}
     show: "%{resource} Details"
+  unsubscription:
+    policy_descriptions:
+      comment:
+        delete: "💬 Your comments → Completely deleted"
+        hide_content: "💬 Your comments → Displayed as 'Content hidden (posted
+          by unsubscribed user)'"
+        keep_visible: "💬 Your comments → Remain visible as is"
+      topic:
+        delete: "📝 Your topics → Completely deleted"
+        keep_visible: "📝 Your topics → Remain visible (Others can still post)"
+        lock: "📝 Your topics → No one can post (Locked)"
+    policy_labels:
+      comment:
+        delete: Delete
+        hide_content: Hide Content
+        keep_visible: Keep Visible
+      topic:
+        delete: Delete
+        keep_visible: Keep Visible
+        lock: Lock
   version: 'Version:'

@@ -8,8 +8,8 @@ ja:
         description: 説明
         identifier: 識別子
         name: テナント名
-        unsubscribed_user_comment_policy: 退会ユーザーのコメント表示ポリシー
-        unsubscribed_user_topic_policy: 退会ユーザーのトピック表示ポリシー
+        unsubscribed_user_comment_policy: コメント表示ポリシー
+        unsubscribed_user_topic_policy: トピック表示ポリシー
         updated_at: 更新日時
     errors:
       models:
@@ -17,5 +17,9 @@ ja:
           attributes:
             identifier:
               invalid: は英小文字、数字、ハイフンのみ使用できます
+            unsubscribed_user_comment_policy:
+              policy_applying: はポリシー適用中のため、変更できません
+            unsubscribed_user_topic_policy:
+              policy_applying: はポリシー適用中のため、変更できません
     models:
       tenant: テナント

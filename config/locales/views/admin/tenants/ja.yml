@@ -1,0 +1,10 @@
+---
+ja:
+  admin:
+    tenants:
+      edit:
+        title: テナント設定
+        unsubscribed_user_policies: 退会ユーザーのポリシー設定
+      update:
+        failure: テナント設定の更新に失敗しました
+        success: テナント設定を更新しました

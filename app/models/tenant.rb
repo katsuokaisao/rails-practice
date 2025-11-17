@@ -8,6 +8,7 @@
 #  description                      :text(65535)      not null
 #  identifier                       :string(255)      not null
 #  name                             :string(255)      not null
+#  policy_application_status        :string(255)      default("idle"), not null
 #  unsubscribed_user_comment_policy :string(255)      not null
 #  unsubscribed_user_topic_policy   :string(255)      not null
 #  created_at                       :datetime         not null
@@ -19,6 +20,8 @@
 #  idx_tenants_name        (name)
 #
 class Tenant < ApplicationRecord
+  include Tenant::PolicyApplicable
+
   has_many :tenant_memberships, dependent: :destroy
   has_many :members, through: :tenant_memberships, source: :user
   has_many :tenant_invitations, dependent: :destroy
@@ -42,6 +45,12 @@ class Tenant < ApplicationRecord
     delete: 'delete'
   }, prefix: :comment, validate: true
 
+  enum :policy_application_status, {
+    idle: 'idle',
+    applying: 'applying',
+    failed: 'failed'
+  }, prefix: :status, validate: true
+
   validates :identifier,
             presence: true,
             uniqueness: true,
@@ -52,11 +61,9 @@ class Tenant < ApplicationRecord
 
   validates :description, presence: true, length: { maximum: 500 }
 
-  after_update :apply_topic_policy,
-               if: :saved_change_to_unsubscribed_user_topic_policy?
+  validate :cannot_update_policy_while_applying, on: :update
 
-  after_update :apply_comment_policy,
-               if: :saved_change_to_unsubscribed_user_comment_policy?
+  after_update :enqueue_apply_policy, if: :policy_changed?
 
   def member?(user)
     return false if user.nil?
@@ -64,65 +71,33 @@ class Tenant < ApplicationRecord
     tenant_memberships.exists?(user: user)
   end
 
-  def apply_topic_policy
-    topic_ids = unsubscribed_users_topic_ids
-    return if topic_ids.empty?
-
-    apply_topic_policy_action(topic_ids)
-  end
-
-  def apply_comment_policy
-    return unless comment_delete?
-
-    comment_ids = unsubscribed_users_comment_ids
-    return if comment_ids.empty?
-
-    delete_comments_in_batches(comment_ids)
+  def policy_editable?
+    status_idle?
   end
 
   private
 
-  def unsubscribed_users_topic_ids
-    Topic
-      .joins('INNER JOIN tenant_memberships ON tenant_memberships.user_id = topics.author_id')
-      .where(
-        topics: { tenant_id: id },
-        tenant_memberships: { tenant_id: id }
-      )
-      .where.not(tenant_memberships: { unsubscribed_at: nil })
-      .pluck('topics.id')
-      .uniq
+  def cannot_update_policy_while_applying
+    return unless status_applying?
+
+    errors.add(:unsubscribed_user_topic_policy, :policy_applying) if unsubscribed_user_topic_policy_changed?
+
+    return unless unsubscribed_user_comment_policy_changed?
+
+    errors.add(:unsubscribed_user_comment_policy, :policy_applying)
   end
 
-  def apply_topic_policy_action(topic_ids)
-    ActiveRecord::Base.transaction do
-      case unsubscribed_user_topic_policy
-      when 'keep_visible'
-        Topic.where(id: topic_ids).locked.update_all(locked_at: nil)
-      when 'lock'
-        Topic.where(id: topic_ids).unlocked.update_all(locked_at: Time.current)
-      when 'delete'
-        topic_ids.each_slice(1000) { |batch_ids| Topic.delete_with_dependencies(batch_ids) }
-      end
-    end
+  def enqueue_apply_policy
+    changed_policies = []
+    changed_policies << :topic if saved_change_to_unsubscribed_user_topic_policy?
+    changed_policies << :comment if saved_change_to_unsubscribed_user_comment_policy?
+
+    status_applying!
+    ApplyPolicyJob.perform_later(id, changed_policies)
   end
 
-  def unsubscribed_users_comment_ids
-    Comment
-      .joins(:topic)
-      .joins('INNER JOIN tenant_memberships ON tenant_memberships.user_id = comments.author_id')
-      .where(
-        topics: { tenant_id: id },
-        tenant_memberships: { tenant_id: id }
-      )
-      .where.not(tenant_memberships: { unsubscribed_at: nil })
-      .pluck('comments.id')
-      .uniq
-  end
-
-  def delete_comments_in_batches(comment_ids)
-    ActiveRecord::Base.transaction do
-      comment_ids.each_slice(1000) { |batch_ids| Comment.delete_with_dependencies(batch_ids) }
-    end
+  def policy_changed?
+    saved_change_to_unsubscribed_user_topic_policy? ||
+      saved_change_to_unsubscribed_user_comment_policy?
   end
 end

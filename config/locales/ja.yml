@@ -8,6 +8,7 @@ ja:
     select: 選択してください
     settle: 確定
     settle_confirm: 本当に確定しますか？
+    unsubscribe: 退会する
   activerecord:
     errors:
       messages:
@@ -52,7 +53,12 @@ ja:
     logout: ログアウト
     password: パスワード
     profile: プロフィール
+    tenant_settings: テナント設定
+    unsubscribe: テナント退会
   history: 履歴
+  locked: ロック済み
+  notices:
+    topic_locked: このトピックはロックされています（書き込みや編集はできません）
   time:
     formats:
       default: "%Y/%m/%d %H:%M"
@@ -63,4 +69,23 @@ ja:
     index: "%{resource} 一覧"
     new: "%{resource} 新規作成"
     show: "%{resource} 詳細"
+  unsubscription:
+    policy_descriptions:
+      comment:
+        delete: "💬 あなたのコメント → 完全に削除されます"
+        hide_content: "💬 あなたのコメント → 「退会ユーザーによる書き込みです」と表示されます"
+        keep_visible: "💬 あなたのコメント → そのまま表示されます"
+      topic:
+        delete: "📝 あなたのトピック → 完全に削除されます"
+        keep_visible: "📝 あなたのトピック → そのまま表示されます（他の人は書き込み可能）"
+        lock: "📝 あなたのトピック → 誰も書き込めなくなります（ロック）"
+    policy_labels:
+      comment:
+        delete: 完全削除
+        hide_content: 内容非表示
+        keep_visible: 表示維持
+      topic:
+        delete: 完全削除
+        keep_visible: 表示維持
+        lock: ロック
   version: 'バージョン:'

@@ -64,6 +64,10 @@ class TenantMembership < ApplicationRecord
     unsubscribed_at.present?
   end
 
+  def active?
+    unsubscribed_at.nil?
+  end
+
   private
 
   def suspended_until_future

@@ -21,6 +21,13 @@
 #  updated_at      :datetime         not null
 #  job_id          :string(255)      not null
 #
+# Indexes
+#
+#  idx_job_executions_job_class_created_at         (job_class,created_at)
+#  idx_job_executions_job_class_status_created_at  (job_class,status,created_at)
+#  idx_job_executions_job_id                       (job_id) UNIQUE
+#  idx_job_executions_status_created_at            (status,created_at)
+#
 class JobExecution < ApplicationRecord
   enum :status, {
     enqueued: 'enqueued',

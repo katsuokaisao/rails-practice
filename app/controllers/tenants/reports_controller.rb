@@ -54,7 +54,7 @@ module Tenants
     def reports
       reports = current_tenant.reports.where(reportable_type: reportable_type)
                     .where.missing(:decision)
-                    .includes(:reporter, :reportable)
+                    .includes(:reporter, :reportable, :ban_reason)
                     .order(created_at: :desc)
 
       case reportable_type
@@ -87,7 +87,7 @@ module Tenants
     end
 
     def create_params
-      params.expect(report: %i[reason_type reason_text])
+      params.expect(report: %i[ban_reason_id reason_text])
     end
   end
 end

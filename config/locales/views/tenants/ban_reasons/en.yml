@@ -1,0 +1,12 @@
+---
+en:
+  tenants:
+    ban_reasons:
+      form:
+        system_reason_edit_note: System ban reasons can only be toggled between active
+          and inactive
+      index:
+        confirm_destroy: Are you sure you want to delete this?
+        custom_reasons: Custom Ban Reasons
+        no_custom_reasons: No custom ban reasons have been registered yet.
+        system_reasons: System Ban Reasons

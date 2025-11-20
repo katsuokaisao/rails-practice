@@ -8,9 +8,9 @@
   <%= hidden_field_tag :reportable_id, report.reportable_id %>
 
   <div class="form-group">
-    <%= f.label :reason_type %>
-    <%= f.select :reason_type,
-                Report.reason_types.keys.map { |k| [t("enums.report.reason_type.#{k}"), k] },
+    <%= f.label :ban_reason_id, BanReason.model_name.human %>
+    <%= f.select :ban_reason_id,
+                current_tenant.ban_reasons.active_reasons.map { |br| [br.display_name, br.id] },
                 { prompt: t('action.select') },
                 { class: "form-control", required: true } %>
   </div>

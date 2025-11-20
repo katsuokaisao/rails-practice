@@ -6,12 +6,12 @@ Rails.application.routes.draw do
   # Sidekiq Web UI（Basic認証付き）
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     ActiveSupport::SecurityUtils.secure_compare(
-      ::Digest::SHA256.hexdigest(username),
-      ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_USERNAME', 'admin'))
+      Digest::SHA256.hexdigest(username),
+      Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_USERNAME', 'admin'))
     ) &
       ActiveSupport::SecurityUtils.secure_compare(
-        ::Digest::SHA256.hexdigest(password),
-        ::Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_PASSWORD', 'password'))
+        Digest::SHA256.hexdigest(password),
+        Digest::SHA256.hexdigest(ENV.fetch('SIDEKIQ_PASSWORD', 'password'))
       )
   end
   mount Sidekiq::Web => '/sidekiq'
@@ -87,6 +87,7 @@ Rails.application.routes.draw do
 
       resources :reports, only: %i[index new create]
       resources :decisions, only: %i[index new create]
+      resources :ban_reasons, except: %i[show]
     end
   end
 end

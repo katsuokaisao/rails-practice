@@ -1,0 +1,15 @@
+---
+ja:
+  activerecord:
+    attributes:
+      ban_reason:
+        active: ステータス
+        created_at: 作成日時
+        description: 説明
+        name: 理由名
+        system: システム理由
+        tenant: テナント
+        tenant_id: テナントID
+        updated_at: 更新日時
+    models:
+      ban_reason: BAN理由

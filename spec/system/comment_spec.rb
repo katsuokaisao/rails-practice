@@ -168,7 +168,7 @@ RSpec.describe 'コメント', type: :system do
   end
 
   scenario 'ユーザーを停止が解除された後のコメント表示状態の確認' do
-    create(:report, :for_user, tenant: tenant, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, tenant: tenant, reportable: user, reason_text: '嫌がらせユーザーです')
     login_as(moderator, scope: :moderator)
     visit tenant_reports_path(tenant_slug: tenant.identifier)
 
@@ -203,7 +203,7 @@ RSpec.describe 'コメント', type: :system do
 
   scenario '停止中ユーザーの非表示コメントの状態確認（二重制約の確認）' do
     create(:report, :for_comment,
-           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+           tenant: tenant, reportable: comment, reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit tenant_reports_path(tenant_slug: tenant.identifier)
@@ -218,7 +218,7 @@ RSpec.describe 'コメント', type: :system do
     end
     expect(page).to have_content('審査が作成されました。')
 
-    create(:report, :for_user, tenant: tenant, reportable: user, reason_type: 'harassment', reason_text: '嫌がらせユーザーです')
+    create(:report, :for_user, tenant: tenant, reportable: user, reason_text: '嫌がらせユーザーです')
 
     visit tenant_reports_path(tenant_slug: tenant.identifier)
     click_link 'ユーザー通報'

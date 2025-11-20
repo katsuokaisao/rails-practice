@@ -227,7 +227,7 @@ class SampleCreator
       tenant: tenant,
       reporter: reporter,
       reportable: comment,
-      reason_type: %w[spam harassment obscene other].sample,
+      ban_reason: tenant.ban_reasons.active_reasons.sample,
       reason_text: Faker::Lorem.sentence(word_count: 10)
     )
   end
@@ -248,7 +248,7 @@ class SampleCreator
       tenant: tenant,
       reporter: reporter,
       reportable: reportable_user,
-      reason_type: %w[spam harassment other].sample,
+      ban_reason: tenant.ban_reasons.active_reasons.sample,
       reason_text: Faker::Lorem.sentence(word_count: 10)
     )
   end
@@ -363,10 +363,10 @@ class SampleCreator
 
   def puts_sample_reports
     puts "\nReports (showing 5):"
-    Report.includes(:tenant, :reporter, :reportable).order('RAND()').limit(5).each do |report|
+    Report.includes(:tenant, :reporter, :reportable, :ban_reason).order('RAND()').limit(5).each do |report|
       status = report.reviewed? ? 'reviewed' : 'pending'
       puts "  - #{report.reportable_type} report by #{report.reporter.login_id}"
-      puts "    Tenant: #{report.tenant.name}, Reason: #{report.reason_type}, Status: #{status}"
+      puts "    Tenant: #{report.tenant.name}, Reason: #{report.ban_reason.name}, Status: #{status}"
     end
   end
 

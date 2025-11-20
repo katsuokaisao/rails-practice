@@ -14,10 +14,10 @@ RSpec.describe '審査', type: :system do
   let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, author: reported_user, content: '報告対象コメント') }
   let!(:comment_report) do
-    create(:report, tenant: tenant, reportable: comment, reporter: user, reason_type: 'spam')
+    create(:report, tenant: tenant, reportable: comment, reporter: user)
   end
   let!(:user_report) do
-    create(:report, tenant: tenant, reportable: reported_user, reporter: user, reason_type: 'harassment')
+    create(:report, tenant: tenant, reportable: reported_user, reporter: user)
   end
   let!(:user_report_decision) do
     create(:decision, :suspend_user, tenant: tenant, report: user_report, decider: moderator)
@@ -45,7 +45,7 @@ RSpec.describe '審査', type: :system do
     expect(page).to have_css('li.active a', text: 'コメント通報審査')
     within('.decisions-container') do
       expect(page).to have_content(user_membership.display_name)
-      expect(page).to have_content(comment_report_decision.report.enum_i18n(:reason_type))
+      expect(page).to have_content(comment_report_decision.report.ban_reason.name)
       expect(page).to have_content(comment_report_decision.report.reason_text)
       expect(page).to have_content(comment_report_decision.report.reportable.topic.title)
       expect(page).to have_content(reported_user_membership.display_name)
@@ -59,7 +59,7 @@ RSpec.describe '審査', type: :system do
     expect(page).to have_css('li.active a', text: 'ユーザー通報審査')
     within('.decisions-container') do
       expect(page).to have_content(user_membership.display_name)
-      expect(page).to have_content(user_report_decision.report.enum_i18n(:reason_type))
+      expect(page).to have_content(user_report_decision.report.ban_reason.name)
       expect(page).to have_content(user_report_decision.report.reason_text)
       expect(page).to have_content(reported_user_membership.display_name)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))

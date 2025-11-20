@@ -30,6 +30,9 @@ class Tenant < ApplicationRecord
   has_many :reports, dependent: :destroy
   has_many :decisions, dependent: :destroy
   has_many :moderators, dependent: :destroy
+  has_many :ban_reasons, dependent: :destroy
+
+  after_create :create_default_ban_reasons
 
   validates :name, presence: true, length: { maximum: 100 }
 
@@ -99,5 +102,18 @@ class Tenant < ApplicationRecord
   def policy_changed?
     saved_change_to_unsubscribed_user_topic_policy? ||
       saved_change_to_unsubscribed_user_comment_policy?
+  end
+
+  def create_default_ban_reasons
+    default_reasons = [
+      { name: 'spam', system: true },
+      { name: 'harassment', system: true },
+      { name: 'obscene', system: true },
+      { name: 'other', system: true }
+    ]
+
+    default_reasons.each do |reason_attrs|
+      ban_reasons.create!(reason_attrs)
+    end
   end
 end

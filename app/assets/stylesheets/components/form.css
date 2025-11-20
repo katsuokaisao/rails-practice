@@ -103,6 +103,29 @@
     }
 }
 
+.form-card .field-checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+
+    label {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-primary);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--color-primary);
+    }
+}
+
 .form-card .actions {
     display: flex;
     gap: var(--spacing-sm);
@@ -132,6 +155,14 @@
         &:disabled {
             background: var(--color-gray-400);
             cursor: not-allowed;
+        }
+    }
+
+    .btn-danger {
+        background: var(--color-danger);
+
+        &:hover {
+            background: #dc2626;
         }
     }
 }

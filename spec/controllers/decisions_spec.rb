@@ -11,9 +11,10 @@ RSpec.describe 'Decisions', type: :request do
     let(:user_membership) { create(:tenant_membership, tenant: tenant, user: user) }
     let(:topic) { create(:topic, tenant: tenant, author: user) }
     let(:comment) { create(:comment, topic: topic, author: user) }
+    let(:harassment_reason) { create(:ban_reason, tenant: tenant) }
     let(:report) do
       create(:report, :for_comment,
-             tenant: tenant, reportable: comment, reporter: user, reason_type: 'harassment',
+             tenant: tenant, reportable: comment, reporter: user, ban_reason: harassment_reason,
              reason_text: '嫌がらせコメントです')
     end
 

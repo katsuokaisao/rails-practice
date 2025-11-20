@@ -55,7 +55,7 @@ RSpec.describe 'テナント', type: :system do
   end
 
   scenario 'テナントが存在しない場合は空メッセージが表示される' do
-    Tenant.delete_all
+    Tenant.destroy_all
 
     visit root_path
 

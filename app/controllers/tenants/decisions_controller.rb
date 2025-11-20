@@ -84,7 +84,8 @@ module Tenants
         {
           report: [
             { reporter: :tenant_memberships },
-            { reportable: [:topic, { author: :tenant_memberships }] }
+            { reportable: [:topic, { author: :tenant_memberships }] },
+            :ban_reason
           ]
         }
       ]
@@ -96,7 +97,8 @@ module Tenants
         {
           report: [
             { reporter: :tenant_memberships },
-            { reportable: :tenant_memberships }
+            { reportable: :tenant_memberships },
+            :ban_reason
           ]
         }
       ]

@@ -13,6 +13,8 @@ RSpec.describe '通報', type: :system do
 
   let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, content: '通報対象コメント') }
+  let!(:spam_reason) { create(:ban_reason, tenant: tenant, name: 'スパム') }
+  let!(:harassment_reason) { create(:ban_reason, tenant: tenant, name: '嫌がらせ') }
 
   scenario '未ログインユーザーが通報を作成できない' do
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
@@ -26,7 +28,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由種別'
+    select 'スパム', from: BanReason.model_name.human
     fill_in '理由詳細', with: '詳細な理由'
     click_button '確定'
     expect(page).to have_content('通報が作成されました。')
@@ -39,7 +41,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('テストトピック')
     click_link '違法ユーザ'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由種別'
+    select 'スパム', from: BanReason.model_name.human
     fill_in '理由詳細', with: '詳細な理由'
     click_button '確定'
     expect(page).to have_content('通報が作成されました。')
@@ -53,7 +55,7 @@ RSpec.describe '通報', type: :system do
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
 
-    select 'スパム', from: '理由種別'
+    select 'スパム', from: BanReason.model_name.human
     fill_in '理由詳細', with: 'a' * 2001
     click_button '確定'
     expect(page).to have_content('理由詳細は2000文字以内で入力してください')
@@ -71,7 +73,8 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario 'モデレーターが通報一覧を閲覧できる' do
-    comment_report = create(:report, :for_comment, tenant: tenant, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+    comment_report = create(:report, :for_comment, tenant: tenant, ban_reason: harassment_reason,
+                                                   reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
 
@@ -92,7 +95,7 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '通報のタブ切り替えが機能する' do
-    user_report = create(:report, :for_user, tenant: tenant, reason_type: 'spam', reason_text: 'スパムユーザーです')
+    user_report = create(:report, :for_user, tenant: tenant, ban_reason: spam_reason, reason_text: 'スパムユーザーです')
 
     login_as(moderator, scope: :moderator)
 
@@ -133,7 +136,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由種別'
+    select 'スパム', from: BanReason.model_name.human
     fill_in '理由詳細', with: '最初のユーザーからの報告'
     click_button '確定'
     expect(page).to have_content('通報が作成されました。')
@@ -144,7 +147,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select '嫌がらせ', from: '理由種別'
+    select '嫌がらせ', from: BanReason.model_name.human
     fill_in '理由詳細', with: '別のユーザーからの報告'
     click_button '確定'
     expect(page).to have_content('通報が作成されました。')
@@ -183,7 +186,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
-    select 'スパム', from: '理由種別'
+    select 'スパム', from: BanReason.model_name.human
     fill_in '理由詳細', with: '最初のユーザーからの報告'
     click_button '閉じる'
     expect(page).not_to have_content('通報の申請')
@@ -193,7 +196,7 @@ RSpec.describe '通報', type: :system do
   scenario '非表示コメントが公開画面に表示されないことの確認' do
     comment = create(:comment, topic: topic, author: user, content: 'テスト用の非表示コメント')
     create(:report, :for_comment,
-           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+           tenant: tenant, reportable: comment, ban_reason: harassment_reason, reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit tenant_reports_path(tenant_slug: tenant.identifier)
@@ -224,7 +227,7 @@ RSpec.describe '通報', type: :system do
   scenario '非表示コメントを編集しても公開画面には表示されないことの確認' do
     comment = create(:comment, topic: topic, author: other_user, content: 'テスト用の非表示コメント')
     create(:report, :for_comment,
-           tenant: tenant, reportable: comment, reason_type: 'harassment', reason_text: '嫌がらせコメントです')
+           tenant: tenant, reportable: comment, ban_reason: harassment_reason, reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
     visit tenant_reports_path(tenant_slug: tenant.identifier)
@@ -294,6 +297,38 @@ RSpec.describe '通報', type: :system do
       visit tenant_reports_path(tenant_slug: tenant_b.identifier)
       expect(page).to have_content('アクセスが禁止されています')
     end
+  end
+
+  scenario 'システムBAN理由とカスタムBAN理由が通報フォームにグループ分けして表示される' do
+    # カスタムBAN理由を作成（activeとinactive両方）
+    create(:ban_reason, tenant: tenant, name: 'カスタム理由1', active: true, system: false)
+    create(:ban_reason, tenant: tenant, name: 'カスタム理由2', active: false, system: false)
+
+    login_as user
+    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    click_link 'コメントを非表示'
+
+    within('select#report_ban_reason_id') do
+      expect(page).to have_css('optgroup[label="システムBAN理由"]')
+      within('optgroup[label="システムBAN理由"]') do
+        expect(page).to have_css('option', text: 'スパム・広告')
+        expect(page).to have_css('option', text: '嫌がらせ・誹謗中傷')
+      end
+    end
+
+    within('select#report_ban_reason_id') do
+      expect(page).to have_css('optgroup[label="カスタムBAN理由"]')
+      within('optgroup[label="カスタムBAN理由"]') do
+        expect(page).to have_css('option', text: 'カスタム理由1')
+      end
+    end
+
+    expect(page).not_to have_select(BanReason.model_name.human, with_options: ['カスタム理由2'])
+
+    select 'カスタム理由1', from: BanReason.model_name.human
+    fill_in '理由詳細', with: 'カスタム理由での通報'
+    click_button '確定'
+    expect(page).to have_content('通報が作成されました。')
   end
 
   context '非所属テナントでのアクセス制限' do

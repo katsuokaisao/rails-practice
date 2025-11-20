@@ -4,10 +4,15 @@ ja:
     cancel: キャンセル
     close: 閉じる
     compare: 選択したバージョンを比較
+    create: 新規作成
+    delete: 削除
     edit: 編集する
     select: 選択してください
     settle: 確定
     settle_confirm: 本当に確定しますか？
+  active_status:
+    active: 有効
+    inactive: 無効
   activerecord:
     errors:
       messages:
@@ -19,6 +24,17 @@ ja:
     moderator_login: モデレータログイン
     signup: 新規登録
   author: '作成者:'
+  ban_reasons:
+    system:
+      harassment: 嫌がらせ・誹謗中傷
+      obscene: わいせつ・暴力的
+      other: その他
+      spam: スパム・広告
+    system_descriptions:
+      harassment: 他のユーザーへの嫌がらせや誹謗中傷
+      obscene: わいせつな内容や暴力的な表現
+      other: その他の不適切な行為
+      spam: スパム行為や不適切な広告投稿
   comment_count: 'コメント数:'
   created_at: '作成日:'
   date:
@@ -49,6 +65,7 @@ ja:
         alert: "%{resource}を更新できませんでした。"
         notice: "%{resource}が更新されました。"
   header:
+    ban_reasons: BAN理由管理
     logout: ログアウト
     password: パスワード
     profile: プロフィール

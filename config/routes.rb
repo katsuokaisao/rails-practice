@@ -65,6 +65,7 @@ Rails.application.routes.draw do
 
       resources :reports, only: %i[index new create]
       resources :decisions, only: %i[index new create]
+      resources :ban_reasons, except: %i[show]
     end
   end
 end

@@ -13,7 +13,7 @@
         <% pagination.records.each do |report| %>
             <tr>
                 <td><%= report.reporter.login_id %></td>
-                <td><%= report.enum_i18n(:reason_type) %></td>
+                <td><%= report.reason_type %></td>
                 <td><%= truncate(report.reason_text, length: 1000) %></td>
                 <td><%= report.reportable.login_id %></td>
                 <td><%= l(report.created_at, format: :default) %></td>

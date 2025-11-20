@@ -10,10 +10,7 @@
   <div class="form-group">
     <%= f.label :ban_reason_id, BanReason.model_name.human %>
     <%= f.select :ban_reason_id,
-                grouped_options_for_select([
-                  [t('tenants.ban_reasons.index.system_reasons'), current_tenant.ban_reasons.system_reasons.active_reasons.map { |br| [br.display_name, br.id] }],
-                  [t('tenants.ban_reasons.index.custom_reasons'), current_tenant.ban_reasons.custom_reasons.active_reasons.map { |br| [br.display_name, br.id] }]
-                ]),
+                current_tenant.ban_reasons.active_reasons.map { |br| [br.display_name, br.id] },
                 { prompt: t('action.select') },
                 { class: "form-control", required: true } %>
   </div>

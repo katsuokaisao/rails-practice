@@ -299,7 +299,7 @@ RSpec.describe '通報', type: :system do
     end
   end
 
-  scenario 'システムBAN理由とカスタムBAN理由が通報フォームにグループ分けして表示される' do
+  scenario 'カスタムBAN理由が通報フォームに表示される' do
     # カスタムBAN理由を作成（activeとinactive両方）
     create(:ban_reason, tenant: tenant, name: 'カスタム理由1', active: true, system: false)
     create(:ban_reason, tenant: tenant, name: 'カスタム理由2', active: false, system: false)
@@ -308,21 +308,7 @@ RSpec.describe '通報', type: :system do
     visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
     click_link 'コメントを非表示'
 
-    within('select#report_ban_reason_id') do
-      expect(page).to have_css('optgroup[label="システムBAN理由"]')
-      within('optgroup[label="システムBAN理由"]') do
-        expect(page).to have_css('option', text: 'スパム・広告')
-        expect(page).to have_css('option', text: '嫌がらせ・誹謗中傷')
-      end
-    end
-
-    within('select#report_ban_reason_id') do
-      expect(page).to have_css('optgroup[label="カスタムBAN理由"]')
-      within('optgroup[label="カスタムBAN理由"]') do
-        expect(page).to have_css('option', text: 'カスタム理由1')
-      end
-    end
-
+    expect(page).to have_select(BanReason.model_name.human, with_options: ['カスタム理由1'])
     expect(page).not_to have_select(BanReason.model_name.human, with_options: ['カスタム理由2'])
 
     select 'カスタム理由1', from: BanReason.model_name.human

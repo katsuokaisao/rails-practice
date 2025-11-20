@@ -55,7 +55,7 @@
                 <td><%= ban_reason.display_name %></td>
                 <td><%= ban_reason.display_description %></td>
                 <td><%= t("active_status.#{ban_reason.active? ? 'active' : 'inactive'}") %></td>
-                <td>
+                <td class="action-buttons">
                   <%= link_to t('action.edit'),
                               edit_tenant_ban_reason_path(tenant_slug: current_tenant.identifier, id: ban_reason.id),
                               class: 'btn btn-small' %>

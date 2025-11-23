@@ -2,11 +2,11 @@
   <ul class="tabs-list" data-controller="decisions">
     <li class="<%= current_tab == 'comment' ? 'active' : '' %>">
       <%= link_to t('.comment_decisions_title'),
-                  tenant_decisions_path(tenant_slug: current_tenant.identifier, reportable_type: 'comment') %>
+                  tenant_decisions_path(tenant_slug: current_tenant.slug, reportable_type: 'comment') %>
     </li>
     <li class="<%= current_tab == 'user' ? 'active' : '' %>">
       <%= link_to t('.user_decisions_title'),
-                  tenant_decisions_path(tenant_slug: current_tenant.identifier, reportable_type: 'user') %>
+                  tenant_decisions_path(tenant_slug: current_tenant.slug, reportable_type: 'user') %>
     </li>
   </ul>
 </div>

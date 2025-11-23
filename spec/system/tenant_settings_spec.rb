@@ -7,7 +7,7 @@ RSpec.describe 'テナント設定', type: :system do
 
   let(:tenant) do
     create(:tenant,
-           identifier: 'test-tenant',
+           slug: 'test-tenant',
            name: 'テストテナント',
            unsubscribed_user_comment_policy: :keep_visible,
            unsubscribed_user_topic_policy: :keep_visible)
@@ -33,7 +33,7 @@ RSpec.describe 'テナント設定', type: :system do
 
     scenario 'テナント設定画面に現在のポリシーが表示される' do
       tenant_with_policies = create(:tenant,
-                                    identifier: 'policy-test-tenant',
+                                    slug: 'policy-test-tenant',
                                     name: 'ポリシーテストテナント',
                                     unsubscribed_user_comment_policy: :hide_content,
                                     unsubscribed_user_topic_policy: :lock)
@@ -70,7 +70,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
 
       expect(page).not_to have_content('テストコメント')
       expect(Comment.exists?(comment.id)).to be false
@@ -99,7 +99,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
 
       expect(page).to have_content('🔒')
       expect(page).to have_content('ロック済み')
@@ -115,7 +115,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
 
       expect(page).not_to have_content('テストトピック')
       expect(Topic.exists?(topic.id)).to be false
@@ -130,7 +130,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
       expect(page).to have_content('🔒')
       expect(topic.reload.locked?).to be true
 
@@ -142,7 +142,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
       expect(page).not_to have_content('🔒 ロック済み')
       expect(topic.reload.locked?).to be false
     end
@@ -162,12 +162,12 @@ RSpec.describe 'テナント設定', type: :system do
 
       expect(page).to have_content('テナント設定を更新しました')
 
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
 
       expect(page).to have_content('🔒')
       expect(topic.reload.locked?).to be true
 
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
       expect(page).not_to have_content('テストコメント')
       expect(Comment.exists?(comment.id)).to be false
     end
@@ -179,7 +179,7 @@ RSpec.describe 'テナント設定', type: :system do
 
       click_link 'キャンセル'
 
-      expect(page).to have_current_path(tenant_path(tenant_slug: tenant.identifier))
+      expect(page).to have_current_path(tenant_path(tenant_slug: tenant.slug))
     end
 
     scenario 'キャンセル時はポリシーが変更されない' do
@@ -230,7 +230,7 @@ RSpec.describe 'テナント設定', type: :system do
   end
 
   describe 'ポリシー変更の影響範囲' do
-    let(:other_tenant) { create(:tenant, identifier: 'other-tenant', name: '他のテナント') }
+    let(:other_tenant) { create(:tenant, slug: 'other-tenant', name: '他のテナント') }
     let(:other_user) { create(:user) }
     let!(:other_membership) { create(:tenant_membership, user: other_user, tenant: other_tenant) }
     let!(:other_topic) { create(:topic, tenant: other_tenant, author: other_user, title: '他のテナントのトピック') }
@@ -250,12 +250,12 @@ RSpec.describe 'テナント設定', type: :system do
       other_moderator = create(:moderator, tenant: other_tenant)
       login_as other_moderator, scope: :moderator
 
-      visit tenant_path(tenant_slug: other_tenant.identifier)
+      visit tenant_path(tenant_slug: other_tenant.slug)
 
       expect(page).not_to have_content('🔒 ロック済み')
       expect(other_topic.reload.locked?).to be false
 
-      visit tenant_topic_path(tenant_slug: other_tenant.identifier, id: other_topic.id)
+      visit tenant_topic_path(tenant_slug: other_tenant.slug, id: other_topic.id)
 
       expect(page).to have_content('他のテナントのコメント')
       expect(Comment.exists?(other_comment.id)).to be true

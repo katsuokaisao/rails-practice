@@ -18,7 +18,7 @@
                 <td><%= report.reportable.login_id %></td>
                 <td><%= l(report.created_at, format: :default) %></td>
                 <td>
-                    <%= link_to Decision.model_name.human, new_tenant_decision_path(tenant_slug: current_tenant.identifier, report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary', data: { turbo_prefetch: false } %>
+                    <%= link_to Decision.model_name.human, new_tenant_decision_path(tenant_slug: current_tenant.slug, report_id: report.id, format: :turbo_stream), class: 'btn btn-sm btn-primary', data: { turbo_prefetch: false } %>
                 </td>
             </tr>
         <% end %>

@@ -6,9 +6,9 @@ RSpec.describe '退会機能', type: :system do
   include ActiveJob::TestHelper
 
   let(:user) { create(:user) }
-  let(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
-  let(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
-  let(:tenant_c) { create(:tenant, identifier: 'tenant-c', name: 'テナントC') }
+  let(:tenant_a) { create(:tenant, slug: 'tenant-a', name: 'テナントA') }
+  let(:tenant_b) { create(:tenant, slug: 'tenant-b', name: 'テナントB') }
+  let(:tenant_c) { create(:tenant, slug: 'tenant-c', name: 'テナントC') }
   let!(:membership_a) { create(:tenant_membership, user: user, tenant: tenant_a, display_name: 'ユーザーA') }
   let!(:membership_b) { create(:tenant_membership, user: user, tenant: tenant_b, display_name: 'ユーザーB') }
   let!(:membership_c) { create(:tenant_membership, user: user, tenant: tenant_c, display_name: 'ユーザーC') }
@@ -93,7 +93,7 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会したテナントにはトピックを投稿できない' do
       membership_a.update!(unsubscribed_at: Time.current)
 
-      visit tenant_path(tenant_slug: tenant_a.identifier)
+      visit tenant_path(tenant_slug: tenant_a.slug)
 
       expect(page).not_to have_link('お題を投稿する')
     end
@@ -101,7 +101,7 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会したテナントのトピックにはコメントを投稿できない' do
       membership_a.update!(unsubscribed_at: Time.current)
 
-      visit tenant_topic_path(tenant_slug: tenant_a.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant_a.slug, id: topic.id)
 
       expect(page).not_to have_button('投稿する')
       expect(page).not_to have_field('comment_content')
@@ -110,7 +110,7 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会したテナントは閲覧できる' do
       membership_a.update!(unsubscribed_at: Time.current)
 
-      visit tenant_path(tenant_slug: tenant_a.identifier)
+      visit tenant_path(tenant_slug: tenant_a.slug)
 
       expect(page).to have_content('テナントA')
       expect(page).to have_content(topic.title)
@@ -119,7 +119,7 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会したテナントのトピックは閲覧できる' do
       membership_a.update!(unsubscribed_at: Time.current)
 
-      visit tenant_topic_path(tenant_slug: tenant_a.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant_a.slug, id: topic.id)
 
       expect(page).to have_content(topic.title)
     end

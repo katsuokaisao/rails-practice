@@ -27,19 +27,19 @@ RSpec.describe '審査', type: :system do
   end
 
   scenario '未ログインユーザーが審査一覧を閲覧できない' do
-    visit tenant_decisions_path(tenant_slug: tenant.identifier)
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '一般ユーザーが審査一覧を閲覧できない' do
     login_as(user)
-    visit tenant_decisions_path(tenant_slug: tenant.identifier)
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'モデレーターが審査一覧を閲覧できる' do
     login_as(moderator, scope: :moderator)
-    visit tenant_decisions_path(tenant_slug: tenant.identifier)
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('審査 一覧')
 
     expect(page).to have_css('li.active a', text: 'コメント通報審査')
@@ -74,7 +74,7 @@ RSpec.describe '審査', type: :system do
     create_list(:decision, 21, :hide_comment, tenant: tenant, decider: moderator)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_decisions_path(tenant_slug: tenant.identifier)
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('審査 一覧')
 
     within('.pagination') do
@@ -85,13 +85,13 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content('コメントを非表示')
     end
 
-    visit tenant_decisions_path(tenant_slug: tenant.identifier, page: 999)
+    visit tenant_decisions_path(tenant_slug: tenant.slug, page: 999)
     expect(page).to have_content('範囲外のリクエストです。')
   end
 
   context 'マルチテナントのデータ分離' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b') }
     let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
     let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
     let!(:user_a) { create(:user) }
@@ -106,14 +106,14 @@ RSpec.describe '審査', type: :system do
     scenario 'テナントAの審査結果がテナントBの審査一覧に表示されない' do
       login_as(moderator_b, scope: :moderator)
 
-      visit tenant_decisions_path(tenant_slug: tenant_b.identifier)
+      visit tenant_decisions_path(tenant_slug: tenant_b.slug)
       expect(page).not_to have_content('テナントAの審査')
     end
 
     scenario 'モデレーターAはテナントBにアクセスできない' do
       login_as(moderator_a, scope: :moderator)
 
-      visit tenant_decisions_path(tenant_slug: tenant_b.identifier)
+      visit tenant_decisions_path(tenant_slug: tenant_b.slug)
       expect(page).to have_content('アクセスが禁止されています')
     end
   end

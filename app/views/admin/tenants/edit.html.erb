@@ -1,6 +1,6 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: tenant_reports_path(tenant_slug: @current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_reports_path(tenant_slug: @current_tenant.slug) %>
 
     <h1><%= t('.title') %></h1>
 
@@ -35,7 +35,7 @@
       <div class="actions">
         <%= f.submit class: "btn btn-primary" %>
         <%= link_to t('action.cancel'),
-                    tenant_path(tenant_slug: current_tenant.identifier),
+                    tenant_path(tenant_slug: current_tenant.slug),
                     class: "btn btn-secondary" %>
       </div>
     <% end %>

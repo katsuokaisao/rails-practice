@@ -19,7 +19,7 @@ module Tenants
       return unless @pagination.out_of_bounds
 
       flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_reports_path(tenant_slug: current_tenant.identifier)
+      redirect_to tenant_reports_path(tenant_slug: current_tenant.slug)
     end
 
     def new
@@ -41,7 +41,7 @@ module Tenants
         format.turbo_stream do
           if @report.save
             flash[:notice] = t('flash.actions.create.notice', resource: Report.model_name.human)
-            redirect_to tenant_topic_path(tenant_slug: @topic.tenant.identifier, id: @topic)
+            redirect_to tenant_topic_path(tenant_slug: @topic.tenant.slug, id: @topic)
           else
             render :create_error, status: :unprocessable_content
           end

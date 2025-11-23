@@ -15,7 +15,7 @@ RSpec.describe 'モデレーター認証', type: :system do
       click_button 'ログイン'
 
       expect(page).to have_content('ログインしました')
-      expect(current_path).to eq(tenant_reports_path(tenant_slug: tenant.identifier))
+      expect(current_path).to eq(tenant_reports_path(tenant_slug: tenant.slug))
     end
 
     it '間違ったパスワードではログインできない' do

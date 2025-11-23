@@ -6,9 +6,9 @@
 #
 #  id                               :bigint           not null, primary key
 #  description                      :text(65535)      not null
-#  identifier                       :string(255)      not null
 #  name                             :string(255)      not null
 #  policy_application_status        :string(255)      default("idle"), not null
+#  slug                             :string(255)      not null
 #  unsubscribed_user_comment_policy :string(255)      not null
 #  unsubscribed_user_topic_policy   :string(255)      not null
 #  created_at                       :datetime         not null
@@ -16,13 +16,12 @@
 #
 # Indexes
 #
-#  idx_tenants_identifier  (identifier) UNIQUE
-#  idx_tenants_name        (name)
+#  idx_tenants_slug  (slug) UNIQUE
 #
 FactoryBot.define do
   factory :tenant do
     sequence(:name) { |n| "テナント#{n}" }
-    sequence(:identifier) { |n| "tenant-#{n}" }
+    sequence(:slug) { |n| "tenant-#{n}" }
     description { Faker::Lorem.sentence }
     unsubscribed_user_comment_policy { :hide_content }
     unsubscribed_user_topic_policy { :lock }

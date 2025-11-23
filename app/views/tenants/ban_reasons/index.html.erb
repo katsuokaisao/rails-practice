@@ -1,11 +1,11 @@
 <article class="layout-center">
   <section class="content-section">
-    <%= render 'shared/back_button', url: tenant_reports_path(tenant_slug: current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_reports_path(tenant_slug: current_tenant.slug) %>
     <h2><%= t('title.index', resource: BanReason.model_name.human) %></h2>
 
     <div class="actions">
       <%= link_to t('action.create'),
-                  new_tenant_ban_reason_path(tenant_slug: current_tenant.identifier),
+                  new_tenant_ban_reason_path(tenant_slug: current_tenant.slug),
                   class: 'btn btn-primary' %>
     </div>
 
@@ -28,7 +28,7 @@
               <td><%= t("active_status.#{ban_reason.active? ? 'active' : 'inactive'}") %></td>
               <td class="action-buttons">
                 <%= link_to t('action.edit'),
-                            edit_tenant_ban_reason_path(tenant_slug: current_tenant.identifier, id: ban_reason.id),
+                            edit_tenant_ban_reason_path(tenant_slug: current_tenant.slug, id: ban_reason.id),
                             class: 'btn btn-small' %>
               </td>
             </tr>
@@ -57,11 +57,11 @@
                 <td><%= t("active_status.#{ban_reason.active? ? 'active' : 'inactive'}") %></td>
                 <td class="action-buttons">
                   <%= link_to t('action.edit'),
-                              edit_tenant_ban_reason_path(tenant_slug: current_tenant.identifier, id: ban_reason.id),
+                              edit_tenant_ban_reason_path(tenant_slug: current_tenant.slug, id: ban_reason.id),
                               class: 'btn btn-small' %>
                   <% if ban_reason.deletable? %>
                     <%= button_to t('action.delete'),
-                                  tenant_ban_reason_path(tenant_slug: current_tenant.identifier, id: ban_reason.id),
+                                  tenant_ban_reason_path(tenant_slug: current_tenant.slug, id: ban_reason.id),
                                   method: :delete,
                                   data: { turbo_confirm: t('.confirm_destroy') },
                                   class: 'btn btn-small btn-danger' %>

@@ -21,7 +21,7 @@ module Tenants
 
       if @ban_reason.save
         flash[:notice] = t('flash.actions.create.notice', resource: BanReason.model_name.human)
-        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.identifier)
+        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
       else
         render :new, status: :unprocessable_content
       end
@@ -31,13 +31,13 @@ module Tenants
       @ban_reason.assign_attributes(ban_reason_params)
       unless @ban_reason.editable?
         flash[:alert] = t('flash.actions.update.alert', resource: BanReason.model_name.human)
-        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.identifier)
+        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
         return
       end
 
       if @ban_reason.save
         flash[:notice] = t('flash.actions.update.notice', resource: BanReason.model_name.human)
-        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.identifier)
+        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
       else
         render :edit, status: :unprocessable_content
       end
@@ -49,7 +49,7 @@ module Tenants
       else
         flash[:alert] = t('flash.actions.destroy.alert', resource: BanReason.model_name.human)
       end
-      redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.identifier)
+      redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
     end
 
     private

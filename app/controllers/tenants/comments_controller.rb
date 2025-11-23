@@ -15,7 +15,7 @@ module Tenants
       )
 
       flash[:notice] = t('flash.actions.comment_created.notice')
-      redirect_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id)
+      redirect_to tenant_topic_path(tenant_slug: current_tenant.slug, id: @topic.id)
     rescue ActiveRecord::RecordInvalid => e
       @comment = e.record
       set_pagination
@@ -30,7 +30,7 @@ module Tenants
     def update
       @comment.update_content!(comment_params[:content])
       flash[:notice] = t('flash.actions.update.notice', resource: Comment.model_name.human)
-      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id)
+      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: @comment.id)
     rescue ActiveRecord::RecordInvalid => e
       @comment = e.record
       render :edit, status: :unprocessable_content

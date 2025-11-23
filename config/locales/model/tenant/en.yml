@@ -6,8 +6,8 @@ en:
         active: Active
         created_at: Created At
         description: Description
-        identifier: Identifier
         name: Name
+        slug: slug
         unsubscribed_user_comment_policy: Comment Display Policy
         unsubscribed_user_topic_policy: Topic Display Policy
         updated_at: Updated At
@@ -15,7 +15,7 @@ en:
       models:
         tenant:
           attributes:
-            identifier:
+            slug:
               invalid: can only contain lowercase letters, numbers, and hyphens
             unsubscribed_user_comment_policy:
               policy_applying: cannot be changed while policy is being applied

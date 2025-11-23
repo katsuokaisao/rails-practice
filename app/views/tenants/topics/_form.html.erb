@@ -1,9 +1,9 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.slug) %>
     <h2><%= t("title.#{topic.new_record? ? 'new' : 'edit'}", resource: Topic.model_name.human) %></h2>
 
-    <%= form_with model: [current_tenant, topic], url: topic.new_record? ? tenant_topics_path(tenant_slug: current_tenant.identifier) : tenant_topic_path(tenant_slug: current_tenant.identifier, id: topic.id) do |f| %>
+    <%= form_with model: [current_tenant, topic], url: topic.new_record? ? tenant_topics_path(tenant_slug: current_tenant.slug) : tenant_topic_path(tenant_slug: current_tenant.slug, id: topic.id) do |f| %>
       <%= render partial: "shared/form_errors", locals: { model: topic } %>
       <div class="field">
         <%= f.label :title %>

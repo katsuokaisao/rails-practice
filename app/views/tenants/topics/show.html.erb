@@ -1,5 +1,5 @@
 <article>
-  <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.identifier) %>
+  <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.slug) %>
   <section class="topic-show">
     <h3><%= @topic.title %></h3>
     <div class="topic-details">
@@ -22,7 +22,7 @@
     <section class="form-card">
       <h3><%= t('.new_comment') %></h3>
       <div id="comment-form-errors"></div>
-      <%= form_with(model: [@topic, Comment.new], url: tenant_topic_comments_path(tenant_slug: current_tenant.identifier, topic_id: @topic.id), local: false) do |f| %>
+      <%= form_with(model: [@topic, Comment.new], url: tenant_topic_comments_path(tenant_slug: current_tenant.slug, topic_id: @topic.id), local: false) do |f| %>
         <div class="field">
           <%= f.label :content %>
           <%= f.text_area :content, rows: 5 %>

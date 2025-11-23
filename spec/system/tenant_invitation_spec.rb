@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'テナント招待機能', type: :system do
-  let(:tenant) { create(:tenant, identifier: 'test-tenant', name: 'テストテナント') }
+  let(:tenant) { create(:tenant, slug: 'test-tenant', name: 'テストテナント') }
   let(:inviter) { create(:user) }
   let(:invited_user) { create(:user) }
 
@@ -13,12 +13,12 @@ RSpec.describe 'テナント招待機能', type: :system do
 
   scenario 'テナントメンバーが新規ユーザーを招待し、招待されたユーザーが受け入れる' do
     login_as inviter
-    visit new_tenant_invitation_path(tenant_slug: tenant.identifier)
+    visit new_tenant_invitation_path(tenant_slug: tenant.slug)
 
     fill_in '招待するユーザー', with: invited_user.id
     click_button '招待を送信'
 
-    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.identifier))
+    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.slug))
 
     logout
     login_as invited_user
@@ -31,7 +31,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     fill_in '表示名', with: '新メンバー'
     click_button '参加する'
 
-    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.identifier))
+    expect(page).to have_current_path(tenant_path(tenant_slug: tenant.slug))
     expect(page).to have_content('テストテナント')
   end
 
@@ -56,7 +56,7 @@ RSpec.describe 'テナント招待機能', type: :system do
 
   scenario '招待作成時のバリデーションエラー（自分自身を招待）' do
     login_as inviter
-    visit new_tenant_invitation_path(tenant_slug: tenant.identifier)
+    visit new_tenant_invitation_path(tenant_slug: tenant.slug)
 
     fill_in '招待するユーザー', with: inviter.id
     click_button '招待を送信'
@@ -69,7 +69,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     create(:tenant_membership, tenant: tenant, user: existing_member, display_name: '既存メンバー')
 
     login_as inviter
-    visit new_tenant_invitation_path(tenant_slug: tenant.identifier)
+    visit new_tenant_invitation_path(tenant_slug: tenant.slug)
 
     fill_in '招待するユーザー', with: existing_member.id
     click_button '招待を送信'
@@ -81,7 +81,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
 
     login_as inviter
-    visit new_tenant_invitation_path(tenant_slug: tenant.identifier)
+    visit new_tenant_invitation_path(tenant_slug: tenant.slug)
 
     fill_in '招待するユーザー', with: invited_user.id
     click_button '招待を送信'
@@ -118,8 +118,8 @@ RSpec.describe 'テナント招待機能', type: :system do
   end
 
   context '招待のテナント分離' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b', name: 'テナントB') }
     let!(:inviter_multi) { create(:user) }
     let!(:invited_user_multi) { create(:user) }
 
@@ -140,10 +140,10 @@ RSpec.describe 'テナント招待機能', type: :system do
 
       expect(page).to have_content('テナントA')
 
-      visit tenant_path(tenant_slug: tenant_a.identifier)
+      visit tenant_path(tenant_slug: tenant_a.slug)
       expect(page).to have_link('お題を投稿する')
 
-      visit tenant_path(tenant_slug: tenant_b.identifier)
+      visit tenant_path(tenant_slug: tenant_b.slug)
       expect(page).not_to have_link('お題を投稿する')
     end
   end

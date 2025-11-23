@@ -17,14 +17,14 @@ RSpec.describe '通報', type: :system do
   let!(:harassment_reason) { create(:ban_reason, tenant: tenant, name: '嫌がらせ') }
 
   scenario '未ログインユーザーが通報を作成できない' do
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_link('違法ユーザ')
     expect(page).not_to have_link('コメントを非表示')
   end
 
   scenario 'ログインユーザーがコメントを通報できる' do
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -37,7 +37,7 @@ RSpec.describe '通報', type: :system do
 
   scenario 'ログインユーザーがユーザーを通報できる' do
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link '違法ユーザ'
     expect(page).to have_content('通報の申請')
@@ -50,7 +50,7 @@ RSpec.describe '通報', type: :system do
 
   scenario '通報作成時の入力バリデーションが機能する' do
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -62,13 +62,13 @@ RSpec.describe '通報', type: :system do
   end
 
   scenario '未ログインユーザーが通報一覧を閲覧できない' do
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '一般ユーザーが通報一覧を閲覧できない' do
     login_as user
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
@@ -78,7 +78,7 @@ RSpec.describe '通報', type: :system do
 
     login_as(moderator, scope: :moderator)
 
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('通報 一覧')
     expect(page).to have_css('li.active a', text: 'コメント通報')
 
@@ -99,7 +99,7 @@ RSpec.describe '通報', type: :system do
 
     login_as(moderator, scope: :moderator)
 
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('通報 一覧')
 
     click_link 'ユーザー通報'
@@ -119,20 +119,20 @@ RSpec.describe '通報', type: :system do
 
     login_as(moderator, scope: :moderator)
 
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('通報 一覧')
 
     click_link '2'
     expect(page).to have_content('通報 一覧')
     expect(page).to have_content(comment_report.reason_text)
 
-    visit tenant_reports_path(tenant_slug: tenant.identifier, page: 999)
+    visit tenant_reports_path(tenant_slug: tenant.slug, page: 999)
     expect(page).to have_content('範囲外のリクエストです。')
   end
 
   scenario '既に報告済みのコメントを再度報告しようとした場合の処理' do
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -143,7 +143,7 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as other_user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -154,7 +154,7 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(moderator, scope: :moderator)
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('最初のユーザーからの報告')
     expect(page).to have_content('別のユーザーからの報告')
     expect(page).to have_content(user.login_id)
@@ -165,7 +165,7 @@ RSpec.describe '通報', type: :system do
     report = create(:report, :for_comment, tenant: tenant)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content(report.reason_text)
 
     click_link '審査'
@@ -176,13 +176,13 @@ RSpec.describe '通報', type: :system do
       click_button '確定'
     end
 
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).not_to have_content(report.reason_text)
   end
 
   scenario '通報モーダルのキャンセルボタンが機能する' do
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('テストトピック')
     click_link 'コメントを非表示'
     expect(page).to have_content('通報の申請')
@@ -199,7 +199,7 @@ RSpec.describe '通報', type: :system do
            tenant: tenant, reportable: comment, ban_reason: harassment_reason, reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('嫌がらせコメントです')
     click_link '審査'
     expect(page).to have_content('審査')
@@ -212,14 +212,14 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(other_user)
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
 
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('このコメントは非表示です。')
     logout
 
     login_as(user)
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
   end
@@ -230,7 +230,7 @@ RSpec.describe '通報', type: :system do
            tenant: tenant, reportable: comment, ban_reason: harassment_reason, reason_text: '嫌がらせコメントです')
 
     login_as(moderator, scope: :moderator)
-    visit tenant_reports_path(tenant_slug: tenant.identifier)
+    visit tenant_reports_path(tenant_slug: tenant.slug)
     expect(page).to have_content('嫌がらせコメントです')
 
     click_link '審査'
@@ -245,12 +245,12 @@ RSpec.describe '通報', type: :system do
     logout
 
     login_as(other_user)
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
     click_link '編集',
-               href: edit_tenant_topic_comment_path(tenant_slug: tenant.identifier,
+               href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
                                                     topic_id: comment.topic.id, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
@@ -260,7 +260,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('変更後のコメント')
 
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_content('テスト用の非表示コメント')
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
@@ -268,8 +268,8 @@ RSpec.describe '通報', type: :system do
   end
 
   context 'マルチテナントのデータ分離' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b') }
     let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
     let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
     let!(:user_a) { create(:user) }
@@ -290,11 +290,11 @@ RSpec.describe '通報', type: :system do
     scenario 'モデレーターAはテナントAの通報のみ閲覧でき、テナントBの通報は閲覧できない' do
       login_as(moderator_a, scope: :moderator)
 
-      visit tenant_reports_path(tenant_slug: tenant_a.identifier)
+      visit tenant_reports_path(tenant_slug: tenant_a.slug)
       expect(page).to have_content('テナントAの通報')
       expect(page).not_to have_content('テナントBの通報')
 
-      visit tenant_reports_path(tenant_slug: tenant_b.identifier)
+      visit tenant_reports_path(tenant_slug: tenant_b.slug)
       expect(page).to have_content('アクセスが禁止されています')
     end
   end
@@ -305,7 +305,7 @@ RSpec.describe '通報', type: :system do
     create(:ban_reason, tenant: tenant, name: 'カスタム理由2', active: false, system: false)
 
     login_as user
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     click_link 'コメントを非表示'
 
     expect(page).to have_select(BanReason.model_name.human, with_options: ['カスタム理由1'])
@@ -318,8 +318,8 @@ RSpec.describe '通報', type: :system do
   end
 
   context '非所属テナントでのアクセス制限' do
-    let!(:member_tenant) { create(:tenant, identifier: 'member-tenant') }
-    let!(:non_member_tenant) { create(:tenant, identifier: 'non-member-tenant') }
+    let!(:member_tenant) { create(:tenant, slug: 'member-tenant') }
+    let!(:non_member_tenant) { create(:tenant, slug: 'non-member-tenant') }
     let!(:multi_user) { create(:user) }
     let!(:other_user_multi) { create(:user) }
     let!(:member_membership) do
@@ -334,7 +334,7 @@ RSpec.describe '通報', type: :system do
     scenario '非所属テナントでは通報ボタンが表示されず、通報もできない' do
       login_as(multi_user)
 
-      visit tenant_topic_path(tenant_slug: non_member_tenant.identifier, id: non_member_topic.id)
+      visit tenant_topic_path(tenant_slug: non_member_tenant.slug, id: non_member_topic.id)
       expect(page).not_to have_link('コメントを非表示')
       expect(page).not_to have_link('違法ユーザ')
     end

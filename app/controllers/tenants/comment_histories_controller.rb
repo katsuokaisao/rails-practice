@@ -14,7 +14,7 @@ module Tenants
       return unless @pagination.out_of_bounds
 
       flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id)
+      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: @comment.id)
     end
 
     def compare
@@ -23,7 +23,7 @@ module Tenants
 
       if @from == @to
         flash[:alert] = t('.same_version_error')
-        redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id)
+        redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: @comment.id)
         return
       end
 
@@ -31,7 +31,7 @@ module Tenants
 
       if histories.size < 2
         flash[:alert] = t('flash.actions.out_of_bounds')
-        redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id)
+        redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: @comment.id)
         return
       end
 

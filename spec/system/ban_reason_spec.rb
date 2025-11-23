@@ -9,13 +9,13 @@ RSpec.describe 'BAN理由管理', type: :system do
   let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
 
   scenario '未ログインユーザーがBAN理由管理ページにアクセスできない' do
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '一般ユーザーがBAN理由管理ページにアクセスできない' do
     login_as(user)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
@@ -24,7 +24,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, tenant: tenant, name: 'カスタム理由1', description: 'カスタム理由の説明', active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     expect(page).to have_content('BAN理由 一覧')
 
@@ -43,7 +43,7 @@ RSpec.describe 'BAN理由管理', type: :system do
 
   scenario 'モデレーターがカスタムBAN理由を作成できる' do
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     click_link '新規作成'
     expect(page).to have_content('BAN理由 新規作成')
@@ -62,7 +62,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, tenant: tenant, name: 'カスタム理由1', description: '元の説明', active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     within('.ban-reasons-section', text: 'カスタムBAN理由') do
       click_link '編集する'
@@ -85,7 +85,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, :system_reason, tenant: tenant, active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     within('.ban-reasons-section', text: 'システムBAN理由') do
       first('a', text: '編集する').click
@@ -110,7 +110,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, tenant: tenant, name: '削除対象理由', description: '削除される理由', active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     within('.ban-reasons-section', text: 'カスタムBAN理由') do
       expect(page).to have_content('削除対象理由')
@@ -127,7 +127,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, :system_reason, tenant: tenant, active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     within('.ban-reasons-section', text: 'システムBAN理由') do
       expect(page).not_to have_button('削除')
@@ -136,7 +136,7 @@ RSpec.describe 'BAN理由管理', type: :system do
 
   scenario 'バリデーションが機能する' do
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     click_link '新規作成'
     expect(page).to have_content('BAN理由 新規作成')
@@ -153,7 +153,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     create(:ban_reason, tenant: tenant, name: '既存の理由', description: '既存の説明', active: true)
 
     login_as(moderator, scope: :moderator)
-    visit tenant_ban_reasons_path(tenant_slug: tenant.identifier)
+    visit tenant_ban_reasons_path(tenant_slug: tenant.slug)
 
     click_link '新規作成'
     expect(page).to have_content('BAN理由 新規作成')
@@ -166,8 +166,8 @@ RSpec.describe 'BAN理由管理', type: :system do
   end
 
   context 'マルチテナントのデータ分離' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b') }
     let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
     let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
     let!(:ban_reason_a) { create(:ban_reason, tenant: tenant_a, name: 'テナントAの理由', description: 'テナントAの説明') }
@@ -176,7 +176,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     scenario 'テナントAのBAN理由がテナントBの一覧に表示されない' do
       login_as(moderator_b, scope: :moderator)
 
-      visit tenant_ban_reasons_path(tenant_slug: tenant_b.identifier)
+      visit tenant_ban_reasons_path(tenant_slug: tenant_b.slug)
       expect(page).to have_content('テナントBの理由')
       expect(page).not_to have_content('テナントAの理由')
     end
@@ -184,7 +184,7 @@ RSpec.describe 'BAN理由管理', type: :system do
     scenario 'モデレーターAはテナントBのBAN理由管理にアクセスできない' do
       login_as(moderator_a, scope: :moderator)
 
-      visit tenant_ban_reasons_path(tenant_slug: tenant_b.identifier)
+      visit tenant_ban_reasons_path(tenant_slug: tenant_b.slug)
       expect(page).to have_content('アクセスが禁止されています')
     end
   end

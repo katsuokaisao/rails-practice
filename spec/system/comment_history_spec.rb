@@ -23,17 +23,17 @@ RSpec.describe 'コメント履歴', type: :system do
   end
 
   scenario '未ログインユーザーがコメント履歴を閲覧できない' do
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_link('履歴',
-                                  href: tenant_comment_histories_path(tenant_slug: tenant.identifier,
+                                  href: tenant_comment_histories_path(tenant_slug: tenant.slug,
                                                                       comment_id: comment.id))
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'ログインユーザーが自分のコメント履歴を閲覧できる' do
     login_as(user)
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('初回コメント')
     expect(page).to have_content('2回目の編集')
@@ -45,22 +45,22 @@ RSpec.describe 'コメント履歴', type: :system do
 
   scenario 'ログインユーザーは他のユーザーのコメント履歴を閲覧できない' do
     login_as(user)
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_link('履歴',
-                                  href: tenant_comment_histories_path(tenant_slug: tenant.identifier,
+                                  href: tenant_comment_histories_path(tenant_slug: tenant.slug,
                                                                       comment_id: other_comment.id))
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: other_comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: other_comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'モデレーターは全てのコメント履歴を閲覧できる' do
     login_as(moderator, scope: :moderator)
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('初回コメント')
     expect(page).to have_content('バージョン: 1')
 
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: other_comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: other_comment.id)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_content('他のユーザーのコメント')
     expect(page).to have_content('バージョン: 1')
@@ -68,7 +68,7 @@ RSpec.describe 'コメント履歴', type: :system do
 
   scenario 'コメント履歴の比較機能が正しく動作する' do
     login_as(user)
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     select '1', from: 'From:'
     select '2', from: 'To:'
     click_button '選択したバージョンを比較'
@@ -79,7 +79,7 @@ RSpec.describe 'コメント履歴', type: :system do
 
   scenario '同じバージョンを比較しようとするとエラーになる' do
     login_as(user)
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     select '1', from: 'From:'
     select '1', from: 'To:'
     click_button '選択したバージョンを比較'
@@ -91,14 +91,14 @@ RSpec.describe 'コメント履歴', type: :system do
       comment.update_content!("#{i + 1}回目の編集")
     end
     login_as(user)
-    visit tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id)
+    visit tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id)
     expect(page).to have_content('コメント編集履歴')
     expect(page).to have_selector('.pagination')
 
     click_link '2'
     expect(page).to have_content('1回目の編集')
 
-    visit compare_tenant_comment_histories_path(tenant_slug: tenant.identifier, comment_id: comment.id, page: 999)
+    visit compare_tenant_comment_histories_path(tenant_slug: tenant.slug, comment_id: comment.id, page: 999)
     expect(page).to have_content('同じバージョンを選択することはできません。異なるバージョンを選択してください。')
   end
 end

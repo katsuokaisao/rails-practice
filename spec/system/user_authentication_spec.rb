@@ -140,8 +140,8 @@ RSpec.describe 'ユーザー認証', type: :system do
   end
 
   describe '所属テナント' do
-    let(:first_tenant) { create(:tenant, identifier: 'tenant-1', name: 'テナント1') }
-    let(:second_tenant) { create(:tenant, identifier: 'tenant-2', name: 'テナント2') }
+    let(:first_tenant) { create(:tenant, slug: 'tenant-1', name: 'テナント1') }
+    let(:second_tenant) { create(:tenant, slug: 'tenant-2', name: 'テナント2') }
 
     it 'プロフィール画面で所属テナント一覧が表示される' do
       create(:tenant_membership, user: user, tenant: first_tenant, display_name: 'ユーザー1のテナント1での表示名')
@@ -173,7 +173,7 @@ RSpec.describe 'ユーザー認証', type: :system do
 
       click_link '編集する'
       expect(page).to have_field('表示名', with: '元の表示名')
-      expect(current_path).to eq(edit_tenant_membership_path(tenant_slug: first_tenant.identifier))
+      expect(current_path).to eq(edit_tenant_membership_path(tenant_slug: first_tenant.slug))
     end
   end
 end

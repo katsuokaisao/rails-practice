@@ -23,7 +23,7 @@ RSpec.describe 'Decisions', type: :request do
       it '先に処理した審査のみが有効になること' do
         login_as(moderator, scope: :moderator)
 
-        post "/#{tenant.identifier}/decisions", params: {
+        post "/#{tenant.slug}/decisions", params: {
           decision: {
             report_id: report.id,
             decision_type: 'hide_comment',
@@ -31,7 +31,7 @@ RSpec.describe 'Decisions', type: :request do
           }
         }, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
 
-        expect(response).to redirect_to(tenant_reports_path(tenant_slug: tenant.identifier,
+        expect(response).to redirect_to(tenant_reports_path(tenant_slug: tenant.slug,
                                                             reportable_type: report.reportable_type.downcase))
         expect(flash[:notice]).to eq(I18n.t('flash.actions.create.notice', resource: Decision.model_name.human))
 
@@ -39,7 +39,7 @@ RSpec.describe 'Decisions', type: :request do
 
         login_as other_moderator, scope: :moderator
 
-        post "/#{tenant.identifier}/decisions", params: {
+        post "/#{tenant.slug}/decisions", params: {
           decision: {
             report_id: report.id,
             decision_type: 'reject',

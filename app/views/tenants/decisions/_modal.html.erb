@@ -59,7 +59,7 @@
         </table>
       </div>
 
-      <%= form_with model: decision, url: tenant_decisions_path(tenant_slug: current_tenant.identifier), local: false,
+      <%= form_with model: decision, url: tenant_decisions_path(tenant_slug: current_tenant.slug), local: false,
       data: { action: 'turbo:submit-end->decisions#handleSubmit' } do |f| %>
         <%= f.hidden_field :report_id, value: report.id %>
         <div id="decision-form-errors"></div>

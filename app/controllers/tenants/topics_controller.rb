@@ -13,7 +13,7 @@ module Tenants
       return unless @pagination.out_of_bounds
 
       flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id)
+      redirect_to tenant_topic_path(tenant_slug: current_tenant.slug, id: @topic.id)
     end
 
     def new
@@ -26,7 +26,7 @@ module Tenants
       @topic = current_user.topics.build(topic_params.merge(tenant: current_tenant))
       if @topic.save
         flash[:notice] = t('flash.actions.create.notice', resource: Topic.model_name.human)
-        redirect_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id)
+        redirect_to tenant_topic_path(tenant_slug: current_tenant.slug, id: @topic.id)
       else
         render :new, status: :unprocessable_content
       end
@@ -35,7 +35,7 @@ module Tenants
     def update
       if @topic.update(topic_params)
         flash[:notice] = t('flash.actions.update.notice', resource: Topic.model_name.human)
-        redirect_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id)
+        redirect_to tenant_topic_path(tenant_slug: current_tenant.slug, id: @topic.id)
       else
         render :edit, status: :unprocessable_content
       end

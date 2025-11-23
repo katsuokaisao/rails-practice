@@ -5,13 +5,13 @@ require 'rails_helper'
 RSpec.describe '所属テナント', type: :system do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
-  let(:tenant) { create(:tenant, identifier: 'test-tenant', name: 'テストテナント') }
+  let(:tenant) { create(:tenant, slug: 'test-tenant', name: 'テストテナント') }
   let!(:membership) { create(:tenant_membership, user: user, tenant: tenant, display_name: '元の表示名') }
   let!(:other_membership) { create(:tenant_membership, user: other_user, tenant: tenant, display_name: '他のユーザー') }
 
   scenario 'テナントメンバーが自分のプロフィールを正常に編集できる' do
     login_as user
-    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.slug)
 
     # 現在の表示名が表示されている
     expect(page).to have_field('表示名', with: '元の表示名')
@@ -22,7 +22,7 @@ RSpec.describe '所属テナント', type: :system do
 
     # 成功メッセージが表示される
     expect(page).to have_content('所属テナント情報が更新されました。')
-    expect(page).to have_current_path(edit_tenant_membership_path(tenant_slug: tenant.identifier))
+    expect(page).to have_current_path(edit_tenant_membership_path(tenant_slug: tenant.slug))
 
     find('.back-button').click
 
@@ -32,7 +32,7 @@ RSpec.describe '所属テナント', type: :system do
 
   scenario '空の表示名では更新できない' do
     login_as user
-    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.slug)
 
     fill_in '表示名', with: ''
     click_button '更新'
@@ -42,7 +42,7 @@ RSpec.describe '所属テナント', type: :system do
   end
 
   scenario '未ログインユーザーは編集ページにアクセスできない' do
-    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.slug)
 
     # 403エラーページが表示される
     expect(page).to have_content('アクセスが禁止されています')
@@ -52,14 +52,14 @@ RSpec.describe '所属テナント', type: :system do
     non_member_user = create(:user)
     login_as non_member_user
 
-    visit edit_tenant_membership_path(tenant_slug: tenant.identifier)
+    visit edit_tenant_membership_path(tenant_slug: tenant.slug)
 
     expect(page).to have_content('権限がありません')
   end
 
   describe 'サスペンドのテナント分離' do
-    let(:tenant_suspend_a) { create(:tenant, identifier: 'suspend-tenant-a', name: 'サスペンドテナントA') }
-    let(:tenant_suspend_b) { create(:tenant, identifier: 'suspend-tenant-b', name: 'サスペンドテナントB') }
+    let(:tenant_suspend_a) { create(:tenant, slug: 'suspend-tenant-a', name: 'サスペンドテナントA') }
+    let(:tenant_suspend_b) { create(:tenant, slug: 'suspend-tenant-b', name: 'サスペンドテナントB') }
     let(:user_suspend) { create(:user) }
     let(:other_user_suspend) { create(:user) }
     let(:membership_suspend_a) do
@@ -82,10 +82,10 @@ RSpec.describe '所属テナント', type: :system do
 
       login_as user_suspend
 
-      visit tenant_path(tenant_slug: tenant_suspend_a.identifier)
+      visit tenant_path(tenant_slug: tenant_suspend_a.slug)
       expect(page).not_to have_link('お題を投稿する')
 
-      visit tenant_path(tenant_slug: tenant_suspend_b.identifier)
+      visit tenant_path(tenant_slug: tenant_suspend_b.slug)
       expect(page).to have_link('お題を投稿する')
 
       click_link 'お題を投稿する'
@@ -111,11 +111,11 @@ RSpec.describe '所属テナント', type: :system do
 
       login_as other_user_suspend
 
-      visit tenant_topic_path(tenant_slug: tenant_suspend_a.identifier, id: topic_a.id)
+      visit tenant_topic_path(tenant_slug: tenant_suspend_a.slug, id: topic_a.id)
       expect(page).not_to have_content('テナントAのコメント')
       expect(page).to have_content('このコメントは非表示です')
 
-      visit tenant_topic_path(tenant_slug: tenant_suspend_b.identifier, id: topic_b.id)
+      visit tenant_topic_path(tenant_slug: tenant_suspend_b.slug, id: topic_b.id)
       expect(page).to have_content('テナントBのコメント')
       expect(page).not_to have_content('このコメントは非表示です')
     end

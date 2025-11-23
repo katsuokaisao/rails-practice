@@ -26,7 +26,7 @@ class SampleCreator
     200.times do |i|
       Tenant.create!(
         name: Faker::Company.name,
-        identifier: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
+        slug: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
         description: Faker::Lorem.sentence(word_count: 10)
       )
     end
@@ -91,7 +91,7 @@ class SampleCreator
     Tenant.order(created_at: :desc).limit(20).each do |tenant|
       3.times do |i|
         Moderator.create!(
-          login_id: "#{tenant.identifier}_#{i + 1}",
+          login_id: "#{tenant.slug}_#{i + 1}",
           password: 'password',
           tenant: tenant
         )
@@ -328,7 +328,7 @@ class SampleCreator
     Tenant.order(created_at: :desc).limit(5).each do |tenant|
       member_count = tenant.tenant_memberships.count
       topic_count = tenant.topics.count
-      puts "  - #{tenant.name} (@#{tenant.identifier})"
+      puts "  - #{tenant.name} (@#{tenant.slug})"
       puts "    Members: #{member_count}, Topics: #{topic_count}"
     end
   end

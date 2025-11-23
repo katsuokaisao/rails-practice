@@ -17,7 +17,7 @@ module Tenants
       return unless @pagination.out_of_bounds
 
       flash[:alert] = t('flash.actions.out_of_bounds')
-      redirect_to tenant_decisions_path(tenant_slug: current_tenant.identifier)
+      redirect_to tenant_decisions_path(tenant_slug: current_tenant.slug)
     end
 
     def new
@@ -106,14 +106,14 @@ module Tenants
 
     def redirect_to_reports_page
       flash[:notice] = t('flash.actions.create.notice', resource: Decision.model_name.human)
-      redirect_to tenant_reports_path(tenant_slug: current_tenant.identifier,
+      redirect_to tenant_reports_path(tenant_slug: current_tenant.slug,
                                       reportable_type: @report.reportable_type.downcase)
     end
 
     def handle_concurrent_modification
       flash[:alert] = t('flash.actions.create.alert', resource: Decision.model_name.human)
       flash[:alert] << t('flash.actions.conflict')
-      redirect_to tenant_reports_path(tenant_slug: current_tenant.identifier,
+      redirect_to tenant_reports_path(tenant_slug: current_tenant.slug,
                                       reportable_type: @report.reportable_type.downcase)
     end
 

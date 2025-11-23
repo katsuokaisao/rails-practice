@@ -8,7 +8,7 @@
       <h2 class="text-subtitle"><%= t('.member_tenants') %></h2>
       <div class="tenant-grid">
         <% @member_pagination.records.each do |tenant| %>
-          <%= link_to tenant_path(tenant_slug: tenant.identifier), class: "tenant-card card" do %>
+          <%= link_to tenant_path(tenant_slug: tenant.slug), class: "tenant-card card" do %>
             <div class="tenant-card-header">
               <h3 class="text-card-title">
                 <%= tenant.name %>
@@ -20,7 +20,7 @@
             </div>
 
             <div class="tenant-card-footer divider--light">
-              <span class="text-caption">@<%= tenant.identifier %></span>
+              <span class="text-caption">@<%= tenant.slug %></span>
             </div>
           <% end %>
         <% end %>
@@ -37,7 +37,7 @@
       <% end %>
       <div class="tenant-grid">
         <% @other_pagination.records.each do |tenant| %>
-          <%= link_to tenant_path(tenant_slug: tenant.identifier), class: "tenant-card card" do %>
+          <%= link_to tenant_path(tenant_slug: tenant.slug), class: "tenant-card card" do %>
             <div class="tenant-card-header">
               <h3 class="text-card-title"><%= tenant.name %></h3>
             </div>
@@ -47,7 +47,7 @@
             </div>
 
             <div class="tenant-card-footer divider--light">
-              <span class="text-caption">@<%= tenant.identifier %></span>
+              <span class="text-caption">@<%= tenant.slug %></span>
             </div>
           <% end %>
         <% end %>

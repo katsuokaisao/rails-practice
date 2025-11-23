@@ -1,10 +1,10 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: tenant_ban_reasons_path(tenant_slug: current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_ban_reasons_path(tenant_slug: current_tenant.slug) %>
     <h2><%= t("title.#{ban_reason.new_record? ? 'new' : 'edit'}", resource: BanReason.model_name.human) %></h2>
 
     <%= form_with model: [current_tenant, ban_reason],
-                  url: ban_reason.new_record? ? tenant_ban_reasons_path(tenant_slug: current_tenant.identifier) : tenant_ban_reason_path(tenant_slug: current_tenant.identifier, id: ban_reason.id) do |f| %>
+                  url: ban_reason.new_record? ? tenant_ban_reasons_path(tenant_slug: current_tenant.slug) : tenant_ban_reason_path(tenant_slug: current_tenant.slug, id: ban_reason.id) do |f| %>
       <%= render partial: "shared/form_errors", locals: { model: ban_reason } %>
 
       <% if ban_reason.system? %>

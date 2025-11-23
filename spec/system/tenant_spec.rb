@@ -13,11 +13,11 @@ RSpec.describe 'テナント', type: :system do
       { role: 'モデレーター', login: :moderator }
     ].each do |test_case|
       scenario "#{test_case[:role]}がテナント一覧から詳細ページへの一連の閲覧ができる" do
-        create(:tenant, name: '社内フォーラム', identifier: 'company-forum',
+        create(:tenant, name: '社内フォーラム', slug: 'company-forum',
                         description: '社員向けの情報共有・質問・議論のための掲示板です。')
-        create(:tenant, name: 'アイドルファンコミュニティ', identifier: 'idol-community',
+        create(:tenant, name: 'アイドルファンコミュニティ', slug: 'idol-community',
                         description: 'アイドルファンが集まるコミュニティ掲示板です。')
-        create(:tenant, name: 'ゲーム攻略掲示板', identifier: 'game-strategy',
+        create(:tenant, name: 'ゲーム攻略掲示板', slug: 'game-strategy',
                         description: 'ゲームの攻略情報を共有する掲示板です。')
 
         case test_case[:login]
@@ -79,7 +79,7 @@ RSpec.describe 'テナント', type: :system do
         # 2ページ目のテナントが表示されることを確認
         tenant = Tenant.order(id: :desc).offset(10).first
         expect(page).to have_content(tenant.name)
-        expect(page).to have_content("@#{tenant.identifier}")
+        expect(page).to have_content("@#{tenant.slug}")
       end
 
       scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
@@ -153,14 +153,14 @@ RSpec.describe 'テナント', type: :system do
   describe 'テナント識別子の検証' do
     scenario '存在しないテナント識別子でアクセスすると404エラーになる' do
       visit tenant_path(tenant_slug: 'non-existent-tenant')
-      expect(page).to have_content('ActiveRecord::RecordNotFound')
+      expect(page).to have_content('テナントが正しく指定されていません。')
     end
   end
 
   describe 'テナント一覧の分類（ログイン時）' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
-    let!(:tenant_c) { create(:tenant, identifier: 'tenant-c', name: 'テナントC') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b', name: 'テナントB') }
+    let!(:tenant_c) { create(:tenant, slug: 'tenant-c', name: 'テナントC') }
     let!(:user_multi) { create(:user) }
 
     before do

@@ -2,7 +2,7 @@
     <div class="header-left">
         <% if current_moderator %>
             <% tenant = current_tenant || current_moderator.tenant %>
-            <%= link_to tenant.name, tenant_reports_path(tenant_slug: tenant.identifier), class: "logo" %>
+            <%= link_to tenant.name, tenant_reports_path(tenant_slug: tenant.slug), class: "logo" %>
         <% else %>
             <%= link_to t('application_title'), root_path, class: "logo" %>
         <% end %>
@@ -38,11 +38,11 @@
         <% elsif moderator_signed_in? %>
             <% tenant_for_nav = current_tenant || current_moderator.tenant %>
             <div class="header-nav">
-                <%= link_to tenant_reports_path(tenant_slug: tenant_for_nav.identifier), class: "nav-button #{'active' if controller_name == 'reports'}" do %>
+                <%= link_to tenant_reports_path(tenant_slug: tenant_for_nav.slug), class: "nav-button #{'active' if controller_name == 'reports'}" do %>
                     <span class="material-icons">report</span>
                     <%= t('title.index', resource: Report.model_name.human) %>
                 <% end %>
-                <%= link_to tenant_decisions_path(tenant_slug: tenant_for_nav.identifier), class: "nav-button #{'active' if controller_name == 'decisions'}" do %>
+                <%= link_to tenant_decisions_path(tenant_slug: tenant_for_nav.slug), class: "nav-button #{'active' if controller_name == 'decisions'}" do %>
                     <span class="material-icons">gavel</span>
                     <%= t('title.index', resource: Decision.model_name.human) %>
                 <% end %>
@@ -54,7 +54,7 @@
             <div class="dropdown-menu" data-dropdown-target="menu">
                 <ul class="dropdown-list">
                     <li class="dropdown-item">
-                        <%= link_to tenant_ban_reasons_path(tenant_slug: tenant_for_nav.identifier) do %>
+                        <%= link_to tenant_ban_reasons_path(tenant_slug: tenant_for_nav.slug) do %>
                             <span class="material-icons">rule</span>
                             <span class="vertical-middle"><%= t('header.ban_reasons') %></span>
                         <% end %>

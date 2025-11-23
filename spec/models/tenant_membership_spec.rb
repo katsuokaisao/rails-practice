@@ -29,8 +29,8 @@ RSpec.describe TenantMembership, type: :model do
   describe 'バリデーション' do
     context 'display_name' do
       it '異なるテナントであれば同じ表示名を使用できる' do
-        tenant_a = create(:tenant, identifier: 'tenant-a')
-        tenant_b = create(:tenant, identifier: 'tenant-b')
+        tenant_a = create(:tenant, slug: 'tenant-a')
+        tenant_b = create(:tenant, slug: 'tenant-b')
         user = create(:user)
         create(:tenant_membership, tenant: tenant_a, user: user, display_name: '山田太郎')
 

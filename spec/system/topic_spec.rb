@@ -17,7 +17,7 @@ RSpec.describe 'トピック', type: :system do
 
   context '未ログインユーザー' do
     it 'トピック一覧を閲覧できる' do
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
 
       expect(page).to have_content('テストトピック')
       expect(page).to have_content('他のユーザーのトピック')
@@ -27,7 +27,7 @@ RSpec.describe 'トピック', type: :system do
 
     it 'トピック詳細を閲覧できる' do
       create_list(:comment, 20, :short_content, topic: topic)
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
 
       within('.topic-show') do
         expect(page).to have_content('テストトピック')
@@ -48,7 +48,7 @@ RSpec.describe 'トピック', type: :system do
     end
 
     it '新規トピック作成ページにアクセスできない' do
-      visit new_tenant_topic_path(tenant_slug: tenant.identifier)
+      visit new_tenant_topic_path(tenant_slug: tenant.slug)
       expect(page).to have_content('アクセスが禁止されています。')
     end
   end
@@ -56,7 +56,7 @@ RSpec.describe 'トピック', type: :system do
   context 'ログインユーザ' do
     scenario 'ログインユーザーが新規トピックを作成し、編集できる' do
       login_as(user)
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
       expect(page).to have_content('お題 一覧')
       click_link 'お題を投稿する'
       expect(page).to have_content('お題 新規作成')
@@ -73,7 +73,7 @@ RSpec.describe 'トピック', type: :system do
 
     scenario 'ログインユーザーが自分のトピックを編集できる' do
       login_as(user)
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
       expect(page).to have_link('edit')
       click_link 'edit'
       expect(page).to have_content('お題 編集')
@@ -90,15 +90,15 @@ RSpec.describe 'トピック', type: :system do
 
     scenario 'ログインユーザーは他のユーザーのトピックを編集できない' do
       login_as(user)
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: other_topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: other_topic.id)
       expect(page).not_to have_link('edit')
-      visit edit_tenant_topic_path(tenant_slug: tenant.identifier, id: other_topic.id)
+      visit edit_tenant_topic_path(tenant_slug: tenant.slug, id: other_topic.id)
       expect(page).to have_content('アクセスが禁止されています。')
     end
 
     scenario 'トピック作成時の入力バリデーションが機能する' do
       login_as(user)
-      visit new_tenant_topic_path(tenant_slug: tenant.identifier)
+      visit new_tenant_topic_path(tenant_slug: tenant.slug)
 
       fill_in 'タイトル', with: ''
       click_button '登録する'
@@ -115,7 +115,7 @@ RSpec.describe 'トピック', type: :system do
 
     scenario 'トピック編集時の入力バリデーションが機能する' do
       login_as(user)
-      visit edit_tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit edit_tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
 
       fill_in 'タイトル', with: ''
       click_button '更新する'
@@ -134,17 +134,17 @@ RSpec.describe 'トピック', type: :system do
   context '停止されたユーザー' do
     it '停止されたユーザーは新規トピックを作成できない' do
       login_as(suspended_user)
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
       expect(page).not_to have_link('お題を投稿する')
-      visit new_tenant_topic_path(tenant_slug: tenant.identifier)
+      visit new_tenant_topic_path(tenant_slug: tenant.slug)
       expect(page).to have_content('アクセスが禁止されています。')
     end
 
     it '停止されたユーザーは自分のトピックを編集できない' do
       login_as(suspended_user)
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
       expect(page).not_to have_link('edit')
-      visit edit_tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit edit_tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
       expect(page).to have_content('アクセスが禁止されています。')
     end
   end
@@ -154,28 +154,28 @@ RSpec.describe 'トピック', type: :system do
       create_list(:topic, 30, tenant: tenant, author: user)
 
       topic = tenant.topics.order(created_at: :desc).last
-      visit tenant_path(tenant_slug: tenant.identifier)
+      visit tenant_path(tenant_slug: tenant.slug)
       expect(page).to have_selector('.pagination')
       click_link '2'
       expect(page).to have_content(topic.title)
       expect(page).to have_content(topic.author.display_name_for(tenant))
       expect(page).to have_content("(ID: #{topic.author.id})")
       expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
-      visit tenant_path(tenant_slug: tenant.identifier, page: 999)
+      visit tenant_path(tenant_slug: tenant.slug, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')
     end
 
     it 'トピック詳細ページのコメントページネーションが機能する' do
       create_list(:comment, 30, :short_content, topic: topic)
 
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
       expect(page).to have_selector('.pagination')
       click_link '2'
       comment = topic.comments.order(created_at: :desc).last
       expect(page).to have_content(comment.content)
       expect(page).to have_content(comment.author.display_name_for(tenant))
       expect(page).to have_content("作成日: #{comment.created_at.strftime('%Y/%m/%d %H:%M')}")
-      visit tenant_topic_path(tenant_slug: tenant.identifier, id: topic.id, page: 999)
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')
     end
   end
@@ -183,16 +183,16 @@ RSpec.describe 'トピック', type: :system do
   it '長いタイトルや特殊文字を含むトピックが正しく表示される' do
     long_x_special_char_topic
 
-    visit tenant_path(tenant_slug: tenant.identifier)
+    visit tenant_path(tenant_slug: tenant.slug)
     expect(page).to have_content(long_x_special_char_topic.title)
 
-    visit tenant_topic_path(tenant_slug: tenant.identifier, id: long_x_special_char_topic.id)
+    visit tenant_topic_path(tenant_slug: tenant.slug, id: long_x_special_char_topic.id)
     expect(page).to have_content(long_x_special_char_topic.title)
   end
 
   context 'マルチテナントのデータ分離' do
-    let!(:tenant_a) { create(:tenant, identifier: 'tenant-a', name: 'テナントA') }
-    let!(:tenant_b) { create(:tenant, identifier: 'tenant-b', name: 'テナントB') }
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a', name: 'テナントA') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b', name: 'テナントB') }
     let!(:user_multi) { create(:user) }
     let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_multi, display_name: 'ユーザーA') }
     let!(:membership_b) { create(:tenant_membership, tenant: tenant_b, user: user_multi, display_name: 'ユーザーB') }
@@ -202,11 +202,11 @@ RSpec.describe 'トピック', type: :system do
     scenario 'テナントAのトピックがテナントBの一覧に表示されない' do
       login_as(user_multi)
 
-      visit tenant_path(tenant_slug: tenant_a.identifier)
+      visit tenant_path(tenant_slug: tenant_a.slug)
       expect(page).to have_content('テナントAのトピック')
       expect(page).not_to have_content('テナントBのトピック')
 
-      visit tenant_path(tenant_slug: tenant_b.identifier)
+      visit tenant_path(tenant_slug: tenant_b.slug)
       expect(page).to have_content('テナントBのトピック')
       expect(page).not_to have_content('テナントAのトピック')
     end
@@ -214,20 +214,20 @@ RSpec.describe 'トピック', type: :system do
     scenario 'テナントAのトピックIDをテナントBのURLで指定してもアクセスできない' do
       login_as(user_multi)
 
-      visit tenant_topic_path(tenant_slug: tenant_b.identifier, id: topic_a.id)
+      visit tenant_topic_path(tenant_slug: tenant_b.slug, id: topic_a.id)
       expect(page).to have_content('ActiveRecord::RecordNotFound')
     end
 
     scenario '同じユーザーでもテナントごとに異なる表示名が使用される' do
       login_as(user_multi)
 
-      visit tenant_topic_path(tenant_slug: tenant_a.identifier, id: topic_a.id)
+      visit tenant_topic_path(tenant_slug: tenant_a.slug, id: topic_a.id)
       within('.topic-show') do
         expect(page).to have_content('ユーザーA')
         expect(page).not_to have_content('ユーザーB')
       end
 
-      visit tenant_topic_path(tenant_slug: tenant_b.identifier, id: topic_b.id)
+      visit tenant_topic_path(tenant_slug: tenant_b.slug, id: topic_b.id)
       within('.topic-show') do
         expect(page).to have_content('ユーザーB')
         expect(page).not_to have_content('ユーザーA')
@@ -236,8 +236,8 @@ RSpec.describe 'トピック', type: :system do
   end
 
   context '非所属テナントでのアクセス制限' do
-    let!(:member_tenant) { create(:tenant, identifier: 'member-tenant', name: 'メンバーテナント') }
-    let!(:non_member_tenant) { create(:tenant, identifier: 'non-member-tenant', name: '非メンバーテナント') }
+    let!(:member_tenant) { create(:tenant, slug: 'member-tenant', name: 'メンバーテナント') }
+    let!(:non_member_tenant) { create(:tenant, slug: 'non-member-tenant', name: '非メンバーテナント') }
     let!(:multi_user) { create(:user) }
     let!(:member_membership) do
       create(:tenant_membership, tenant: member_tenant, user: multi_user, display_name: 'メンバー')
@@ -246,13 +246,13 @@ RSpec.describe 'トピック', type: :system do
     scenario '非所属テナントではトピック作成ボタンが表示されず、作成もできない' do
       login_as(multi_user)
 
-      visit tenant_path(tenant_slug: non_member_tenant.identifier)
+      visit tenant_path(tenant_slug: non_member_tenant.slug)
       expect(page).not_to have_link('お題を投稿する')
 
-      visit new_tenant_topic_path(tenant_slug: non_member_tenant.identifier)
+      visit new_tenant_topic_path(tenant_slug: non_member_tenant.slug)
       expect(page).to have_content('アクセスが禁止されています')
 
-      visit tenant_path(tenant_slug: member_tenant.identifier)
+      visit tenant_path(tenant_slug: member_tenant.slug)
       expect(page).to have_link('お題を投稿する')
     end
   end

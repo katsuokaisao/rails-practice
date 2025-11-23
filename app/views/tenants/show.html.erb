@@ -4,13 +4,6 @@
       <h1 class="text-title"><%= @tenant.name %></h1>
       <div class="tenant-detail-identifier-wrapper">
         <span class="text-caption">@<%= @tenant.slug %></span>
-        <button class="icon-btn"
-                data-controller="clipboard"
-                data-clipboard-text-value="<%= @tenant.slug %>"
-                data-action="click->clipboard#copy">
-          <span class="material-icons" data-clipboard-target="icon">content_copy</span>
-          <span class="material-icons hidden" data-clipboard-target="successIcon">check</span>
-        </button>
       </div>
     </div>
     <% if can_access?('tenants/invitations', 'new') %>

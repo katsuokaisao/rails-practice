@@ -29,6 +29,7 @@ class ApplicationPolicy
   def user? = !!user
   def moderator? = !!moderator
   def unsuspended_user? = user? && tenant && !user.suspended?(tenant)
+  def topic_locked? = extract_topic&.locked? || false
   def only_user? = !!user && !moderator?
   def only_moderator? = !!moderator && !user?
 
@@ -70,5 +71,12 @@ class ApplicationPolicy
     return false unless user? && tenant && record.is_a?(TenantMembership)
 
     record.user == user && record.tenant == tenant
+  end
+
+  def extract_topic
+    return record if record.is_a?(Topic)
+    return record.topic if record.respond_to?(:topic)
+
+    nil
   end
 end

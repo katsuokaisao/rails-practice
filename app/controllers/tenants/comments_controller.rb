@@ -4,7 +4,8 @@ module Tenants
   class CommentsController < BaseController
     before_action :set_topic, only: %i[create edit update]
     before_action :set_comment, only: %i[edit update]
-    before_action -> { authorize_action!(@comment) }
+    before_action -> { authorize_action!(@topic) }, only: [:create]
+    before_action -> { authorize_action!(@comment) }, only: %i[edit update]
 
     def edit; end
 

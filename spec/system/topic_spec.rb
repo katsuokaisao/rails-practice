@@ -256,4 +256,25 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_link('お題を投稿する')
     end
   end
+
+  context 'ロックされたトピック' do
+    let!(:locked_topic) { create(:topic, :locked, tenant: tenant, author: user, title: 'ロックされたトピック') }
+
+    scenario 'ロックされたトピックは編集できない' do
+      login_as(user)
+
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).not_to have_link('edit')
+
+      visit edit_tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).to have_content('アクセスが禁止されています。')
+    end
+
+    scenario 'ロックされたトピックは一覧でロックアイコンが表示される' do
+      visit tenant_path(tenant_slug: tenant.slug)
+
+      expect(page).to have_content('🔒')
+      expect(page).to have_content('ロック済み')
+    end
+  end
 end

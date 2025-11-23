@@ -7,6 +7,5 @@ create_table 'tenants', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.datetime 'created_at',  null: false
   t.datetime 'updated_at',  null: false
 
-  t.index ['name'], name: 'idx_tenants_name'
   t.index ['slug'], name: 'idx_tenants_slug', unique: true
 end

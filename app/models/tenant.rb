@@ -13,7 +13,6 @@
 #
 # Indexes
 #
-#  idx_tenants_name  (name)
 #  idx_tenants_slug  (slug) UNIQUE
 #
 class Tenant < ApplicationRecord

@@ -2,8 +2,8 @@
 
 module Tenants
   class DecisionsPolicy < ApplicationPolicy
-    def index? = moderator? && moderator_tenant_member?
-    def new? = moderator? && moderator_tenant_member?
-    def create? = moderator? && moderator_tenant_member?
+    def index? = moderator_tenant_member?
+    def new? = moderator_tenant_member?
+    def create? = moderator_tenant_member?
   end
 end

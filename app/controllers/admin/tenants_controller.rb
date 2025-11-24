@@ -10,7 +10,7 @@ module Admin
       if current_tenant.update(tenant_params)
         redirect_to tenant_path(tenant_slug: current_tenant.slug), notice: t('.success')
       else
-        render :edit, status: :unprocessable_entity, alert: t('.failure')
+        render :edit, status: :unprocessable_entity
       end
     end
 

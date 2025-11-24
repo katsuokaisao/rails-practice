@@ -4,8 +4,7 @@ class UnsubscriptionsController < ApplicationController
   before_action -> { authorize_action! }
 
   def new
-    @active_memberships = current_user.tenant_memberships
-                                      .active
+    @active_memberships = current_user.active_tenant_memberships
                                       .includes(:tenant)
                                       .order(created_at: :desc)
   end
@@ -18,8 +17,7 @@ class UnsubscriptionsController < ApplicationController
       return
     end
 
-    valid_tenants = current_user.tenant_memberships
-                                   .active
+    valid_tenants = current_user.active_tenant_memberships
                                    .where(tenant_id: tenant_ids)
 
     if valid_tenants.empty?

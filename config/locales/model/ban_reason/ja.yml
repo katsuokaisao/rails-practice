@@ -11,5 +11,9 @@ ja:
         tenant: テナント
         tenant_id: テナントID
         updated_at: 更新日時
+    errors:
+      models:
+        ban_reason:
+          not_editable: システム理由は編集できません
     models:
       ban_reason: BAN理由

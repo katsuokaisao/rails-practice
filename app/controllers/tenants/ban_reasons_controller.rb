@@ -28,14 +28,7 @@ module Tenants
     end
 
     def update
-      @ban_reason.assign_attributes(ban_reason_params)
-      unless @ban_reason.editable?
-        flash[:alert] = t('flash.actions.update.alert', resource: BanReason.model_name.human)
-        redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
-        return
-      end
-
-      if @ban_reason.save
+      if @ban_reason.update(ban_reason_params)
         flash[:notice] = t('flash.actions.update.notice', resource: BanReason.model_name.human)
         redirect_to tenant_ban_reasons_path(tenant_slug: current_tenant.slug)
       else

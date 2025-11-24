@@ -32,6 +32,7 @@ class BanReason < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :tenant_id }
   validates :active, inclusion: { in: [true, false] }
   validates :system, inclusion: { in: [true, false] }
+  validate :must_be_editable, on: :update
 
   def display_name
     system? ? I18n.t("ban_reasons.system.#{name}") : name
@@ -47,5 +48,13 @@ class BanReason < ApplicationRecord
 
   def deletable?
     !system && !reports.exists?
+  end
+
+  private
+
+  def must_be_editable
+    return if editable?
+
+    errors.add(:base, :not_editable)
   end
 end

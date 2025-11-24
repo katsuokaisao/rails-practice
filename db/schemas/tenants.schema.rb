@@ -6,9 +6,11 @@ create_table 'tenants', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.text     'description', null: false, comment: 'テナントの説明'
   t.string 'unsubscribed_user_topic_policy',
            null: false,
+           default: 'keep_visible',
            comment: '退会ユーザーのトピック表示ポリシー（keep_visible / lock / delete）'
   t.string 'unsubscribed_user_comment_policy',
            null: false,
+           default: 'keep_visible',
            comment: '退会ユーザーのコメント表示ポリシー（keep_visible / hide_content / delete）'
   t.string 'policy_application_status',
            null: false,

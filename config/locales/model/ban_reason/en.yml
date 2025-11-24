@@ -3,7 +3,7 @@ en:
   activerecord:
     attributes:
       ban_reason:
-        active: Status
+        active: Active
         created_at: Created At
         description: Description
         name: Name

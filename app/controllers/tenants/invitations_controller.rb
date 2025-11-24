@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Tenants
-  class InvitationsController < ApplicationController
-    before_action :require_tenant
+  class InvitationsController < BaseController
     before_action -> { authorize_action! }
 
     def new

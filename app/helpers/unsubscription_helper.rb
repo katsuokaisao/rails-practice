@@ -8,10 +8,6 @@ module UnsubscriptionHelper
     }
   end
 
-  def unsubscribed_user_policy_label(policy_type, policy_value)
-    t("unsubscription.policy_labels.#{policy_type}.#{policy_value}")
-  end
-
   def unsubscribed_user_policy_options(type)
     case type
     when :comment

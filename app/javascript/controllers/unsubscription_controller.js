@@ -35,6 +35,7 @@ export default class extends Controller {
     const checkedCount = this.checkboxTargets.filter(cb => cb.checked).length
 
     if (checkedCount === 0) {
+      alert("一つ以上のテナントを選択してください。")
       event.preventDefault()
       return
     }

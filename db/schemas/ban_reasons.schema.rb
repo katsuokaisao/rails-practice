@@ -9,7 +9,6 @@ create_table 'ban_reasons', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do 
   t.datetime 'created_at',  null: false
   t.datetime 'updated_at',  null: false
 
-  t.index %w[tenant_id active], name: 'idx_ban_reasons_tenant_id_active'
   t.index %w[tenant_id name], name: 'uniq_ban_reasons_tenant_name', unique: true
 end
 

@@ -11,7 +11,7 @@ module My
       @invitations = current_user.received_invitations
                                  .status_pending
                                  .includes(:tenant, :inviter)
-                                 .recent
+                                 .order(created_at: :desc)
     end
 
     def accept

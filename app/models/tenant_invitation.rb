@@ -42,8 +42,6 @@ class TenantInvitation < ApplicationRecord
   }
   validate :validate_invited_user
 
-  scope :recent, -> { order(created_at: :desc) }
-
   def accept!(display_name:)
     with_lock do
       unless status_pending?

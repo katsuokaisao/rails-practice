@@ -15,8 +15,7 @@
 #
 # Indexes
 #
-#  idx_ban_reasons_tenant_id_active  (tenant_id,active)
-#  uniq_ban_reasons_tenant_name      (tenant_id,name) UNIQUE
+#  uniq_ban_reasons_tenant_name  (tenant_id,name) UNIQUE
 #
 # Foreign Keys
 #

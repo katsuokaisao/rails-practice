@@ -3,7 +3,7 @@ ja:
   activerecord:
     attributes:
       ban_reason:
-        active: ステータス
+        active: 有効
         created_at: 作成日時
         description: 説明
         name: 理由名

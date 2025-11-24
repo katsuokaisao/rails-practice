@@ -15,9 +15,9 @@
 #
 # Indexes
 #
-#  idx_decisions_created_at_report_id  (tenant_id,created_at,report_id)
 #  idx_decisions_decided_by            (decided_by)
 #  idx_decisions_report_id             (report_id) UNIQUE
+#  idx_decisions_tenant_id_created_at  (tenant_id,created_at)
 #
 # Foreign Keys
 #

@@ -151,10 +151,9 @@ RSpec.describe 'テナント', type: :system do
   end
 
   describe 'テナント識別子の検証' do
-    scenario '存在しないテナント識別子でアクセスするとルートにリダイレクトされる' do
+    scenario '存在しないテナント識別子でアクセスすると404エラーになる' do
       visit tenant_path(tenant_slug: 'non-existent-tenant')
-      expect(page).to have_content('テナントが正しく指定されていません。')
-      expect(page).to have_current_path(root_path)
+      expect(page.status_code).to eq(404)
     end
   end
 

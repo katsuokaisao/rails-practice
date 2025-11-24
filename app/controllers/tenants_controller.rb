@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TenantsController < ApplicationController
-  before_action :require_tenant, only: %i[show]
+  before_action :set_current_tenant, only: %i[show]
 
   def index
     if user_signed_in?

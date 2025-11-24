@@ -11,7 +11,7 @@ create_table 'decisions', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t
 
   t.index ['report_id'],            name: 'idx_decisions_report_id', unique: true
   t.index ['decided_by'],           name: 'idx_decisions_decided_by'
-  t.index %w[tenant_id created_at report_id], name: 'idx_decisions_created_at_report_id'
+  t.index %w[tenant_id created_at], name: 'idx_decisions_tenant_id_created_at'
 end
 
 add_foreign_key 'decisions', 'reports',    column: 'report_id'

@@ -2,6 +2,6 @@
 
 module Tenants
   class BaseController < ApplicationController
-    before_action :require_tenant
+    before_action :set_current_tenant
   end
 end

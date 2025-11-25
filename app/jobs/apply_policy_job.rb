@@ -13,11 +13,8 @@ class ApplyPolicyJob < ApplicationJob
     end
 
     tenant.status_idle!
-  rescue StandardError => e
-    tenant = Tenant.find(tenant_id)
+  rescue StandardError
     tenant.status_failed!
-
-    Rails.logger.error("ApplyPolicyJob failed for tenant #{tenant_id}: #{e.message}")
     raise
   end
 end

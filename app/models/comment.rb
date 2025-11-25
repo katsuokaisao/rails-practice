@@ -71,19 +71,21 @@ class Comment < ApplicationRecord
   def self.delete_with_dependencies(comment_ids)
     return if comment_ids.empty?
 
-    CommentHistory.where(comment_id: comment_ids).delete_all
+    transaction do
+      CommentHistory.where(comment_id: comment_ids).delete_all
 
-    report_ids = Report.where(
-      reportable_type: 'Comment',
-      reportable_id: comment_ids
-    ).pluck(:id)
+      report_ids = Report.where(
+        reportable_type: 'Comment',
+        reportable_id: comment_ids
+      ).pluck(:id)
 
-    if report_ids.any?
-      Decision.where(report_id: report_ids).delete_all
-      Report.where(id: report_ids).delete_all
+      if report_ids.any?
+        Decision.where(report_id: report_ids).delete_all
+        Report.where(id: report_ids).delete_all
+      end
+
+      where(id: comment_ids).delete_all
     end
-
-    where(id: comment_ids).delete_all
   end
 
   private

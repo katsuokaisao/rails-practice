@@ -49,9 +49,11 @@ class Topic < ApplicationRecord
   def self.delete_with_dependencies(topic_ids)
     return if topic_ids.empty?
 
-    comment_ids = Comment.where(topic_id: topic_ids).pluck(:id)
-    Comment.delete_with_dependencies(comment_ids) if comment_ids.any?
+    transaction do
+      comment_ids = Comment.where(topic_id: topic_ids).pluck(:id)
+      Comment.delete_with_dependencies(comment_ids) if comment_ids.any?
 
-    where(id: topic_ids).delete_all
+      where(id: topic_ids).delete_all
+    end
   end
 end

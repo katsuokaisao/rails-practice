@@ -14,13 +14,6 @@ class ApplicationJob < ActiveJob::Base
       started_at: Time.current,
       attempt_number: job.executions
     )
-
-    Rails.logger.info(
-      "#{job.class.name} started: " \
-      "job_id=#{job.job_id}, " \
-      "arguments=#{job.arguments}, " \
-      "attempt=#{job.executions}"
-    )
   end
 
   after_perform do |job|
@@ -28,12 +21,6 @@ class ApplicationJob < ActiveJob::Base
     job_execution&.update!(
       status: :completed,
       completed_at: Time.current
-    )
-
-    Rails.logger.info(
-      "#{job.class.name} completed: " \
-      "job_id=#{job.job_id}, " \
-      "arguments=#{job.arguments}"
     )
   end
 
@@ -45,13 +32,6 @@ class ApplicationJob < ActiveJob::Base
       error_class: exception.class.name,
       error_message: exception.message,
       error_backtrace: exception.backtrace&.first(10)&.join("\n")
-    )
-
-    Rails.logger.error(
-      "#{self.class.name} failed: " \
-      "job_id=#{job_id}, " \
-      "arguments=#{arguments}, " \
-      "error=#{exception.class.name}: #{exception.message}"
     )
 
     raise exception

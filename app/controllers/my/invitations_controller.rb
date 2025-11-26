@@ -21,22 +21,24 @@ module My
     end
 
     def create_acceptance
-      @tenant_membership = @invitation.accept!(display_name: display_name_param)
-
-      flash[:notice] = t('.success', tenant_name: @invitation.tenant.name)
-      redirect_to tenant_path(tenant_slug: @invitation.tenant.slug)
-    rescue ActiveRecord::RecordInvalid => e
-      @tenant_membership = e.record
-      render :accept, status: :unprocessable_entity
+      @tenant_membership = current_user.tenant_memberships.new(
+        tenant: @invitation.tenant,
+        display_name: display_name_param
+      )
+      if @invitation.accept(@tenant_membership)
+        flash[:notice] = t('.success', tenant_name: @invitation.tenant.name)
+        redirect_to tenant_path(tenant_slug: @invitation.tenant.slug)
+      else
+        render :accept, status: :unprocessable_entity
+      end
     end
 
     def reject
-      @invitation.reject!
-
-      flash[:notice] = t('.success')
-      redirect_to my_invitations_path
-    rescue ActiveRecord::RecordInvalid
-      flash[:alert] = t('flash.actions.create.alert', resource: TenantInvitation.model_name.human)
+      if @invitation.reject
+        flash[:notice] = t('.success')
+      else
+        flash[:alert] = t('flash.actions.update.alert', resource: TenantInvitation.model_name.human)
+      end
       redirect_to my_invitations_path
     end
 

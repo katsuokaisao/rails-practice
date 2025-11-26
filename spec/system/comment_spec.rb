@@ -27,9 +27,8 @@ RSpec.describe 'コメント', type: :system do
   scenario '未ログインユーザーはコメントを編集できない' do
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_link('編集',
-                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                                       topic_id: comment.topic.id, id: comment.id))
-    visit edit_tenant_topic_comment_path(tenant_slug: tenant.slug, topic_id: comment.topic.id, id: comment.id)
+                                  href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id))
+    visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
@@ -47,8 +46,7 @@ RSpec.describe 'コメント', type: :system do
     login_as(user)
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     click_link '編集',
-               href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                    topic_id: comment.topic.id, id: comment.id)
+               href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'
@@ -61,11 +59,8 @@ RSpec.describe 'コメント', type: :system do
   scenario 'ログインユーザーは他のユーザーのコメントを編集できない' do
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_link('edit',
-                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                                       topic_id: other_comment.topic.id,
-                                                                       id: other_comment.id))
-    visit edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                         topic_id: other_comment.topic.id, id: other_comment.id)
+                                  href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: other_comment.id))
+    visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: other_comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
@@ -91,8 +86,7 @@ RSpec.describe 'コメント', type: :system do
     login_as(user)
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     click_link '編集',
-               href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                    topic_id: comment.topic.id, id: comment.id)
+               href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('編集')
 
     sleep(1)
@@ -119,9 +113,8 @@ RSpec.describe 'コメント', type: :system do
     login_as(suspended_user)
     visit tenant_topic_path(tenant_slug: tenant.slug, id: suspended_user_topic.id)
     expect(page).not_to have_link('edit',
-                                  href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                                       topic_id: comment.topic.id, id: comment.id))
-    visit edit_tenant_topic_comment_path(tenant_slug: tenant.slug, topic_id: comment.topic.id, id: comment.id)
+                                  href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id))
+    visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
@@ -137,7 +130,7 @@ RSpec.describe 'コメント', type: :system do
     expect(page).to have_content('テストコメント')
 
     click_link '編集',
-               href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug, topic_id: topic.id, id: comment.id)
+               href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント', with: '1回目の編集'
@@ -145,14 +138,14 @@ RSpec.describe 'コメント', type: :system do
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).to have_content('1回目の編集')
 
-    visit edit_tenant_topic_comment_path(tenant_slug: tenant.slug, topic_id: topic.id, id: comment.id)
+    visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     fill_in 'コメント', with: '2回目の編集'
     click_button '更新する'
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)
     expect(page).not_to have_content('1回目の編集')
     expect(page).to have_content('2回目の編集')
 
-    visit edit_tenant_topic_comment_path(tenant_slug: tenant.slug, topic_id: topic.id, id: comment.id)
+    visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     fill_in 'コメント', with: '3回目の編集（最新版）'
     click_button '更新する'
     visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id)

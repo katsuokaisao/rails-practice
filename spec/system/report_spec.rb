@@ -250,8 +250,7 @@ RSpec.describe '通報', type: :system do
     expect(page).to have_content('規約違反の可能性があるため、あなたのコメントは非表示になりました。')
 
     click_link '編集',
-               href: edit_tenant_topic_comment_path(tenant_slug: tenant.slug,
-                                                    topic_id: comment.topic.id, id: comment.id)
+               href: edit_tenant_comment_path(tenant_slug: tenant.slug, id: comment.id)
     expect(page).to have_content('編集')
     sleep(1)
     fill_in 'コメント内容', with: '変更後のコメント'

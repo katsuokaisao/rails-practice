@@ -2,7 +2,7 @@
 
 module Tenants
   class CommentsController < BaseController
-    before_action :set_topic, only: %i[create edit update]
+    before_action :set_topic, only: %i[create]
     before_action :set_comment, only: %i[edit update]
     before_action -> { authorize_action!(@comment) }
 
@@ -53,7 +53,7 @@ module Tenants
     end
 
     def set_comment
-      @comment = @topic.comments.find(params[:id])
+      @comment = Comment.find(params[:id])
     end
   end
 end

@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       resource :membership, only: %i[edit update]
 
       resources :topics, except: %i[index destroy] do
-        resources :comments, only: %i[create edit update]
+        resources :comments, only: %i[create edit update], shallow: true
       end
 
       resources :comments, only: %i[] do

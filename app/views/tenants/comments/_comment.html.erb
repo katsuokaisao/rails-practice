@@ -11,7 +11,7 @@
       <% if can_access?('tenants/comments', 'edit', comment) %>
         <p>
           <span class="material-icons">edit</span>
-          <%= link_to t('edit'), edit_tenant_topic_comment_path(tenant_slug: current_tenant.slug, topic_id: comment.topic.id, id: comment.id), class: "edit-link" %>
+          <%= link_to t('edit'), edit_tenant_comment_path(tenant_slug: current_tenant.slug, id: comment.id), class: "edit-link" %>
         </p>
       <% end %>
       <% if can_access?('tenants/comment_histories', 'index', comment) %>

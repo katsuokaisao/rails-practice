@@ -30,7 +30,7 @@ Metrics/BlockLength:
     - 'config/environments/**/*'
 
 Layout/LineLength:
-  Max: 120
+  Max: 130
   Exclude:
     - 'config/initializers/**/*'
 

@@ -4,14 +4,14 @@
 #
 # Table name: ban_reasons
 #
-#  id                               :bigint           not null, primary key
-#  active                           :boolean          default(TRUE), not null
-#  description                      :text(65535)
-#  name                             :string(255)      not null
-#  system(システム基本理由かどうか) :boolean          default(FALSE), not null
-#  created_at                       :datetime         not null
-#  updated_at                       :datetime         not null
-#  tenant_id                        :bigint           not null
+#  id                                                                             :bigint           not null, primary key
+#  active                                                                         :boolean          default(TRUE), not null
+#  description                                                                    :text(65535)
+#  name                                                                           :string(255)      not null
+#  system(システム的にデフォルトで用意されている ban_reason かどうかを示すフラグ) :boolean          default(FALSE), not null
+#  created_at                                                                     :datetime         not null
+#  updated_at                                                                     :datetime         not null
+#  tenant_id                                                                      :bigint           not null
 #
 # Indexes
 #

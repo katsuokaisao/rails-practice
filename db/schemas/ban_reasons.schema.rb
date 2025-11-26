@@ -5,7 +5,7 @@ create_table 'ban_reasons', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do 
   t.string   'name',        null: false
   t.text     'description', null: true
   t.boolean  'active',      null: false, default: true
-  t.boolean  'system',      null: false, default: false, comment: 'システム基本理由かどうか'
+  t.boolean  'system',      null: false, default: false, comment: 'システム的にデフォルトで用意されている ban_reason かどうかを示すフラグ'
   t.datetime 'created_at',  null: false
   t.datetime 'updated_at',  null: false
 

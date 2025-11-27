@@ -42,14 +42,20 @@ class TenantInvitation < ApplicationRecord
   }
   validate :validate_invited_user
 
-  def accept(membership)
+  def accept(display_name:)
+    tenant_membership = invited_user.tenant_memberships.build(
+      tenant: tenant,
+      display_name: display_name
+    )
+
     transaction do
-      membership.save!
+      tenant_membership.save!
       status_accepted!
     end
-    true
+
+    [true, tenant_membership]
   rescue ActiveRecord::RecordInvalid
-    false
+    [false, tenant_membership]
   end
 
   def reject

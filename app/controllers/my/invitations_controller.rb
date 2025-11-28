@@ -21,11 +21,8 @@ module My
     end
 
     def create_acceptance
-      @tenant_membership = current_user.tenant_memberships.new(
-        tenant: @invitation.tenant,
-        display_name: display_name_param
-      )
-      if @invitation.accept(@tenant_membership)
+      success, @tenant_membership = @invitation.accept(display_name: display_name_param)
+      if success
         flash[:notice] = t('.success', tenant_name: @invitation.tenant.name)
         redirect_to tenant_path(tenant_slug: @invitation.tenant.slug)
       else

@@ -124,42 +124,35 @@ RSpec.describe TenantInvitation, type: :model do
 
       context '正常系' do
         it 'TenantMembershipが作成され、ステータスがacceptedに変更され、display_nameが反映される' do
-          membership = invited_user.tenant_memberships.new(
-            tenant: tenant,
-            display_name: 'カスタム表示名'
-          )
+          result = nil
+          tenant_membership = nil
 
           expect do
-            result = invitation.accept(membership)
-            expect(result).to be true
+            result, tenant_membership = invitation.accept(display_name: 'カスタム表示名')
           end.to change(TenantMembership, :count).by(1)
              .and change { invitation.reload.status }.from('pending').to('accepted')
 
-          expect(membership.reload.display_name).to eq('カスタム表示名')
+          expect(result).to be true
+          expect(tenant_membership.display_name).to eq('カスタム表示名')
         end
       end
 
       context '異常系' do
         it '無効なdisplay_nameの場合、falseを返しステータスは変更されない' do
-          membership = invited_user.tenant_memberships.new(
-            tenant: tenant,
-            display_name: ''
-          )
+          result, tenant_membership = invitation.accept(display_name: '')
 
-          expect(invitation.accept(membership)).to be false
-          expect(TenantMembership.find_by(tenant: tenant, user: invited_user)).to be_nil
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
           expect(invitation.reload.status).to eq('pending')
         end
 
         it '51文字のdisplay_nameでfalseを返す' do
           long_name = 'あ' * 51
-          membership = invited_user.tenant_memberships.new(
-            tenant: tenant,
-            display_name: long_name
-          )
 
-          expect(invitation.accept(membership)).to be false
-          expect(TenantMembership.find_by(tenant: tenant, user: invited_user)).to be_nil
+          result, tenant_membership = invitation.accept(display_name: long_name)
+
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
           expect(invitation.reload.status).to eq('pending')
         end
 
@@ -168,12 +161,11 @@ RSpec.describe TenantInvitation, type: :model do
           invitation
           create(:tenant_membership, tenant: tenant, user: invited_user, display_name: 'メンバー')
 
-          membership = invited_user.tenant_memberships.new(
-            tenant: tenant,
-            display_name: '表示名2'
-          )
+          result, tenant_membership = invitation.accept(display_name: '表示名2')
 
-          expect(invitation.accept(membership)).to be false
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
+          expect(invitation.reload.status).to eq('pending')
         end
       end
 
@@ -181,14 +173,12 @@ RSpec.describe TenantInvitation, type: :model do
         it '同時に受け入れようとした場合、片方だけが成功する' do
           threads = []
           results = []
+          mutex = Mutex.new
 
           2.times do |i|
             threads << Thread.new do
-              membership = invited_user.tenant_memberships.new(
-                tenant: tenant,
-                display_name: "表示名#{i}"
-              )
-              results << invitation.accept(membership)
+              result, _tenant_membership = invitation.accept(display_name: "表示名#{i}")
+              mutex.synchronize { results << result }
             end
           end
 
@@ -255,10 +245,9 @@ RSpec.describe TenantInvitation, type: :model do
     it '招待受け入れ時にpending_invitations_countがデクリメントされる' do
       invitation = create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user,
                                               status: :pending)
-      membership = invited_user.tenant_memberships.new(tenant: tenant, display_name: '表示名')
 
       expect do
-        invitation.accept(membership)
+        invitation.accept(display_name: '表示名')
       end.to change { invited_user.reload.pending_invitations_count }.by(-1)
     end
 

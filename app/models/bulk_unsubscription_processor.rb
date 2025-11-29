@@ -16,8 +16,10 @@ class BulkUnsubscriptionProcessor
   def execute
     raise ActiveModel::ValidationError, self unless valid?
 
-    tenant_ids.each do |tenant_id|
-      process_single_unsubscription(tenant_id)
+    ActiveRecord::Base.transaction do
+      tenant_ids.each do |tenant_id|
+        process_single_unsubscription(tenant_id)
+      end
     end
   end
 

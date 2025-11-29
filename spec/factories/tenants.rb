@@ -4,15 +4,15 @@
 #
 # Table name: tenants
 #
-#  id                               :bigint           not null, primary key
-#  description                      :text(65535)      not null
-#  name                             :string(255)      not null
-#  policy_application_status        :string(255)      default("idle"), not null
-#  slug                             :string(255)      not null
-#  unsubscribed_user_comment_policy :string(255)      default("keep_visible"), not null
-#  unsubscribed_user_topic_policy   :string(255)      default("keep_visible"), not null
-#  created_at                       :datetime         not null
-#  updated_at                       :datetime         not null
+#  id                                                                                                           :bigint           not null, primary key
+#  description(テナントの説明)                                                                                  :text(65535)      not null
+#  name(テナント名（表示用）)                                                                                   :string(255)      not null
+#  policy_application_status(ポリシー適用状態（idle / applying / failed）)                                      :string(255)      default("idle"), not null
+#  slug(テナント識別子)                                                                                         :string(255)      not null
+#  unsubscribed_user_comment_policy(退会ユーザーのコメント表示ポリシー（keep_visible / hide_content / delete）) :string(255)      default("keep_visible"), not null
+#  unsubscribed_user_topic_policy(退会ユーザーのトピック表示ポリシー（keep_visible / lock / delete）)           :string(255)      default("keep_visible"), not null
+#  created_at                                                                                                   :datetime         not null
+#  updated_at                                                                                                   :datetime         not null
 #
 # Indexes
 #

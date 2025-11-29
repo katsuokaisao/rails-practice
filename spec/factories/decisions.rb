@@ -4,14 +4,14 @@
 #
 # Table name: decisions
 #
-#  id              :bigint           not null, primary key
-#  decided_by      :bigint           not null
-#  decision_type   :string(255)      not null
-#  note            :text(65535)
-#  suspended_until :datetime
-#  created_at      :datetime         not null
-#  report_id       :bigint           not null
-#  tenant_id       :bigint           not null
+#  id                                                                :bigint           not null, primary key
+#  decided_by                                                        :bigint           not null
+#  decision_type((enum: 'reject' | 'hide_comment' | 'suspend_user')) :string(255)      not null
+#  note                                                              :text(65535)
+#  suspended_until                                                   :datetime
+#  created_at                                                        :datetime         not null
+#  report_id                                                         :bigint           not null
+#  tenant_id                                                         :bigint           not null
 #
 # Indexes
 #

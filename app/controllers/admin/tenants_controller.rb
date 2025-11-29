@@ -8,7 +8,7 @@ module Admin
 
     def update
       if current_tenant.update(tenant_params)
-        redirect_to tenant_path(tenant_slug: current_tenant.slug), notice: t('.success')
+        redirect_to edit_admin_tenant_path(current_tenant), notice: t('.success')
       else
         render :edit, status: :unprocessable_entity
       end

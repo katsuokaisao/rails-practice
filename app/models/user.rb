@@ -46,7 +46,7 @@ class User < ApplicationRecord
   end
 
   def suspended?(tenant)
-    tenant_memberships.find_by(tenant: tenant)&.suspended? || false
+    membership_for(tenant)&.suspended? || false
   end
 
   def suspend!(tenant, suspended_until)
@@ -54,7 +54,7 @@ class User < ApplicationRecord
   end
 
   def suspended_until_date(tenant)
-    tenant_memberships.find_by(tenant: tenant)&.suspended_until_date
+    membership_for(tenant)&.suspended_until_date
   end
 
   def enforce_release_suspension!(tenant)
@@ -62,24 +62,19 @@ class User < ApplicationRecord
   end
 
   def member_of?(tenant)
-    tenant_memberships.exists?(tenant: tenant)
+    membership_for(tenant).present?
   end
 
   def unsubscribed_from?(tenant)
-    tenant_memberships.find_by(tenant: tenant)&.unsubscribed? || false
+    membership_for(tenant)&.unsubscribed? || false
   end
 
   def active_member_of?(tenant)
-    membership = tenant_memberships.find_by(tenant: tenant)
-    membership&.active? || false
+    membership_for(tenant)&.active? || false
   end
 
   def display_name_for(tenant)
-    membership = if association(:tenant_memberships).loaded?
-                   tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
-                 else
-                   tenant_memberships.find_by(tenant: tenant)
-                 end
+    membership = membership_for(tenant)
     if membership&.unsubscribed?
       I18n.t('activerecord.attributes.user.unsubscribed_user')
     else
@@ -107,5 +102,15 @@ class User < ApplicationRecord
 
   def topics_in_tenant(tenant)
     topics.where(tenant_id: tenant.id)
+  end
+
+  private
+
+  def membership_for(tenant)
+    if association(:tenant_memberships).loaded?
+      tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
+    else
+      tenant_memberships.find_by(tenant: tenant)
+    end
   end
 end

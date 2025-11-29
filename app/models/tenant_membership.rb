@@ -37,7 +37,7 @@ class TenantMembership < ApplicationRecord
 
   validate :suspended_until_future
 
-  scope :active, -> { where(unsubscribed_at: nil) }
+  scope :subscribed, -> { where(unsubscribed_at: nil) }
   scope :unsubscribed, -> { where.not(unsubscribed_at: nil) }
 
   def suspended?
@@ -64,7 +64,7 @@ class TenantMembership < ApplicationRecord
     unsubscribed_at.present?
   end
 
-  def active?
+  def subscribed?
     unsubscribed_at.nil?
   end
 

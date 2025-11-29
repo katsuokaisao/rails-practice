@@ -65,16 +65,12 @@ class Tenant < ApplicationRecord
 
   validate :cannot_update_policy_while_applying, on: :update
 
-  after_update :enqueue_apply_policy, if: :policy_changed?
+  after_update :apply_policy_later, if: :policy_changed?
 
   def member?(user)
     return false if user.nil?
 
     tenant_memberships.exists?(user: user)
-  end
-
-  def policy_editable?
-    status_idle?
   end
 
   private
@@ -89,7 +85,7 @@ class Tenant < ApplicationRecord
     errors.add(:unsubscribed_user_comment_policy, :policy_applying)
   end
 
-  def enqueue_apply_policy
+  def apply_policy_later
     changed_policies = []
     changed_policies << :topic if saved_change_to_unsubscribed_user_topic_policy?
     changed_policies << :comment if saved_change_to_unsubscribed_user_comment_policy?

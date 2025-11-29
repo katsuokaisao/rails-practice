@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_many :tenant_memberships, dependent: :destroy
   has_many :tenants, through: :tenant_memberships
   has_many :active_tenant_memberships, lambda {
-    active
+    subscribed
   }, class_name: 'TenantMembership', dependent: :destroy, inverse_of: :user
   has_many :active_tenants, through: :active_tenant_memberships, source: :tenant
   has_many :sent_invitations,
@@ -70,7 +70,7 @@ class User < ApplicationRecord
   end
 
   def active_member_of?(tenant)
-    membership_for(tenant)&.active? || false
+    membership_for(tenant)&.subscribed? || false
   end
 
   def display_name_for(tenant)

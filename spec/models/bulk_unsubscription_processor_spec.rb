@@ -56,10 +56,10 @@ RSpec.describe BulkUnsubscriptionProcessor, type: :model do
       context '不正なtenant_idが指定された場合' do
         let(:processor) { described_class.new(user, [999_999]) }
 
-        it 'エラーが発生せず、処理がスキップされる' do
+        it 'ActiveRecord::RecordNotFoundが発生する' do
           expect do
             processor.execute
-          end.not_to change(TenantUnsubscriptionHistory, :count)
+          end.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
     end

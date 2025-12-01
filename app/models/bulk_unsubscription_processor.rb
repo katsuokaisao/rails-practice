@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BulkUnsubscriptionProcessor
-  include ActiveModel::Model
+  include ActiveModel::Validations
 
   attr_accessor :user, :tenant_ids
 
@@ -26,11 +26,46 @@ class BulkUnsubscriptionProcessor
   private
 
   def process_single_unsubscription(tenant_id)
-    membership = user.tenant_memberships
-                     .find_by(tenant_id: tenant_id)
-    return unless membership
+    tenant = Tenant.find(tenant_id)
+    record_unsubscription_history(tenant)
+    handle_user_content(tenant)
+  end
 
-    processor = UnsubscriptionProcessor.new(membership)
-    processor.execute
+  def record_unsubscription_history(tenant)
+    TenantUnsubscriptionHistory.create!(
+      user_id: user.id,
+      tenant_id: tenant.id,
+      comment_policy: tenant.unsubscribed_user_comment_policy,
+      topic_policy: tenant.unsubscribed_user_topic_policy,
+      unsubscribed_at: Time.current
+    )
+  end
+
+  def handle_user_content(tenant)
+    apply_comment_policy(tenant)
+    apply_topic_policy(tenant)
+  end
+
+  def apply_comment_policy(tenant)
+    return unless tenant.comment_delete?
+
+    comment_ids = user.comments_in_tenant(tenant).pluck(:id)
+    return if comment_ids.empty?
+
+    Comment.delete_with_dependencies(comment_ids)
+  end
+
+  def apply_topic_policy(tenant)
+    case tenant.unsubscribed_user_topic_policy
+    when 'delete'
+      topic_ids = user.topics_in_tenant(tenant).pluck(:id)
+      return if topic_ids.empty?
+
+      Topic.delete_with_dependencies(topic_ids)
+    when 'lock'
+      user.topics_in_tenant(tenant).unlocked.update_all(locked_at: Time.current)
+    when 'keep_visible'
+      # 何もしない
+    end
   end
 end

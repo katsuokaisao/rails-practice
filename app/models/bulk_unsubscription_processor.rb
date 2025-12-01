@@ -50,8 +50,6 @@ class BulkUnsubscriptionProcessor
     return unless tenant.comment_policy_delete?
 
     comment_ids = user.comments_in_tenant(tenant).pluck(:id)
-    return if comment_ids.empty?
-
     Comment.delete_with_dependencies(comment_ids)
   end
 
@@ -59,8 +57,6 @@ class BulkUnsubscriptionProcessor
     case tenant.unsubscribed_user_topic_policy
     when 'delete'
       topic_ids = user.topics_in_tenant(tenant).pluck(:id)
-      return if topic_ids.empty?
-
       Topic.delete_with_dependencies(topic_ids)
     when 'lock'
       user.topics_in_tenant(tenant).unlocked.update_all(locked_at: Time.current)

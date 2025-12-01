@@ -30,10 +30,10 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :tenant_memberships, dependent: :destroy
   has_many :tenants, through: :tenant_memberships
-  has_many :active_tenant_memberships, lambda {
+  has_many :subscribed_tenant_memberships, lambda {
     subscribed
   }, class_name: 'TenantMembership', dependent: :destroy, inverse_of: :user
-  has_many :active_tenants, through: :active_tenant_memberships, source: :tenant
+  has_many :subscribed_tenants, through: :subscribed_tenant_memberships, source: :tenant
   has_many :sent_invitations,
            class_name: 'TenantInvitation', foreign_key: :inviter_id, dependent: :destroy,
            inverse_of: :inviter
@@ -91,7 +91,7 @@ class User < ApplicationRecord
   end
 
   def memberships_ordered_by_tenant_name
-    active_tenant_memberships.includes(:tenant).order('tenants.name')
+    subscribed_tenant_memberships.includes(:tenant).order('tenants.name')
   end
 
   def comments_in_tenant(tenant)

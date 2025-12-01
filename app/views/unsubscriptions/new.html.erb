@@ -6,7 +6,7 @@
 
     <p class="text-body"><%= t('.description') %></p>
 
-    <% if @active_memberships.any? %>
+    <% if @subscribed_memberships.any? %>
       <%= form_with url: unsubscription_path,
                     method: :post,
                     data: {
@@ -29,7 +29,7 @@
         </div>
 
         <div class="tenant-list">
-          <% @active_memberships.each do |membership| %>
+          <% @subscribed_memberships.each do |membership| %>
             <div class="tenant-item">
               <label class="tenant-item-label">
                 <%= check_box_tag 'tenant_ids[]',

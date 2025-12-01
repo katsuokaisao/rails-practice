@@ -46,7 +46,7 @@ class TenantsController < ApplicationController
 
   def topics
     current_tenant.topics
-      .order(created_at: :desc, id: :desc)
-      .eager_load(:author)
+                  .order(created_at: :desc, id: :desc)
+                  .eager_load(:author)
   end
 end

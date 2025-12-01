@@ -53,9 +53,9 @@ module Tenants
 
     def comments
       @topic.comments
-      .eager_load(:author)
-      .preload(author: :tenant_memberships)
-      .order(created_at: :desc)
+            .eager_load(:author)
+            .preload(author: :tenant_memberships)
+            .order(created_at: :desc)
     end
   end
 end

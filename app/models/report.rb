@@ -41,8 +41,8 @@ class Report < ApplicationRecord
 
   scope :similar_reports, lambda { |report|
     where(tenant_id: report.tenant_id)
-    .where(reportable: report.reportable)
-    .where.not(id: report.id)
+      .where(reportable: report.reportable)
+      .where.not(id: report.id)
   }
 
   validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true

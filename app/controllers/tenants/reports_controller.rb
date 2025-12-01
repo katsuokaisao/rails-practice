@@ -53,9 +53,9 @@ module Tenants
 
     def reports
       reports = current_tenant.reports.where(reportable_type: reportable_type)
-                    .where.missing(:decision)
-                    .includes(:reporter, :reportable, :ban_reason)
-                    .order(created_at: :desc)
+                              .where.missing(:decision)
+                              .includes(:reporter, :reportable, :ban_reason)
+                              .order(created_at: :desc)
 
       case reportable_type
       when 'comment'

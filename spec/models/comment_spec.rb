@@ -43,8 +43,8 @@ RSpec.describe Comment, type: :model do
             content: content
           )
         end.to change(described_class, :count).by(1)
-          .and change(CommentHistory, :count).by(1)
-          .and change { topic.reload.total_comment }.by(1)
+                                              .and change(CommentHistory, :count).by(1)
+                                                                                 .and change { topic.reload.total_comment }.by(1)
 
         aggregate_failures do
           expect(comment).to be_persisted
@@ -74,9 +74,9 @@ RSpec.describe Comment, type: :model do
             content: content
           )
         end.to raise_error(ActiveRecord::RecordInvalid)
-         .and change(described_class, :count).by(0)
-         .and change(CommentHistory, :count).by(0)
-         .and change { topic.reload.total_comment }.by(0)
+          .and change(described_class, :count).by(0)
+                                              .and change(CommentHistory, :count).by(0)
+                                                                                 .and change { topic.reload.total_comment }.by(0)
       end
     end
 
@@ -123,14 +123,14 @@ RSpec.describe Comment, type: :model do
         expect do
           comment.update_content!(new_content)
         end.to change { comment.reload.content }
-        .to(new_content)
-        .and change(comment, :current_version_no)
-        .from(initial_version).to(initial_version + 1)
-        .and change(CommentHistory, :count).by(1)
-        .and change { comment.histories.last.version_no }
-        .from(initial_version).to(initial_version + 1)
-        .and change { comment.histories.last.content }
-        .to(new_content)
+          .to(new_content)
+          .and change(comment, :current_version_no)
+          .from(initial_version).to(initial_version + 1)
+          .and change(CommentHistory, :count).by(1)
+                                             .and change { comment.histories.last.version_no }
+          .from(initial_version).to(initial_version + 1)
+          .and change { comment.histories.last.content }
+          .to(new_content)
       end
     end
 

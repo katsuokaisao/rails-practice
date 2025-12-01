@@ -18,7 +18,7 @@ class UnsubscriptionsController < ApplicationController
     end
 
     valid_tenants = current_user.active_tenant_memberships
-                                   .where(tenant_id: tenant_ids)
+                                .where(tenant_id: tenant_ids)
 
     if valid_tenants.empty?
       redirect_to new_unsubscription_path, alert: t('.invalid_tenant')

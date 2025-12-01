@@ -63,10 +63,10 @@ module Tenants
 
     def decisions
       current_tenant.decisions
-        .includes(includes_list_for_decisions)
-        .joins(:report)
-        .where(reports: { reportable_type: reportable_type })
-        .order(created_at: :desc)
+                    .includes(includes_list_for_decisions)
+                    .joins(:report)
+                    .where(reports: { reportable_type: reportable_type })
+                    .order(created_at: :desc)
     end
 
     def includes_list_for_decisions

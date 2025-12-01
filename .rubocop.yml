@@ -98,7 +98,7 @@ RSpec/ChangeByZero:
   Enabled: false
 
 Layout/MultilineMethodCallIndentation:
-  Enabled: false
+  EnforcedStyle: aligned
 
 Style/Documentation:
   Enabled: false

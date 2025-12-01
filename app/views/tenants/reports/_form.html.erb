@@ -10,7 +10,7 @@
   <div class="form-group">
     <%= f.label :ban_reason_id, BanReason.model_name.human %>
     <%= f.select :ban_reason_id,
-                current_tenant.ban_reasons.active_reasons.map { |br| [br.display_name, br.id] },
+                ban_reasons.map { |br| [br.display_name, br.id] },
                 { prompt: t('action.select') },
                 { class: "form-control", required: true } %>
   </div>

@@ -7,6 +7,7 @@ ruby '3.3.7'
 gem 'bootsnap', require: false
 gem 'counter_culture', '~> 3.2'
 gem 'devise'
+gem 'draper'
 gem 'jsbundling-rails', '~> 1.3'
 gem 'mysql2', '~> 0.5'
 gem 'puma', '>= 5.0'

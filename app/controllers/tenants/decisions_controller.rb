@@ -10,9 +10,13 @@ module Tenants
     def index
       @current_tab = reportable_type
 
-      @pagination = Pagination::Paginator.new(
+      pagination = Pagination::Paginator.new(
         relation: decisions, page: params[:page], per: params[:per]
       ).call
+
+      @pagination = pagination.with(
+        records: DecisionDecorator.decorate_collection(pagination.records)
+      )
 
       return unless @pagination.out_of_bounds
 
@@ -21,6 +25,7 @@ module Tenants
     end
 
     def new
+      @report = @report.decorate
       @user_time_zone_identifier = user_time_zone_identifier
       respond_to(&:turbo_stream)
     end

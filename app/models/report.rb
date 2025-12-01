@@ -62,8 +62,4 @@ class Report < ApplicationRecord
   def user_suspended?
     decision.decision_type_suspend_user?
   end
-
-  def reason_type
-    ban_reason.display_name
-  end
 end

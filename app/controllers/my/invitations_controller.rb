@@ -8,13 +8,16 @@ module My
     before_action :verify_not_member, except: %i[index]
 
     def index
-      @invitations = current_user.received_invitations
-                                 .status_pending
-                                 .includes(:tenant, :inviter)
-                                 .order(created_at: :desc)
+      @invitations = TenantInvitationDecorator.decorate_collection(
+        current_user.received_invitations
+                    .status_pending
+                    .includes(:tenant, inviter: :tenant_memberships)
+                    .order(created_at: :desc)
+      )
     end
 
     def accept
+      @invitation = @invitation.decorate
       @tenant_membership = current_user.tenant_memberships.new(
         tenant: @invitation.tenant
       )
@@ -26,6 +29,7 @@ module My
         flash[:notice] = t('.success', tenant_name: @invitation.tenant.name)
         redirect_to tenant_path(tenant_slug: @invitation.tenant.slug)
       else
+        @invitation = @invitation.decorate
         render :accept, status: :unprocessable_entity
       end
     end

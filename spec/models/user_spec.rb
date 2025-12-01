@@ -148,22 +148,4 @@ RSpec.describe User, type: :model do
       end
     end
   end
-
-  describe '#display_name_for' do
-    context 'ユーザーがテナントのメンバーの場合' do
-      before do
-        create(:tenant_membership, user: user, tenant: tenant_a, display_name: '山田太郎')
-      end
-
-      it 'そのテナントでの表示名を返す' do
-        expect(user.display_name_for(tenant_a)).to eq('山田太郎')
-      end
-    end
-
-    context 'ユーザーがテナントのメンバーでない場合' do
-      it '空文字列を返す' do
-        expect(user.display_name_for(tenant_a)).to eq('')
-      end
-    end
-  end
 end

@@ -34,14 +34,6 @@ class BanReason < ApplicationRecord
   validates :system, inclusion: { in: [true, false] }
   validate :must_be_editable, on: :update
 
-  def display_name
-    system? ? I18n.t("ban_reasons.system.#{name}") : name
-  end
-
-  def display_description
-    system? ? I18n.t("ban_reasons.system_descriptions.#{name}") : description
-  end
-
   def editable?
     !system || (system && changes.keys == ['active'])
   end

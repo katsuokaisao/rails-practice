@@ -73,7 +73,7 @@ module ApplicationHelper
   end
 
   def display_name(user)
-    user.display_name_for(current_tenant)
+    user.decorate.display_name_for(current_tenant)
   end
 
   def display_name_with_id(user)

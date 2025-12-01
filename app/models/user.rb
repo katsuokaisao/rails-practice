@@ -73,15 +73,6 @@ class User < ApplicationRecord
     membership_for(tenant)&.subscribed? || false
   end
 
-  def display_name_for(tenant)
-    membership = membership_for(tenant)
-    if membership&.unsubscribed?
-      I18n.t('activerecord.attributes.user.unsubscribed_user')
-    else
-      membership&.display_name || ''
-    end
-  end
-
   def pending_invitations
     received_invitations.status_pending
   end
@@ -103,8 +94,6 @@ class User < ApplicationRecord
   def topics_in_tenant(tenant)
     topics.where(tenant_id: tenant.id)
   end
-
-  private
 
   def membership_for(tenant)
     if association(:tenant_memberships).loaded?

@@ -12,9 +12,13 @@ module Tenants
     def index
       @current_tab = reportable_type
 
-      @pagination = Pagination::Paginator.new(
+      pagination = Pagination::Paginator.new(
         relation: reports, page: params[:page], per: params[:per]
       ).call
+
+      @pagination = pagination.with(
+        records: ReportDecorator.decorate_collection(pagination.records)
+      )
 
       return unless @pagination.out_of_bounds
 
@@ -23,12 +27,15 @@ module Tenants
     end
 
     def new
+      @ban_reasons = BanReasonDecorator.decorate_collection(
+        current_tenant.ban_reasons.active_reasons
+      )
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.append(
             'modal-root',
             partial: 'modal',
-            locals: { topic: @topic, report: @report }
+            locals: { topic: @topic, report: @report, ban_reasons: @ban_reasons }
           )
         end
       end

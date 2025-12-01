@@ -6,7 +6,11 @@
 
     <%= form_with model: current_tenant,
                   url: admin_tenant_path(current_tenant),
-                  method: :patch do |f| %>
+                  method: :patch,
+                  data: {
+                    controller: "delete-policy-confirm",
+                    action: "submit->delete-policy-confirm#confirmSubmit"
+                  } do |f| %>
 
       <%= render partial: "shared/form_errors", locals: { model: current_tenant } %>
 
@@ -19,7 +23,8 @@
           <%= f.select :unsubscribed_user_comment_policy,
                       unsubscribed_user_policy_options(:comment),
                       {},
-                      { class: "select-field" } %>
+                      { class: "select-field",
+                        data: { delete_policy_confirm_target: "commentPolicy" } } %>
         </div>
 
         <div class="field">
@@ -28,7 +33,8 @@
           <%= f.select :unsubscribed_user_topic_policy,
                       unsubscribed_user_policy_options(:topic),
                       {},
-                      { class: "select-field" } %>
+                      { class: "select-field",
+                        data: { delete_policy_confirm_target: "topicPolicy" } } %>
         </div>
       </div>
 

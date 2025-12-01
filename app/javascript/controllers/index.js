@@ -21,3 +21,6 @@ application.register("flash", FlashController)
 
 import UnsubscriptionController from "./unsubscription_controller"
 application.register("unsubscription", UnsubscriptionController)
+
+import DeletePolicyConfirmController from "./delete_policy_confirm_controller"
+application.register("delete-policy-confirm", DeletePolicyConfirmController)

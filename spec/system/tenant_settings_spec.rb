@@ -66,7 +66,9 @@ RSpec.describe 'テナント設定', type: :system do
 
       select '完全削除', from: 'tenant_unsubscribed_user_comment_policy'
 
-      click_button '更新する'
+      accept_confirm do
+        click_button '更新する'
+      end
 
       expect(page).to have_content('テナント設定を更新しました')
 
@@ -111,7 +113,9 @@ RSpec.describe 'テナント設定', type: :system do
 
       select '完全削除', from: 'tenant_unsubscribed_user_topic_policy'
 
-      click_button '更新する'
+      accept_confirm do
+        click_button '更新する'
+      end
 
       expect(page).to have_content('テナント設定を更新しました')
 
@@ -158,7 +162,9 @@ RSpec.describe 'テナント設定', type: :system do
       select '完全削除', from: 'tenant_unsubscribed_user_comment_policy'
       select 'ロック', from: 'tenant_unsubscribed_user_topic_policy'
 
-      click_button '更新する'
+      accept_confirm do
+        click_button '更新する'
+      end
 
       expect(page).to have_content('テナント設定を更新しました')
 
@@ -242,7 +248,9 @@ RSpec.describe 'テナント設定', type: :system do
       select '完全削除', from: 'tenant_unsubscribed_user_comment_policy'
       select 'ロック', from: 'tenant_unsubscribed_user_topic_policy'
 
-      click_button '更新する'
+      accept_confirm do
+        click_button '更新する'
+      end
 
       expect(page).to have_content('テナント設定を更新しました')
 

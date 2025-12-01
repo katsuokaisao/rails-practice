@@ -18,7 +18,7 @@
       <%= render partial: 'shared/pagination', locals: { pagination: @pagination } %>
     </section>
   <% end %>
-  <% if can_access?('tenants/comments', 'create') && !@topic.locked? %>
+  <% if can_access?('tenants/comments', 'create', @topic) %>
     <section class="form-card">
       <h3><%= t('.new_comment') %></h3>
       <div id="comment-form-errors"></div>

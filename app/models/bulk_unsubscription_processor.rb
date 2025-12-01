@@ -47,7 +47,7 @@ class BulkUnsubscriptionProcessor
   end
 
   def apply_comment_policy(tenant)
-    return unless tenant.comment_delete?
+    return unless tenant.comment_policy_delete?
 
     comment_ids = user.comments_in_tenant(tenant).pluck(:id)
     return if comment_ids.empty?

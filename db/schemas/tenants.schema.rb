@@ -12,10 +12,10 @@ create_table 'tenants', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
            null: false,
            default: 'keep_visible',
            comment: '退会ユーザーのコメント表示ポリシー（keep_visible / hide_content / delete）'
-  t.string 'policy_application_status',
+  t.string 'applying_policy',
            null: false,
            default: 'idle',
-           comment: 'ポリシー適用状態（idle / applying / failed）'
+           comment: 'ポリシー適用状態（idle / progress / failed）'
   t.datetime 'created_at',  null: false
   t.datetime 'updated_at',  null: false
 

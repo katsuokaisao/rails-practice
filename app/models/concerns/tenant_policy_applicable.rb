@@ -11,7 +11,7 @@ module TenantPolicyApplicable
   end
 
   def apply_comment_policy
-    return unless comment_delete?
+    return unless comment_policy_delete?
 
     comment_ids = unsubscribed_users_comment_ids
     return if comment_ids.empty?

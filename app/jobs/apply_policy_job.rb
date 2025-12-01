@@ -12,9 +12,9 @@ class ApplyPolicyJob < ApplicationJob
       tenant.apply_comment_policy if changed_policies.include?(:comment)
     end
 
-    tenant.status_idle!
+    tenant.applying_policy_idle!
   rescue StandardError
-    tenant.status_failed!
+    tenant.applying_policy_failed!
     raise
   end
 end

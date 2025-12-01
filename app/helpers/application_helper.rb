@@ -25,7 +25,7 @@ module ApplicationHelper
 
   def render_unsubscribed_comment_content(comment)
     tenant = comment.topic.tenant
-    content = tenant.comment_hide_content? ? I18n.t('helpers.application.hidden_comment_content') : comment.content
+    content = tenant.comment_policy_hide_content? ? I18n.t('helpers.application.hidden_comment_content') : comment.content
     content_tag(:div, simple_format(sanitize(content)), class: ['comment-content'])
   end
 

@@ -5,9 +5,9 @@
 # Table name: tenants
 #
 #  id                                                                                                           :bigint           not null, primary key
+#  applying_policy(ポリシー適用状態（idle / progress / failed）)                                                :string(255)      default("idle"), not null
 #  description(テナントの説明)                                                                                  :text(65535)      not null
 #  name(テナント名（表示用）)                                                                                   :string(255)      not null
-#  policy_application_status(ポリシー適用状態（idle / applying / failed）)                                      :string(255)      default("idle"), not null
 #  slug(テナント識別子)                                                                                         :string(255)      not null
 #  unsubscribed_user_comment_policy(退会ユーザーのコメント表示ポリシー（keep_visible / hide_content / delete）) :string(255)      default("keep_visible"), not null
 #  unsubscribed_user_topic_policy(退会ユーザーのトピック表示ポリシー（keep_visible / lock / delete）)           :string(255)      default("keep_visible"), not null
@@ -39,19 +39,19 @@ class Tenant < ApplicationRecord
     keep_visible: 'keep_visible',
     lock: 'lock',
     delete: 'delete'
-  }, prefix: :topic, validate: true
+  }, prefix: :topic_policy, validate: true
 
   enum :unsubscribed_user_comment_policy, {
     keep_visible: 'keep_visible',
     hide_content: 'hide_content',
     delete: 'delete'
-  }, prefix: :comment, validate: true
+  }, prefix: :comment_policy, validate: true
 
-  enum :policy_application_status, {
+  enum :applying_policy, {
     idle: 'idle',
-    applying: 'applying',
+    progress: 'progress',
     failed: 'failed'
-  }, prefix: :status, validate: true
+  }, prefix: :applying_policy, validate: true
 
   validates :slug,
             presence: true,
@@ -76,7 +76,7 @@ class Tenant < ApplicationRecord
   private
 
   def cannot_update_policy_while_applying
-    return unless status_applying?
+    return unless applying_policy_progress?
 
     errors.add(:unsubscribed_user_topic_policy, :policy_applying) if unsubscribed_user_topic_policy_changed?
 
@@ -90,7 +90,7 @@ class Tenant < ApplicationRecord
     changed_policies << :topic if saved_change_to_unsubscribed_user_topic_policy?
     changed_policies << :comment if saved_change_to_unsubscribed_user_comment_policy?
 
-    status_applying!
+    applying_policy_progress!
     ApplyPolicyJob.perform_later(id, changed_policies)
   end
 

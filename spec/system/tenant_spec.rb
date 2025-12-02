@@ -84,7 +84,7 @@ RSpec.describe 'テナント', type: :system do
 
       scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
         create_list(:tenant, 30, description: 'テストテナントの説明です。')
-        visit root_path(other_page: 999)
+        visit root_path(no_member_tenants_page: 999)
         expect(page).to have_current_path(root_path)
         expect(page).to have_content('範囲外のリクエストです。')
       end
@@ -107,7 +107,7 @@ RSpec.describe 'テナント', type: :system do
         expect(page).to have_selector('.pagination')
 
         # 所属テナントセクションの2ページ目に移動
-        within('.tenant-section', text: '所属テナント') do
+        within('.tenant-section', text: /\A所属テナント/) do
           click_link '2'
         end
 
@@ -116,7 +116,7 @@ RSpec.describe 'テナント', type: :system do
         expect(page).to have_content(member_tenant.name)
       end
 
-      scenario 'その他のテナントでページネーションが機能する' do
+      scenario '未所属テナントでページネーションが機能する' do
         tenants = create_list(:tenant, 30, description: 'テストテナントの説明です。')
         # ユーザーを最初の5個のテナントだけに所属させる
         tenants.first(5).each do |tenant|
@@ -124,10 +124,10 @@ RSpec.describe 'テナント', type: :system do
         end
 
         visit root_path
-        expect(page).to have_content('その他のテナント')
+        expect(page).to have_content('未所属テナント')
 
-        # その他のテナントセクションの2ページ目に移動
-        within('.tenant-section', text: 'その他のテナント') do
+        # 未所属テナントセクションの2ページ目に移動
+        within('.tenant-section', text: '未所属テナント') do
           click_link '2'
         end
 
@@ -135,15 +135,15 @@ RSpec.describe 'テナント', type: :system do
         other_tenant_ids = Tenant.where.not(id: user.tenants.pluck(:id)).order(id: :desc).offset(10).limit(1).pluck(:id)
         other_tenant = Tenant.find(other_tenant_ids.first)
 
-        # その他のテナントセクション内で確認
-        within('.tenant-section', text: 'その他のテナント') do
+        # 未所属テナントセクション内で確認
+        within('.tenant-section', text: '未所属テナント') do
           expect(page).to have_content(other_tenant.name)
         end
       end
 
       scenario 'ページ範囲外にアクセスすると一覧ページにリダイレクトされる' do
         create_list(:tenant, 30, description: 'テストテナントの説明です。')
-        visit root_path(member_page: 999)
+        visit root_path(member_tenants_page: 999)
         expect(page).to have_current_path(root_path)
         expect(page).to have_content('範囲外のリクエストです。')
       end
@@ -169,17 +169,17 @@ RSpec.describe 'テナント', type: :system do
       # tenant_cには所属していない
     end
 
-    scenario '所属テナントとその他のテナントが正しく分類される' do
+    scenario '所属テナントと未所属テナントが正しく分類される' do
       login_as user_multi
       visit root_path
 
-      within('.tenant-section', text: '所属テナント') do
+      within('.tenant-section', text: /\A所属テナント/) do
         expect(page).to have_content('テナントA')
         expect(page).to have_content('テナントB')
         expect(page).not_to have_content('テナントC')
       end
 
-      within('.tenant-section', text: 'その他のテナント') do
+      within('.tenant-section', text: '未所属テナント') do
         expect(page).to have_content('テナントC')
         expect(page).not_to have_content('テナントA')
         expect(page).not_to have_content('テナントB')

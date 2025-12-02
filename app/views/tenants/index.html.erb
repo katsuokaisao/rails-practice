@@ -3,11 +3,11 @@
     <h1 class="text-title"><%= t('.title') %></h1>
   </div>
 
-  <% if @member_pagination.records.any? %>
+  <% if @member_tenants_pagination.records.any? %>
     <div class="tenant-section">
       <h2 class="text-subtitle"><%= t('.member_tenants') %></h2>
       <div class="tenant-grid">
-        <% @member_pagination.records.each do |tenant| %>
+        <% @member_tenants_pagination.records.each do |tenant| %>
           <%= link_to tenant_path(tenant_slug: tenant.slug), class: "tenant-card card" do %>
             <div class="tenant-card-header">
               <h3 class="text-card-title">
@@ -26,17 +26,17 @@
         <% end %>
       </div>
 
-      <%= render partial: 'shared/pagination', locals: { pagination: @member_pagination, page_param: :member_page, query_params: { other_page: params[:other_page], per: params[:per] }.compact } %>
+      <%= render partial: 'shared/pagination', locals: { pagination: @member_tenants_pagination, page_param: :member_tenants_page, query_params: { no_member_tenants_page: params[:no_member_tenants_page], per: params[:per] }.compact } %>
     </div>
   <% end %>
 
-  <% if @other_pagination.records.any? %>
+  <% if @no_member_tenants_pagination.records.any? %>
     <div class="tenant-section">
       <% if user_signed_in? %>
-        <h2 class="text-subtitle"><%= t('.other_tenants') %></h2>
+        <h2 class="text-subtitle"><%= t('.no_member_tenants') %></h2>
       <% end %>
       <div class="tenant-grid">
-        <% @other_pagination.records.each do |tenant| %>
+        <% @no_member_tenants_pagination.records.each do |tenant| %>
           <%= link_to tenant_path(tenant_slug: tenant.slug), class: "tenant-card card" do %>
             <div class="tenant-card-header">
               <h3 class="text-card-title"><%= tenant.name %></h3>
@@ -53,11 +53,11 @@
         <% end %>
       </div>
 
-      <%= render partial: 'shared/pagination', locals: { pagination: @other_pagination, page_param: :other_page, query_params: { member_page: params[:member_page], per: params[:per] }.compact } %>
+      <%= render partial: 'shared/pagination', locals: { pagination: @no_member_tenants_pagination, page_param: :no_member_tenants_page, query_params: { member_tenants_page: params[:member_tenants_page], per: params[:per] }.compact } %>
     </div>
   <% end %>
 
-  <% if @member_pagination.records.empty? && @other_pagination.records.empty? %>
+  <% if @member_tenants_pagination.records.empty? && @no_member_tenants_pagination.records.empty? %>
     <div class="tenant-list-empty">
       <p><%= t('.no_tenants') %></p>
     </div>

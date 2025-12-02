@@ -1,6 +1,6 @@
 ---
 en:
-  my:
+  users:
     invitations:
       accept:
         display_name_hint: Enter the display name you want to use in this tenant (you

@@ -1,6 +1,6 @@
-<% if user_signed_in? && current_user.pending_invitations? && request.path != my_invitations_path %>
+<% if user_signed_in? && current_user.pending_invitations? && request.path != users_invitations_path %>
   <div class="invitation-banner">
-    <%= link_to my_invitations_path, class: "invitation-banner-link" do %>
+    <%= link_to users_invitations_path, class: "invitation-banner-link" do %>
       <span class="invitation-banner-text">
         <%= t('.message', count: pending_invitations_count) %>
       </span>

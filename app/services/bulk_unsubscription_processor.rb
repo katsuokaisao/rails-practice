@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
 class BulkUnsubscriptionProcessor
-  include ActiveModel::Validations
-
-  attr_accessor :user, :tenant_ids
-
-  validates :user, presence: true
-  validates :tenant_ids, presence: true
+  attr_reader :user, :tenant_ids
 
   def initialize(user, tenant_ids)
+    raise ArgumentError, 'user is required' if user.blank?
+    raise ArgumentError, 'tenant_ids is required' if tenant_ids.blank?
+
     @user = user
     @tenant_ids = Array(tenant_ids).map(&:to_i)
   end
 
   def execute
-    raise ActiveModel::ValidationError, self unless valid?
-
     ActiveRecord::Base.transaction do
       tenant_ids.each do |tenant_id|
         process_single_unsubscription(tenant_id)

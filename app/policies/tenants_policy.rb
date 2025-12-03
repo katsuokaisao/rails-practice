@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class TenantsPolicy < ApplicationPolicy
-  def index? = true
-  def show? = true
+  def index?
+    true
+  end
+
+  def show?
+    true
+  end
 end

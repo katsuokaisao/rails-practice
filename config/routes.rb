@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     get 'moderators/password', to: 'moderators/registrations#password', as: :edit_moderator_password
   end
 
-  namespace :my do
+  namespace :users do
     resources :invitations, only: %i[index] do
       member do
         get :accept

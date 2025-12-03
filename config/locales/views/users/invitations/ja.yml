@@ -1,6 +1,6 @@
 ---
 ja:
-  my:
+  users:
     invitations:
       accept:
         display_name_hint: このテナント内での表示名を入力してください（後から変更できます）

@@ -212,13 +212,13 @@ RSpec.describe '退会機能', type: :system do
 
       visit root_path
 
-      within('.tenant-section', text: '所属テナント') do
+      within('.tenant-section', text: /\A所属テナント/) do
         expect(page).not_to have_content('テナントA')
         expect(page).to have_content('テナントB')
         expect(page).to have_content('テナントC')
       end
 
-      within('.tenant-section', text: 'その他のテナント') do
+      within('.tenant-section', text: '未所属テナント') do
         expect(page).to have_content('テナントA')
       end
     end

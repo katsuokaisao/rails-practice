@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module My
+module Users
   class InvitationsPolicy < ApplicationPolicy
     def index?
       user?

@@ -23,7 +23,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     logout
     login_as invited_user
 
-    visit my_invitations_path
+    visit users_invitations_path
     expect(page).to have_content('テストテナント')
 
     click_link '招待を受ける'
@@ -42,14 +42,14 @@ RSpec.describe 'テナント招待機能', type: :system do
 
     login_as invited_user
 
-    visit my_invitations_path
+    visit users_invitations_path
     expect(page).to have_content('テストテナント')
 
     accept_confirm do
       click_button '拒否する'
     end
 
-    expect(page).to have_current_path(my_invitations_path)
+    expect(page).to have_current_path(users_invitations_path)
     expect(page).not_to have_content('テストテナント')
     expect(invitation.reload.status).to eq('rejected')
   end
@@ -95,7 +95,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
 
     login_as invited_user
-    visit my_invitations_path
+    visit users_invitations_path
 
     click_link '招待を受ける'
     fill_in '表示名', with: '既存の表示名'
@@ -108,7 +108,7 @@ RSpec.describe 'テナント招待機能', type: :system do
     create(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user, status: :pending)
 
     login_as invited_user
-    visit my_invitations_path
+    visit users_invitations_path
 
     click_link '招待を受ける'
     fill_in '表示名', with: 'あ' * 51
@@ -132,7 +132,7 @@ RSpec.describe 'テナント招待機能', type: :system do
                                  status: :pending)
 
       login_as invited_user_multi
-      visit my_invitations_path
+      visit users_invitations_path
 
       click_link '招待を受ける'
       fill_in '表示名', with: '新メンバー'

@@ -6,25 +6,25 @@ class TenantsController < ApplicationController
   def index
     if user_signed_in?
       member_tenants_relation = current_user.subscribed_tenants.order(id: :desc)
-      other_tenants_relation = Tenant.where.not(id: member_tenants_relation.pluck(:id)).order(id: :desc)
+      no_member_tenants_relation = Tenant.where.not(id: member_tenants_relation.pluck(:id)).order(id: :desc)
     else
       member_tenants_relation = Tenant.none
-      other_tenants_relation = Tenant.order(id: :desc)
+      no_member_tenants_relation = Tenant.order(id: :desc)
     end
 
-    @member_pagination = Pagination::Paginator.new(
+    @member_tenants_pagination = Pagination::Paginator.new(
       relation: member_tenants_relation,
-      page: params[:member_page],
+      page: params[:member_tenants_page],
       per: params[:per] || 10
     ).call
 
-    @other_pagination = Pagination::Paginator.new(
-      relation: other_tenants_relation,
-      page: params[:other_page],
+    @no_member_tenants_pagination = Pagination::Paginator.new(
+      relation: no_member_tenants_relation,
+      page: params[:no_member_tenants_page],
       per: params[:per] || 10
     ).call
 
-    return unless @member_pagination.out_of_bounds || @other_pagination.out_of_bounds
+    return unless @member_tenants_pagination.out_of_bounds || @no_member_tenants_pagination.out_of_bounds
 
     redirect_to root_path, alert: t('flash.actions.out_of_bounds')
   end

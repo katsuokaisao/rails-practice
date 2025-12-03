@@ -1,6 +1,6 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: my_invitations_path %>
+    <%= render 'shared/back_button', url: users_invitations_path %>
 
     <h1><%= t('.title', tenant_name: @invitation.tenant.name) %></h1>
 
@@ -15,7 +15,7 @@
     </div>
 
     <%= form_with model: @tenant_membership,
-                  url: accept_my_invitation_path(@invitation),
+                  url: accept_users_invitation_path(@invitation),
                   html: { "data-turbo": "false" } do |f| %>
 
       <%= render partial: "shared/form_errors", locals: { model: @tenant_membership } %>
@@ -31,7 +31,7 @@
 
       <div class="actions">
         <%= f.submit t('.submit') %>
-        <%= link_to t('action.cancel'), my_invitations_path, class: "btn btn-secondary" %>
+        <%= link_to t('action.cancel'), users_invitations_path, class: "btn btn-secondary" %>
       </div>
     <% end %>
   </section>

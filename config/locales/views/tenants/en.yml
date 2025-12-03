@@ -3,8 +3,8 @@ en:
   tenants:
     index:
       member_tenants: Member Tenants
+      no_member_tenants: Non-member Tenants
       no_tenants: No tenants registered
-      other_tenants: Other Tenants
       title: Tenant List
     show:
       action:

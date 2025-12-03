@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module My
+module Users
   class InvitationsController < ApplicationController
     before_action :set_invitation, except: %i[index]
     before_action -> { authorize_action!(@invitation) }
@@ -40,7 +40,7 @@ module My
       else
         flash[:alert] = t('flash.actions.update.alert', resource: TenantInvitation.model_name.human)
       end
-      redirect_to my_invitations_path
+      redirect_to users_invitations_path
     end
 
     private
@@ -56,15 +56,15 @@ module My
     def verify_invitation_pending
       return if @invitation.status_pending?
 
-      flash[:alert] = t('my.invitations.errors.already_processed')
-      redirect_to my_invitations_path
+      flash[:alert] = t('users.invitations.errors.already_processed')
+      redirect_to users_invitations_path
     end
 
     def verify_not_member
       return unless @invitation.already_member?
 
-      flash[:alert] = t('my.invitations.errors.already_member')
-      redirect_to my_invitations_path
+      flash[:alert] = t('users.invitations.errors.already_member')
+      redirect_to users_invitations_path
     end
   end
 end

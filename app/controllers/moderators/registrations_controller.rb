@@ -84,7 +84,7 @@ module Moderators
     def account_update_params
       permitted =
         case update_kind
-        when :profile  then %i[nickname time_zone]
+        when :profile  then %i[login_id time_zone]
         when :password then %i[current_password password password_confirmation]
         else []
         end
@@ -92,7 +92,7 @@ module Moderators
     end
 
     def configure_account_update_params
-      devise_parameter_sanitizer.permit(:account_update, keys: %i[nickname time_zone update_kind])
+      devise_parameter_sanitizer.permit(:account_update, keys: %i[login_id time_zone update_kind])
     end
 
     def update_resource(resource, params)

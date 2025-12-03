@@ -1,0 +1,14 @@
+---
+en:
+  tenants:
+    index:
+      member_tenants: Member Tenants
+      no_member_tenants: Non-member Tenants
+      no_tenants: No tenants registered
+      title: Tenant List
+    show:
+      action:
+        new: Create Topic
+      back_to_list: Back to Tenant List
+      description_title: Description
+      invite_member: Invite Member

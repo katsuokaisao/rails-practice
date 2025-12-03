@@ -1,0 +1,47 @@
+<div class="comment" id="comment-<%= comment.id %>">
+  <div class="comment-header">
+    <p><%= display_name_with_id(comment.author) %></p>
+  </div>
+  <%= render_comment_content(comment) %>
+  <div class="comment-footer">
+    <p>
+      <%= t('created_at') %> <%= l(comment.created_at, format: :default) %>
+    </p>
+    <div class="comment-actions">
+      <% if can_access?('tenants/comments', 'edit', comment) %>
+        <p>
+          <span class="material-icons">edit</span>
+          <%= link_to t('edit'), edit_tenant_comment_path(tenant_slug: current_tenant.slug, id: comment.id), class: "edit-link" %>
+        </p>
+      <% end %>
+      <% if can_access?('tenants/comment_histories', 'index', comment) %>
+        <p>
+          <span class="material-icons">history</span>
+          <%= link_to t('history'), tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: comment.id), class: "history-link" %>
+        </p>
+      <% end %>
+      <% if !comment.invisible? && can_access?('tenants/reports', 'new', comment) %>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.report_user'), new_tenant_report_path(
+            tenant_slug: current_tenant.slug,
+            format: :turbo_stream,
+            reportable_type: "user",
+            reportable_id: comment.author.id,
+            from_topic_id: comment.topic.id,
+          ), data: { turbo_prefetch: false } %>
+        </p>
+        <p>
+          <span class="material-icons">flag</span>
+          <%= link_to t('.hide_comment'), new_tenant_report_path(
+            tenant_slug: current_tenant.slug,
+            format: :turbo_stream,
+            reportable_type: "comment",
+            reportable_id: comment.id,
+            from_topic_id: comment.topic.id,
+          ), data: { turbo_prefetch: false } %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>

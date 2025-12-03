@@ -1,2 +1,0 @@
-web: env RUBY_DEBUG_OPEN=true RUBY_DEBUG_HOST=0.0.0.0 RUBY_DEBUG_PORT=12345 bin/rails server --binding=0.0.0.0 --port=3000
-js: yarn build --watch

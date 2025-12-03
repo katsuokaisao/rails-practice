@@ -15,5 +15,11 @@ ja:
         topic: お題
         topic_id: お題ID
         updated_at: 更新日時
+    errors:
+      models:
+        comment:
+          attributes:
+            tenant_id:
+              must_match_topic_tenant: はお題のテナントと一致する必要があります
     models:
       comment: コメント

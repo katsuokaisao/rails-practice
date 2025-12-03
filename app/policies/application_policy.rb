@@ -1,21 +1,42 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :user, :moderator, :record
+  attr_reader :user, :moderator, :tenant, :record
 
-  def initialize(user, moderator, record)
+  def initialize(user, moderator, tenant, record)
     @user = user
     @moderator = moderator
+    @tenant = tenant
     @record = record
   end
 
-  def index? = false
-  def show? = false
-  def new? = false
-  def edit? = false
-  def create? = false
-  def update? = false
-  def destroy? = false
+  def index?
+    false
+  end
+
+  def show?
+    false
+  end
+
+  def new?
+    false
+  end
+
+  def edit?
+    false
+  end
+
+  def create?
+    false
+  end
+
+  def update?
+    false
+  end
+
+  def destroy?
+    false
+  end
 
   private
 
@@ -24,12 +45,29 @@ class ApplicationPolicy
   # 同時ログインしている場合は、両ロールの権限をすべて付与する方針で基本的に良いと思う（＝最大権限）。
   # 同時ログインを許容しない場合は、only_user? または only_moderator? を利用して制御する。
   # 基本的に同時ログインはしないようにするという運用で良いと思う
-  def logged_in? = !!user || !!moderator
-  def user? = !!user
-  def moderator? = !!moderator
-  def unsuspended_user? = user? && !user.suspended?
-  def only_user? = !!user && !moderator?
-  def only_moderator? = !!moderator && !user?
+  def logged_in?
+    !!user || !!moderator
+  end
+
+  def user?
+    !!user
+  end
+
+  def moderator?
+    !!moderator
+  end
+
+  def unsuspended_user?
+    user? && tenant && !user.suspended?(tenant)
+  end
+
+  def only_user?
+    !!user && !moderator?
+  end
+
+  def only_moderator?
+    !!moderator && !user?
+  end
 
   def owner?
     return false unless user?
@@ -45,5 +83,23 @@ class ApplicationPolicy
     return report.reportable == user if report.reportable_type_user?
 
     false
+  end
+
+  def tenant_member?
+    return false unless user? && tenant
+
+    user.member_of?(tenant)
+  end
+
+  def moderator_tenant_member?
+    return false unless moderator? && tenant
+
+    moderator.member_of?(tenant)
+  end
+
+  def membership_owner?
+    return false unless user? && tenant && record.is_a?(TenantMembership)
+
+    record.user == user && record.tenant == tenant
   end
 end

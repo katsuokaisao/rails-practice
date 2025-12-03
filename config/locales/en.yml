@@ -4,9 +4,15 @@ en:
     cancel: Cancel
     close: Close
     compare: Compare Selected Versions
+    create: Create New
+    delete: Delete
+    edit: Edit
     select: Please, select
     settle: Confirm
     settle_confirm: Are you sure you want to confirm?
+  active_status:
+    active: Active
+    inactive: Inactive
   activerecord:
     errors:
       messages:
@@ -18,6 +24,17 @@ en:
     moderator_login: Moderator Login
     signup: Sign Up
   author: 'Author:'
+  ban_reasons:
+    system:
+      harassment: Harassment
+      obscene: Obscene/Violent Content
+      other: Other
+      spam: Spam/Advertisement
+    system_descriptions:
+      harassment: Harassment or defamation of other users
+      obscene: Obscene or violent content
+      other: Other inappropriate behavior
+      spam: Spam or inappropriate advertisement
   comment_count: 'Comments:'
   created_at: 'Created at:'
   date:
@@ -43,10 +60,12 @@ en:
         alert: "%{resource} could not be destroyed."
         notice: "%{resource} was successfully destroyed."
       out_of_bounds: Out of bounds request.
+      tenant_incorrect: Tenant is not correctly specified.
       update:
         alert: "%{resource} could not be updated."
         notice: "%{resource} was successfully updated."
   header:
+    ban_reasons: Ban Reasons
     logout: Logout
     password: Password
     profile: Profile

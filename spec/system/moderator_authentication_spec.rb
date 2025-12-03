@@ -3,28 +3,29 @@
 require 'rails_helper'
 
 RSpec.describe 'モデレーター認証', type: :system do
-  let(:moderator) { create(:moderator, password: 'password123', password_confirmation: 'password123') }
+  let(:tenant) { create(:tenant) }
+  let(:moderator) { create(:moderator, tenant: tenant, password: 'password123', password_confirmation: 'password123') }
 
   describe 'モデレーターログイン' do
     it '正しい認証情報でログインできる' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
       expect(page).to have_content('ログインしました')
-      expect(current_path).to eq(reports_path)
+      expect(current_path).to eq(tenant_reports_path(tenant_slug: tenant.slug))
     end
 
     it '間違ったパスワードではログインできない' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'wrong_password'
       click_button 'ログイン'
 
-      expect(page).to have_content('ニックネームまたはパスワードが違います')
+      expect(page).to have_content('ログインIDまたはパスワードが違います')
     end
   end
 
@@ -32,7 +33,7 @@ RSpec.describe 'モデレーター認証', type: :system do
     it 'ログイン後にログアウトできる' do
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: moderator.nickname
+      fill_in 'moderator_login_id', with: moderator.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
@@ -50,11 +51,11 @@ RSpec.describe 'モデレーター認証', type: :system do
 
       visit new_moderator_session_path
 
-      fill_in 'moderator_nickname', with: user.nickname
+      fill_in 'moderator_login_id', with: user.login_id
       fill_in 'moderator_password', with: 'password123'
       click_button 'ログイン'
 
-      expect(page).to have_content('ニックネームまたはパスワードが違います')
+      expect(page).to have_content('ログインIDまたはパスワードが違います')
     end
   end
 end

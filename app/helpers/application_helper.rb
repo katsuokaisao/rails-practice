@@ -21,8 +21,9 @@ module ApplicationHelper
 
     return content_tag(:p, 'このコメントは非表示です。', class: ['hidden-comment-info']) if comment.author != current_user
 
-    if comment.author.suspended?
-      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date}です。",
+    tenant = comment.topic.tenant
+    if comment.author.suspended?(tenant)
+      content_tag(:p, "規約違反の可能性があるため、アカウントが停止されています。停止期間は#{comment.author.suspended_until_date(tenant)}です。",
                   class: ['hidden-comment-warning'])
     else
       content_tag(:p, '規約違反の可能性があるため、あなたのコメントは非表示になりました。', class: ['hidden-comment-warning'])
@@ -33,8 +34,32 @@ module ApplicationHelper
     policy_class_name = "#{controller.to_s.camelize}Policy"
 
     policy_class = policy_class_name.constantize
-    policy = policy_class.new(current_user, current_moderator, record)
+    policy = policy_class.new(current_user, current_moderator, current_tenant, record)
 
     policy.public_send("#{action}?")
+  end
+
+  def only_user_signed_in?
+    user_signed_in? && !moderator_signed_in?
+  end
+
+  def pending_invitations_count
+    return 0 unless user_signed_in?
+
+    current_user.pending_invitations_count
+  end
+
+  def display_name(user)
+    user.display_name_for(current_tenant)
+  end
+
+  def display_name_with_id(user)
+    name = display_name(user)
+
+    content_tag(:span, class: 'user-info') do
+      concat(content_tag(:span, name, class: 'user-name'))
+      concat(' ')
+      concat(content_tag(:span, "(ID: #{user.id})", class: 'user-id'))
+    end
   end
 end

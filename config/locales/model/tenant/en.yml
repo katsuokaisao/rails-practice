@@ -1,0 +1,19 @@
+---
+en:
+  activerecord:
+    attributes:
+      tenant:
+        active: Active
+        created_at: Created At
+        description: Description
+        name: Name
+        slug: slug
+        updated_at: Updated At
+    errors:
+      models:
+        tenant:
+          attributes:
+            slug:
+              invalid: can only contain lowercase letters, numbers, and hyphens
+    models:
+      tenant: Tenant

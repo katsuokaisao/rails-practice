@@ -11,7 +11,7 @@ create_table 'comments', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.datetime 'updated_at',               null: false
 
   t.index %w[topic_id created_at], name: 'idx_comments_topic_id_created_at'
-  t.index ['author_id'], name: 'idx_comments_author_id'
+  t.index %w[author_id], name: 'idx_comments_author_id'
 end
 
 add_foreign_key 'comments', 'topics', column: 'topic_id'

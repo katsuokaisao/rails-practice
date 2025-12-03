@@ -1,0 +1,53 @@
+<article class="layout-center">
+  <section class="form-card">
+    <%= render 'shared/back_button', url: tenant_ban_reasons_path(tenant_slug: current_tenant.slug) %>
+    <h2><%= t("title.#{ban_reason.new_record? ? 'new' : 'edit'}", resource: BanReason.model_name.human) %></h2>
+
+    <%= form_with model: [current_tenant, ban_reason],
+                  url: ban_reason.new_record? ? tenant_ban_reasons_path(tenant_slug: current_tenant.slug) : tenant_ban_reason_path(tenant_slug: current_tenant.slug, id: ban_reason.id) do |f| %>
+      <%= render partial: "shared/form_errors", locals: { model: ban_reason } %>
+
+      <% if ban_reason.system? %>
+        <div class="notice-box">
+          <p><%= t('.system_reason_edit_note') %></p>
+        </div>
+      <% end %>
+
+      <% if ban_reason.system? %>
+        <div class="field">
+          <%= f.label :name %>
+          <%= f.text_field :name, readonly: true %>
+        </div>
+
+        <div class="field">
+          <%= f.label :description %>
+          <%= f.text_area :description, readonly: true %>
+        </div>
+
+        <div class="field-checkbox">
+          <%= f.label :active %>
+          <%= f.check_box :active %>
+        </div>
+      <% else %>
+        <div class="field">
+          <%= f.label :name %>
+          <%= f.text_field :name %>
+        </div>
+
+        <div class="field">
+          <%= f.label :description %>
+          <%= f.text_area :description %>
+        </div>
+
+        <div class="field-checkbox">
+          <%= f.label :active %>
+          <%= f.check_box :active %>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <% end %>
+  </section>
+</article>

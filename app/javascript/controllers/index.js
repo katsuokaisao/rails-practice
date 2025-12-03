@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import ClipboardController from "./clipboard_controller"
+application.register("clipboard", ClipboardController)
+
 import CloseModalController from "./close_modal_controller"
 application.register("close-modal", CloseModalController)
 

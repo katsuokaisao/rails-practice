@@ -1,0 +1,19 @@
+---
+en:
+  activerecord:
+    attributes:
+      ban_reason:
+        active: Active
+        created_at: Created At
+        description: Description
+        name: Name
+        system: System Reason
+        tenant: Tenant
+        tenant_id: Tenant ID
+        updated_at: Updated At
+    errors:
+      models:
+        ban_reason:
+          not_editable: System reason cannot be edited
+    models:
+      ban_reason: Ban Reason

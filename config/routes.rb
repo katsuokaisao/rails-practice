@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: 'topics#index'
-
   devise_for :users, controllers: {
     sessions: 'users/sessions',
     registrations: 'users/registrations'
@@ -35,18 +33,39 @@ Rails.application.routes.draw do
     get 'moderators/password', to: 'moderators/registrations#password', as: :edit_moderator_password
   end
 
-  resources :topics, except: %i[destroy] do
-    resources :comments, only: %i[create edit update]
-  end
-
-  resources :comments, only: %i[] do
-    resources :histories, controller: 'comment_histories', only: %i[index] do
-      get 'compare', on: :collection
+  namespace :users do
+    resources :invitations, only: %i[index] do
+      member do
+        get :accept
+        post :accept, action: :create_acceptance
+        post :reject
+      end
     end
   end
 
-  resources :reports, only: %i[index new create]
-  resources :decisions, only: %i[index new create]
-
   get 'up' => 'rails/health#show', as: :rails_health_check
+
+  root to: 'tenants#index'
+  scope '/:tenant_slug', as: :tenant do
+    get '/', to: 'tenants#show', as: ''
+
+    scope module: 'tenants' do
+      resources :invitations, only: %i[new create]
+      resource :membership, only: %i[edit update]
+
+      resources :topics, except: %i[index destroy] do
+        resources :comments, only: %i[create edit update], shallow: true
+      end
+
+      resources :comments, only: %i[] do
+        resources :histories, controller: 'comment_histories', only: %i[index] do
+          get 'compare', on: :collection
+        end
+      end
+
+      resources :reports, only: %i[index new create]
+      resources :decisions, only: %i[index new create]
+      resources :ban_reasons, except: %i[show]
+    end
+  end
 end

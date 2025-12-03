@@ -3,69 +3,78 @@
 require 'rails_helper'
 
 RSpec.describe '審査', type: :system do
+  let!(:tenant) { create(:tenant) }
   let!(:user) { create(:user) }
   let!(:reported_user) { create(:user) }
-  let!(:moderator) { create(:moderator) }
-  let!(:topic) { create(:topic, author: user, title: 'テストトピック') }
+  let!(:moderator) { create(:moderator, tenant: tenant) }
+  let!(:user_membership) { create(:tenant_membership, tenant: tenant, user: user, display_name: 'ユーザー1') }
+  let!(:reported_user_membership) do
+    create(:tenant_membership, tenant: tenant, user: reported_user, display_name: 'ユーザー2')
+  end
+  let!(:topic) { create(:topic, tenant: tenant, author: user, title: 'テストトピック') }
   let!(:comment) { create(:comment, topic: topic, author: reported_user, content: '報告対象コメント') }
   let!(:comment_report) do
-    create(:report, reportable: comment, reporter: user, reason_type: 'spam')
+    create(:report, tenant: tenant, reportable: comment, reporter: user)
   end
   let!(:user_report) do
-    create(:report, reportable: reported_user, reporter: user, reason_type: 'harassment')
+    create(:report, tenant: tenant, reportable: reported_user, reporter: user)
   end
-  let!(:user_report_decision) { create(:decision, :suspend_user, report: user_report, decider: moderator) }
-  let!(:comment_report_decision) { create(:decision, :hide_comment, report: comment_report, decider: moderator) }
+  let!(:user_report_decision) do
+    create(:decision, :suspend_user, tenant: tenant, report: user_report, decider: moderator)
+  end
+  let!(:comment_report_decision) do
+    create(:decision, :hide_comment, tenant: tenant, report: comment_report, decider: moderator)
+  end
 
   scenario '未ログインユーザーが審査一覧を閲覧できない' do
-    visit decisions_path
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario '一般ユーザーが審査一覧を閲覧できない' do
     login_as(user)
-    visit decisions_path
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('アクセスが禁止されています。')
   end
 
   scenario 'モデレーターが審査一覧を閲覧できる' do
     login_as(moderator, scope: :moderator)
-    visit decisions_path
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('審査 一覧')
 
     expect(page).to have_css('li.active a', text: 'コメント通報審査')
     within('.decisions-container') do
-      expect(page).to have_content(comment_report_decision.report.reporter.nickname)
-      expect(page).to have_content(comment_report_decision.report.enum_i18n(:reason_type))
+      expect(page).to have_content(user_membership.display_name)
+      expect(page).to have_content(comment_report_decision.report.ban_reason.name)
       expect(page).to have_content(comment_report_decision.report.reason_text)
       expect(page).to have_content(comment_report_decision.report.reportable.topic.title)
-      expect(page).to have_content(comment_report_decision.report.reportable.author.nickname)
+      expect(page).to have_content(reported_user_membership.display_name)
       expect(page).to have_content(comment_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(comment_report_decision.note)
-      expect(page).to have_content(comment_report_decision.decider.nickname)
+      expect(page).to have_content(comment_report_decision.decider.login_id)
       expect(page).to have_content(comment_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
 
     click_link 'ユーザー通報審査'
     expect(page).to have_css('li.active a', text: 'ユーザー通報審査')
     within('.decisions-container') do
-      expect(page).to have_content(user_report_decision.report.reporter.nickname)
-      expect(page).to have_content(user_report_decision.report.enum_i18n(:reason_type))
+      expect(page).to have_content(user_membership.display_name)
+      expect(page).to have_content(user_report_decision.report.ban_reason.name)
       expect(page).to have_content(user_report_decision.report.reason_text)
-      expect(page).to have_content(user_report_decision.report.reportable.nickname)
+      expect(page).to have_content(reported_user_membership.display_name)
       expect(page).to have_content(user_report_decision.enum_i18n(:decision_type))
       expect(page).to have_content(user_report_decision.note)
       expect(page).to have_content(user_report_decision.suspended_until.strftime('%Y/%m/%d %H:%M'))
-      expect(page).to have_content(user_report_decision.decider.nickname)
+      expect(page).to have_content(user_report_decision.decider.login_id)
       expect(page).to have_content(user_report_decision.created_at.strftime('%Y/%m/%d %H:%M'))
     end
   end
 
   scenario '審査のページネーションが機能する' do
-    create_list(:decision, 21, :hide_comment, decider: moderator)
+    create_list(:decision, 21, :hide_comment, tenant: tenant, decider: moderator)
 
     login_as(moderator, scope: :moderator)
-    visit decisions_path
+    visit tenant_decisions_path(tenant_slug: tenant.slug)
     expect(page).to have_content('審査 一覧')
 
     within('.pagination') do
@@ -76,7 +85,36 @@ RSpec.describe '審査', type: :system do
       expect(page).to have_content('コメントを非表示')
     end
 
-    visit decisions_path(page: 999)
+    visit tenant_decisions_path(tenant_slug: tenant.slug, page: 999)
     expect(page).to have_content('範囲外のリクエストです。')
+  end
+
+  context 'マルチテナントのデータ分離' do
+    let!(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+    let!(:tenant_b) { create(:tenant, slug: 'tenant-b') }
+    let!(:moderator_a) { create(:moderator, tenant: tenant_a) }
+    let!(:moderator_b) { create(:moderator, tenant: tenant_b) }
+    let!(:user_a) { create(:user) }
+    let!(:membership_a) { create(:tenant_membership, tenant: tenant_a, user: user_a, display_name: 'ユーザーA') }
+    let!(:topic_a) { create(:topic, tenant: tenant_a, author: user_a) }
+    let!(:comment_a) { create(:comment, topic: topic_a, author: user_a) }
+    let!(:report_a) { create(:report, :for_comment, tenant: tenant_a, reportable: comment_a) }
+    let!(:decision_a) do
+      create(:decision, :hide_comment, tenant: tenant_a, report: report_a, decider: moderator_a, note: 'テナントAの審査')
+    end
+
+    scenario 'テナントAの審査結果がテナントBの審査一覧に表示されない' do
+      login_as(moderator_b, scope: :moderator)
+
+      visit tenant_decisions_path(tenant_slug: tenant_b.slug)
+      expect(page).not_to have_content('テナントAの審査')
+    end
+
+    scenario 'モデレーターAはテナントBにアクセスできない' do
+      login_as(moderator_a, scope: :moderator)
+
+      visit tenant_decisions_path(tenant_slug: tenant_b.slug)
+      expect(page).to have_content('アクセスが禁止されています')
+    end
   end
 end

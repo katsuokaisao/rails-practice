@@ -15,5 +15,11 @@ en:
         topic: Topic
         topic_id: Topic ID
         updated_at: Updated At
+    errors:
+      models:
+        comment:
+          attributes:
+            tenant_id:
+              must_match_topic_tenant: must match the topic's tenant
     models:
       comment: Comment

@@ -30,7 +30,7 @@ Metrics/BlockLength:
     - 'config/environments/**/*'
 
 Layout/LineLength:
-  Max: 120
+  Max: 130
   Exclude:
     - 'config/initializers/**/*'
 
@@ -38,14 +38,24 @@ Metrics/MethodLength:
   Max: 20
   Exclude:
     - 'spec/**/*'
+    - 'lib/sample_creator.rb'
 
 Metrics/AbcSize:
   Max: 17
   Exclude:
     - 'app/controllers/**/*'
+    - 'lib/sample_creator.rb'
 
 Metrics/ClassLength:
-  Max: 100
+  Max: 120
+  Exclude:
+    - 'lib/sample_creator.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/sample_creator.rb'
+
+Metrics/PerceivedComplexity:
   Exclude:
     - 'lib/sample_creator.rb'
 

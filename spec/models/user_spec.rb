@@ -4,21 +4,25 @@
 #
 # Table name: users
 #
-#  id                 :bigint           not null, primary key
-#  encrypted_password :string(255)      not null
-#  nickname           :string(255)      not null
-#  suspended_until    :datetime
-#  time_zone          :string(255)      default("Tokyo"), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                        :bigint           not null, primary key
+#  encrypted_password        :string(255)      not null
+#  pending_invitations_count :integer          default(0), not null
+#  time_zone                 :string(255)      default("Tokyo"), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  login_id                  :string(255)      not null
 #
 # Indexes
 #
-#  idx_users_nickname  (nickname) UNIQUE
+#  idx_users_login_id  (login_id) UNIQUE
 #
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  let(:user) { create(:user) }
+  let(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+  let(:tenant_b) { create(:tenant, slug: 'tenant-b') }
+
   describe 'バリデーション' do
     context '新規作成時' do
       it '有効な場合は保存できる' do
@@ -26,28 +30,28 @@ RSpec.describe User, type: :model do
         expect(user).to be_valid
       end
 
-      it 'nickname が必須' do
-        user = build(:user, nickname: nil)
+      it 'login_id が必須' do
+        user = build(:user, login_id: nil)
         expect(user).to be_invalid
-        expect(user.errors[:nickname]).to be_present
+        expect(user.errors[:login_id]).to be_present
       end
 
-      it 'nickname は一意' do
-        create(:user, nickname: 'dup')
-        user = build(:user, nickname: 'dup')
+      it 'login_id は一意' do
+        create(:user, login_id: 'dup')
+        user = build(:user, login_id: 'dup')
         expect(user).to be_invalid
-        expect(user.errors[:nickname]).to be_present
+        expect(user.errors[:login_id]).to be_present
       end
 
-      it 'nickname の長さが範囲外だと無効' do
-        too_short = build(:user, nickname: '')
-        too_long  = build(:user, nickname: 'a' * 51)
+      it 'login_id の長さが範囲外だと無効' do
+        too_short = build(:user, login_id: '')
+        too_long  = build(:user, login_id: 'a' * 51)
 
         expect(too_short).to be_invalid
-        expect(too_short.errors[:nickname]).to be_present
+        expect(too_short.errors[:login_id]).to be_present
 
         expect(too_long).to be_invalid
-        expect(too_long.errors[:nickname]).to be_present
+        expect(too_long.errors[:login_id]).to be_present
       end
 
       it 'password は必須' do
@@ -101,7 +105,7 @@ RSpec.describe User, type: :model do
       let!(:user) { create(:user) }
 
       it 'password を変更しない更新は password がなくても更新できる' do
-        expect(user.update(nickname: 'renamed', password: '', password_confirmation: '')).to be true
+        expect(user.update(login_id: 'renamed', password: '', password_confirmation: '')).to be true
       end
 
       it 'password_confirmation だけは無効' do
@@ -123,6 +127,42 @@ RSpec.describe User, type: :model do
       it 'パスワードの長さが最小未満だと無効' do
         user.update(password: 'A1!a', password_confirmation: 'A1!a')
         expect(user.errors[:password]).to be_present
+      end
+    end
+  end
+
+  describe '#member_of?' do
+    context 'ユーザーがテナントのメンバーの場合' do
+      before do
+        create(:tenant_membership, user: user, tenant: tenant_a)
+      end
+
+      it 'trueを返す' do
+        expect(user.member_of?(tenant_a)).to be true
+      end
+    end
+
+    context 'ユーザーがテナントのメンバーでない場合' do
+      it 'falseを返す' do
+        expect(user.member_of?(tenant_a)).to be false
+      end
+    end
+  end
+
+  describe '#display_name_for' do
+    context 'ユーザーがテナントのメンバーの場合' do
+      before do
+        create(:tenant_membership, user: user, tenant: tenant_a, display_name: '山田太郎')
+      end
+
+      it 'そのテナントでの表示名を返す' do
+        expect(user.display_name_for(tenant_a)).to eq('山田太郎')
+      end
+    end
+
+    context 'ユーザーがテナントのメンバーでない場合' do
+      it '空文字列を返す' do
+        expect(user.display_name_for(tenant_a)).to eq('')
       end
     end
   end

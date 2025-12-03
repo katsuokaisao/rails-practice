@@ -1,0 +1,14 @@
+---
+ja:
+  tenants:
+    index:
+      member_tenants: 所属テナント
+      no_member_tenants: 未所属テナント
+      no_tenants: テナントが登録されていません
+      title: テナント一覧
+    show:
+      action:
+        new: お題を投稿する
+      back_to_list: テナント一覧に戻る
+      description_title: 説明
+      invite_member: メンバーを招待

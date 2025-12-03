@@ -1,0 +1,11 @@
+---
+ja:
+  tenants:
+    ban_reasons:
+      form:
+        system_reason_edit_note: システムBAN理由は有効/無効の切り替えのみ可能です
+      index:
+        confirm_destroy: 本当に削除しますか？
+        custom_reasons: カスタムBAN理由
+        no_custom_reasons: カスタムBAN理由はまだ登録されていません。
+        system_reasons: システムBAN理由

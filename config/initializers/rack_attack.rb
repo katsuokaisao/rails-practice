@@ -20,6 +20,30 @@ module Rack
       req.ip if req.path.match?(/reports/) && req.post?
     end
 
+    throttle('req/ip/user_sign_up', limit: 5, period: 1.hour) do |req|
+      req.ip if req.path == '/users' && req.post?
+    end
+
+    throttle('req/ip/user_sign_up/daily', limit: 10, period: 1.day) do |req|
+      req.ip if req.path == '/users' && req.post?
+    end
+
+    throttle('req/ip/user_profile_update', limit: 10, period: 1.hour) do |req|
+      req.ip if req.path == '/users' && (req.put? || req.patch?)
+    end
+
+    throttle('req/ip/user_profile_update/daily', limit: 20, period: 1.day) do |req|
+      req.ip if req.path == '/users' && (req.put? || req.patch?)
+    end
+
+    throttle('req/ip/moderator_profile_update', limit: 10, period: 1.hour) do |req|
+      req.ip if req.path == '/moderators' && (req.put? || req.patch?)
+    end
+
+    throttle('req/ip/moderator_profile_update/daily', limit: 20, period: 1.day) do |req|
+      req.ip if req.path == '/moderators' && (req.put? || req.patch?)
+    end
+
     throttle('req/user/contents', limit: 30, period: 10.minutes) do |req|
       user_id = req.env['warden']&.user&.id
       user_id if user_id && req.path.match?(/topics|comments|reports/) && (req.post? || req.put? || req.patch?)

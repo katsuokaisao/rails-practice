@@ -1,6 +1,6 @@
 <li class="topic-item">
     <div>
-        <%= link_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: topic.id) do %>
+        <%= link_to tenant_topic_path(tenant_slug: current_tenant.slug, id: topic.id) do %>
             <h3><%= topic.title %></h3>
         <% end %>
         <div class="topic-details">

@@ -3,20 +3,13 @@
     <div class="tenant-detail-title-wrapper">
       <h1 class="text-title"><%= @tenant.name %></h1>
       <div class="tenant-detail-identifier-wrapper">
-        <span class="text-caption">@<%= @tenant.identifier %></span>
-        <button class="icon-btn"
-                data-controller="clipboard"
-                data-clipboard-text-value="<%= @tenant.identifier %>"
-                data-action="click->clipboard#copy">
-          <span class="material-icons" data-clipboard-target="icon">content_copy</span>
-          <span class="material-icons hidden" data-clipboard-target="successIcon">check</span>
-        </button>
+        <span class="text-caption">@<%= @tenant.slug %></span>
       </div>
     </div>
     <% if can_access?('tenants/invitations', 'new') %>
       <div class="tenant-detail-actions">
         <%= link_to t('.invite_member'),
-                    new_tenant_invitation_path(tenant_slug: @tenant.identifier),
+                    new_tenant_invitation_path(tenant_slug: @tenant.slug),
                     class: "btn-link" %>
       </div>
     <% end %>
@@ -38,7 +31,7 @@
     <% if can_access?('tenants/topics', 'new') %>
       <div class="topic-actions">
         <%= link_to t('.action.new'),
-                    new_tenant_topic_path(tenant_slug: current_tenant.identifier),
+                    new_tenant_topic_path(tenant_slug: current_tenant.slug),
                     class: "btn-link" %>
       </div>
     <% end %>

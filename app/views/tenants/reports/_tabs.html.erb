@@ -1,0 +1,12 @@
+<div class="reports-tabs" data-controller="reports">
+  <ul class="tabs-list">
+    <li class="<%= current_tab == 'comment' ? 'active' : '' %>">
+      <%= link_to t('.comment_reports_title'),
+                  tenant_reports_path(tenant_slug: current_tenant.slug, reportable_type: 'comment') %>
+    </li>
+    <li class="<%= current_tab == 'user' ? 'active' : '' %>">
+      <%= link_to t('.user_reports_title'),
+                  tenant_reports_path(tenant_slug: current_tenant.slug, reportable_type: 'user') %>
+    </li>
+  </ul>
+</div>

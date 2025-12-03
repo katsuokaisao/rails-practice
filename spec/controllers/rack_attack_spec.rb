@@ -92,12 +92,13 @@ RSpec.describe 'Rack::Attack', type: :request do
     let(:reports_path) { '/reports' }
     let(:user) { create(:user) }
     let(:comment) { create(:comment) }
+    let(:ban_reason) { create(:ban_reason, tenant: comment.topic.tenant) }
     let(:params) do
       {
         report: {
           reportable_type: 'Comment',
           reportable_id: comment.id,
-          reason_type: 'harassment',
+          ban_reason_id: ban_reason.id,
           reason_text: 'テスト理由'
         }
       }

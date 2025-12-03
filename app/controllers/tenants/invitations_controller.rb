@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module Tenants
-  class InvitationsController < ApplicationController
-    before_action :require_tenant
+  class InvitationsController < BaseController
     before_action -> { authorize_action! }
 
     def new
@@ -15,7 +14,7 @@ module Tenants
 
       if @invitation.save
         flash[:notice] = t('.success', resource: TenantInvitation.model_name.human)
-        redirect_to tenant_path(tenant_slug: current_tenant.identifier)
+        redirect_to tenant_path(tenant_slug: current_tenant.slug)
       else
         render :new, status: :unprocessable_entity
       end

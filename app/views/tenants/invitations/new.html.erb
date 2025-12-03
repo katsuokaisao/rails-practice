@@ -1,11 +1,11 @@
 <article class="layout-center">
   <section class="form-card">
-    <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.identifier) %>
+    <%= render 'shared/back_button', url: tenant_path(tenant_slug: current_tenant.slug) %>
 
     <h1><%= t('.title') %></h1>
 
     <%= form_with model: @invitation,
-                  url: tenant_invitations_path(tenant_slug: current_tenant.identifier),
+                  url: tenant_invitations_path(tenant_slug: current_tenant.slug),
                   html: { "data-turbo": "false" } do |f| %>
 
       <%= render partial: "shared/form_errors", locals: { model: @invitation } %>

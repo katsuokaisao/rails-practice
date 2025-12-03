@@ -13,6 +13,7 @@ export default class extends Controller {
       }, 1000)
     }).catch(err => {
       console.error('コピーに失敗しました:', err)
+      window.alert('コピーに失敗しました。')
     })
   }
 

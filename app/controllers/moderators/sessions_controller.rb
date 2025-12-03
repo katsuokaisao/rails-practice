@@ -27,8 +27,8 @@ module Moderators
     #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
     # end
 
-    def after_sign_in_path_for(_resource)
-      reports_path
+    def after_sign_in_path_for(resource)
+      tenant_reports_path(tenant_slug: resource.tenant.slug)
     end
 
     def after_sign_out_path_for(_resource)

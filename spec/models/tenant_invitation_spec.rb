@@ -102,7 +102,7 @@ RSpec.describe TenantInvitation, type: :model do
   end
 
   describe 'インスタンスメソッド' do
-    describe '#accept!' do
+    describe '#accept' do
       let(:tenant) { create(:tenant, name: 'テストテナント') }
       let(:inviter) { create(:user) }
       let(:invited_user) { create(:user) }
@@ -116,65 +116,48 @@ RSpec.describe TenantInvitation, type: :model do
 
       context '正常系' do
         it 'TenantMembershipが作成され、ステータスがacceptedに変更され、display_nameが反映される' do
-          expect do
-            invitation.accept!(display_name: 'カスタム表示名')
-          end.to change(TenantMembership, :count).by(1)
-                                                 .and change { invitation.reload.status }.from('pending').to('accepted')
+          result = nil
+          tenant_membership = nil
 
-          membership = TenantMembership.find_by(tenant: tenant, user: invited_user)
-          expect(membership).to be_present
-          expect(membership.display_name).to eq('カスタム表示名')
+          expect do
+            result, tenant_membership = invitation.accept(display_name: 'カスタム表示名')
+          end.to change(TenantMembership, :count).by(1)
+             .and change { invitation.reload.status }.from('pending').to('accepted')
+
+          expect(result).to be true
+          expect(tenant_membership.display_name).to eq('カスタム表示名')
         end
       end
 
       context '異常系' do
-        it '無効なdisplay_nameの場合、エラーが発生する' do
-          expect do
-            invitation.accept!(display_name: '')
-          end.to raise_error(ActiveRecord::RecordInvalid)
+        it '無効なdisplay_nameの場合、falseを返しステータスは変更されない' do
+          result, tenant_membership = invitation.accept(display_name: '')
 
-          # メンバーシップが作成されていないことを確認
-          membership = TenantMembership.find_by(tenant: tenant, user: invited_user)
-          expect(membership).to be_nil
-
-          # ステータスも変更されていないことを確認
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
           expect(invitation.reload.status).to eq('pending')
         end
 
-        it '51文字のdisplay_nameでエラーが発生する' do
+        it '51文字のdisplay_nameでfalseを返す' do
           long_name = 'あ' * 51
-          expect do
-            invitation.accept!(display_name: long_name)
-          end.to raise_error(ActiveRecord::RecordInvalid)
 
-          # メンバーシップが作成されていないことを確認
-          membership = TenantMembership.find_by(tenant: tenant, user: invited_user)
-          expect(membership).to be_nil
+          result, tenant_membership = invitation.accept(display_name: long_name)
 
-          # ステータスも変更されていないことを確認
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
           expect(invitation.reload.status).to eq('pending')
         end
 
-        it 'ステータスがpending以外の場合はエラーが発生する' do
-          invitation.update!(status: :accepted)
-
-          expect do
-            invitation.accept!(display_name: '表示名')
-          end.to raise_error(ActiveRecord::RecordInvalid)
-
-          expect(invitation.errors[:status]).to include('はすでに保留中ではありません')
-        end
-
-        it '既にメンバーの場合はエラーが発生する' do
+        it '既にメンバーの場合はfalseを返す' do
+          # invitationを先に作成してからメンバーを作成（バリデーション回避）
           invitation
-
           create(:tenant_membership, tenant: tenant, user: invited_user, display_name: 'メンバー')
 
-          expect do
-            invitation.accept!(display_name: '表示名')
-          end.to raise_error(ActiveRecord::RecordInvalid)
+          result, tenant_membership = invitation.accept(display_name: '表示名2')
 
-          expect(invitation.errors[:invited_user_id]).to include('は既にメンバーです')
+          expect(result).to be false
+          expect(tenant_membership).not_to be_persisted
+          expect(invitation.reload.status).to eq('pending')
         end
       end
 
@@ -182,30 +165,25 @@ RSpec.describe TenantInvitation, type: :model do
         it '同時に受け入れようとした場合、片方だけが成功する' do
           threads = []
           results = []
+          mutex = Mutex.new
 
           2.times do |i|
             threads << Thread.new do
-              sleep 0.01 * i
-              begin
-                invitation.accept!(display_name: "表示名#{i}")
-                results << :success
-              rescue ActiveRecord::RecordInvalid
-                results << :error
-              end
+              result, _tenant_membership = invitation.accept(display_name: "表示名#{i}")
+              mutex.synchronize { results << result }
             end
           end
 
           threads.each(&:join)
 
-          expect(results.count(:success)).to eq(1)
-          expect(results.count(:error)).to eq(1)
-
+          expect(results.count(true)).to eq(1)
+          expect(results.count(false)).to eq(1)
           expect(TenantMembership.where(tenant: tenant, user: invited_user).count).to eq(1)
         end
       end
     end
 
-    describe '#reject!' do
+    describe '#reject' do
       let(:tenant) { create(:tenant) }
       let(:inviter) { create(:user) }
       let(:invited_user) { create(:user) }
@@ -215,45 +193,7 @@ RSpec.describe TenantInvitation, type: :model do
 
       context '正常系' do
         it 'ステータスがrejectedに変更される' do
-          invitation.reject!
-          expect(invitation.reload.status).to eq('rejected')
-        end
-      end
-
-      context '異常系' do
-        it 'ステータスがpending以外の場合はエラーが発生する' do
-          invitation.update!(status: :accepted)
-
-          expect do
-            invitation.reject!
-          end.to raise_error(ActiveRecord::RecordInvalid)
-
-          expect(invitation.errors[:status]).to include('はすでに保留中ではありません')
-        end
-      end
-
-      context '同時処理' do
-        it '同時に拒否しようとした場合、片方だけが成功する' do
-          threads = []
-          results = []
-
-          2.times do |i|
-            threads << Thread.new do
-              sleep 0.01 * i
-              begin
-                invitation.reject!
-                results << :success
-              rescue ActiveRecord::RecordInvalid
-                results << :error
-              end
-            end
-          end
-
-          threads.each(&:join)
-
-          expect(results.count(:success)).to eq(1)
-          expect(results.count(:error)).to eq(1)
-
+          expect(invitation.reject).to be true
           expect(invitation.reload.status).to eq('rejected')
         end
       end
@@ -299,7 +239,7 @@ RSpec.describe TenantInvitation, type: :model do
                                               status: :pending)
 
       expect do
-        invitation.accept!(display_name: '表示名')
+        invitation.accept(display_name: '表示名')
       end.to change { invited_user.reload.pending_invitations_count }.by(-1)
     end
 
@@ -308,7 +248,7 @@ RSpec.describe TenantInvitation, type: :model do
                                               status: :pending)
 
       expect do
-        invitation.reject!
+        invitation.reject
       end.to change { invited_user.reload.pending_invitations_count }.by(-1)
     end
 

@@ -1,8 +1,8 @@
 <section class="form-card">
-  <%= render 'shared/back_button', url: tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id) %>
+  <%= render 'shared/back_button', url: tenant_topic_path(tenant_slug: current_tenant.slug, id: @comment.topic.id) %>
   <h3><%= t('edit', resource: Comment.model_name.human) %></h3>
 
-  <%= form_with(model: [@topic, @comment], url: tenant_topic_comment_path(tenant_slug: current_tenant.identifier, topic_id: @topic.id, id: @comment.id), local: true) do |f| %>
+  <%= form_with(model: @comment, url: tenant_comment_path(tenant_slug: current_tenant.slug, id: @comment.id), local: true) do |f| %>
     <%= render partial: "shared/form_errors", locals: { model: @comment } %>
 
     <div class="field">

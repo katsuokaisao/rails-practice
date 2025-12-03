@@ -42,42 +42,24 @@ class TenantInvitation < ApplicationRecord
   }
   validate :validate_invited_user
 
-  scope :recent, -> { order(created_at: :desc) }
+  def accept(display_name:)
+    tenant_membership = invited_user.tenant_memberships.build(
+      tenant: tenant,
+      display_name: display_name
+    )
 
-  def accept!(display_name:)
-    with_lock do
-      unless status_pending?
-        errors.add(:status, :already_not_pending)
-        raise ActiveRecord::RecordInvalid, self
-      end
-
-      if already_member?
-        errors.add(:invited_user_id, :already_member)
-        raise ActiveRecord::RecordInvalid, self
-      end
-
-      invited_user.tenant_memberships.create!(
-        tenant: tenant,
-        display_name: display_name
-      )
+    transaction do
+      tenant_membership.save!
       status_accepted!
     end
+
+    [true, tenant_membership]
+  rescue ActiveRecord::RecordInvalid
+    [false, tenant_membership]
   end
 
-  def reject!
-    with_lock do
-      unless status_pending?
-        errors.add(:status, :already_not_pending)
-        raise ActiveRecord::RecordInvalid, self
-      end
-
-      if already_member?
-        errors.add(:invited_user_id, :already_member)
-        raise ActiveRecord::RecordInvalid, self
-      end
-
-      status_rejected!
-    end
+  def reject
+    status_rejected!
   end
 
   def already_member?

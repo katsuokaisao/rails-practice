@@ -8,7 +8,6 @@ class SampleCreator
   def create
     create_tenants
     create_users
-    create_suspend_users
     create_tenant_memberships
     create_tenant_invitations
     create_moderators
@@ -23,36 +22,27 @@ class SampleCreator
   private
 
   def create_tenants
+    puts 'Creating tenants...'
     200.times do |i|
       Tenant.create!(
         name: Faker::Company.name,
-        identifier: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
+        slug: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
         description: Faker::Lorem.sentence(word_count: 10)
       )
     end
   end
 
-  def create_moderators
-    FactoryBot.create_list(:moderator, 5)
-  end
-
   def create_users
+    puts 'Creating users...'
     FactoryBot.create_list(:user, 20)
   end
 
-  def create_suspend_users
-    5.times do
-      FactoryBot.create(:user, :suspended)
-    end
-  end
-
   def create_tenant_memberships
-    tenants = Tenant.all.to_a
+    puts 'Creating tenant memberships...'
+    tenants = Tenant.order(created_at: :desc).limit(20).to_a
     users = User.all.to_a
 
-    # 各ユーザーをランダムに複数のテナントに所属させる
     users.each do |user|
-      # ユーザーごとに5〜30個のテナントに所属
       membership_count = rand(5..30)
       selected_tenants = tenants.sample(membership_count)
 
@@ -69,19 +59,49 @@ class SampleCreator
     end
   end
 
-  def generate_unique_display_name(used_names)
-    loop do
-      name = Faker::Japanese::Name.name
-      return name unless used_names.include?(name)
+  def create_tenant_invitations
+    puts 'Creating tenant invitations...'
+    tenants = Tenant.all.to_a
+    users = User.all.to_a
+
+    tenants.each do |tenant|
+      members = tenant.members.to_a
+      non_members = users - members
+
+      next if members.empty? || non_members.empty?
+
+      invitation_count = [rand(3..5), non_members.count].min
+      invite_users = non_members.sample(invitation_count)
+
+      invite_users.each do |invited_user|
+        inviter = members.sample
+
+        TenantInvitation.create!(
+          tenant: tenant,
+          inviter: inviter,
+          invited_user: invited_user,
+          status: :pending
+        )
+      end
+    end
+  end
+
+  def create_moderators
+    puts 'Creating moderators...'
+    Tenant.order(created_at: :desc).limit(20).each do |tenant|
+      3.times do |i|
+        Moderator.create!(
+          login_id: "#{tenant.slug}_#{i + 1}",
+          password: 'password',
+          tenant: tenant
+        )
+      end
     end
   end
 
   def create_topics
-    tenants = Tenant.order(created_at: :desc).limit(50).to_a
-    puts "Creating topics for #{tenants.count} tenants..."
-
-    total_topics = 0
-
+    puts 'Creating topics...'
+    tenants = Tenant.order(created_at: :desc).limit(20).to_a
     tenants.each do |tenant|
       members = tenant.members.to_a
 
@@ -95,30 +115,19 @@ class SampleCreator
       topic_count.times do
         created_at = rand(60.days.ago..Time.current)
 
-        Topic.create!(
-          tenant: tenant,
+        tenant.topics.create!(
           author: members.sample,
           title: Faker::Book.title,
           created_at: created_at,
           updated_at: created_at
         )
-
-        total_topics += 1
       end
-
-      print '.'
     end
-
-    puts "\n✅ Created #{total_topics} topics across #{tenants.count} tenants"
   end
 
   def create_comments
-    tenants = Tenant.order(created_at: :desc).limit(50).to_a
-    puts "Creating comments for latest topics in #{tenants.count} tenants..."
-
-    total_comments = 0
-    total_topics = 0
-
+    puts 'Creating comments...'
+    tenants = Tenant.order(created_at: :desc).limit(20).to_a
     tenants.each do |tenant|
       topics = tenant.topics.order(created_at: :desc).limit(10).to_a
       members = tenant.members.to_a
@@ -133,22 +142,13 @@ class SampleCreator
         next
       end
 
-      comments, topics_count = create_comments_for_topics(topics, members)
-      total_comments += comments
-      total_topics += topics_count
-
-      print '.'
+      create_comments_for_topics(topics, members)
     end
-
-    puts "\n✅ Created #{total_comments} comments for #{total_topics} topics in #{tenants.count} tenants"
   end
 
   def create_comments_for_topics(topics, members)
-    comments_count = 0
-    topics_count = 0
-
     topics.each do |topic|
-      comment_count = rand(20..50)
+      comment_count = rand(20..30)
 
       comment_count.times do
         created_at = rand(topic.created_at..Time.current)
@@ -159,227 +159,233 @@ class SampleCreator
           created_at: created_at,
           updated_at: created_at
         )
-
-        comments_count += 1
       end
-
-      topics_count += 1
     end
-
-    [comments_count, topics_count]
   end
 
   def update_comments
-    puts 'Updating comments to create histories...'
-
+    puts 'Updating comments...'
     Comment.order('RAND()').limit(100).each do |comment|
       10.times do
         comment.update_content!(Faker::Lorem.paragraphs(number: rand(1..3)).join("\n"))
       end
-
-      print '.'
     end
-
-    puts "\n✅ Updated 100 comments (created ~1000 comment histories)"
   end
 
   def create_reports
-    comments = Comment.eager_load(:author).to_a
-    users = User.where(suspended_until: nil).last(5)
-    500.times do
+    puts 'Creating reports...'
+    tenants = Tenant.order(created_at: :desc).limit(20).to_a
+    tenants.each do |tenant|
+      create_reports_for_tenant(tenant)
+    end
+  end
+
+  def create_reports_for_tenant(tenant)
+    members = tenant.members.to_a
+    topics = tenant.topics.includes(:comments)
+
+    if members.empty?
+      puts "  ⚠️  Tenant '#{tenant.name}' has no members, skipping..."
+      return 0
+    end
+
+    if topics.empty?
+      puts "  ⚠️  Tenant '#{tenant.name}' has no topics, skipping..."
+      return 0
+    end
+
+    report_count = rand(10..20)
+
+    report_count.times do
       type = %w[Comment User].sample
       case type
       when 'Comment'
-        reporter = users.sample
-        comment = comments.sample
-        next if comment.author == reporter
-
-        FactoryBot.create(:report, :for_comment, reporter: reporter, reportable: comment)
+        try_create_comment_report(tenant, members, topics)
       when 'User'
-        reporter, reportable_user = users.sample(2)
-        FactoryBot.create(:report, :for_user, reporter: reporter, reportable: reportable_user)
+        try_create_user_report(tenant, members)
       end
     end
+  end
+
+  def try_create_comment_report(tenant, members, topics)
+    topic = topics.sample
+    if topic.comments.empty?
+      puts "  ⚠️  Topic '#{topic.title}' has no comments, skipping..."
+      return
+    end
+
+    comment = topic.comments.sample
+    reporter = members.reject { |m| m == comment.author }.sample
+    if reporter.nil?
+      puts "  ⚠️  No valid reporter found for comment ID #{comment.id}, skipping..."
+      return false
+    end
+
+    Report.create!(
+      tenant: tenant,
+      reporter: reporter,
+      reportable: comment,
+      ban_reason: tenant.ban_reasons.active_reasons.sample,
+      reason_text: Faker::Lorem.sentence(word_count: 10)
+    )
+  end
+
+  def try_create_user_report(tenant, members)
+    reporter, reportable_user = members.sample(2)
+    if reporter.nil? || reportable_user.nil?
+      puts "  ⚠️  Not enough members to create user report in tenant '#{tenant.name}', skipping..."
+      return false
+    end
+
+    if reporter == reportable_user
+      puts "  ⚠️  Reporter and reportable user are the same for tenant '#{tenant.name}', skipping..."
+      return false
+    end
+
+    Report.create!(
+      tenant: tenant,
+      reporter: reporter,
+      reportable: reportable_user,
+      ban_reason: tenant.ban_reasons.active_reasons.sample,
+      reason_text: Faker::Lorem.sentence(word_count: 10)
+    )
   end
 
   def create_decisions
-    reports = Report.order(created_at: :asc).limit(200)
-    moderators = Moderator.all.to_a
-
-    reports.each do |report|
-      moderator = moderators.sample
-      next if report.reload.reviewed?
-
-      FactoryBot.create(:decision, report: report, decider: moderator)
+    puts 'Creating decisions...'
+    Tenant.order(created_at: :desc).limit(20).each do |tenant|
+      create_decisions_for_tenant(tenant)
     end
   end
 
-  def create_tenant_invitations
-    tenants = Tenant.all.to_a
-    users = User.all.to_a
+  def create_decisions_for_tenant(tenant)
+    moderators = tenant.moderators.to_a
+    reports = tenant.reports.where.missing(:decision).to_a
 
-    tenants.each do |tenant|
-      invitation_count = rand(3..5)
-      members = tenant.members.to_a
-      non_members = users - members
+    if moderators.empty?
+      puts "  ⚠️  Tenant '#{tenant.name}' has no moderators, skipping..."
+      return
+    end
 
-      next if members.empty? || non_members.empty?
+    if reports.empty?
+      puts "  ⚠️  Tenant '#{tenant.name}' has no reports (or all reports already have decisions), skipping..."
+      return
+    end
 
-      invite_users = non_members.first(invitation_count)
+    reports_to_decide = reports.sample([3, reports.count].min)
 
-      invitation_count.times do |i|
-        inviter = members.sample
-        invited_user = invite_users[i]
+    reports_to_decide.each do |report|
+      # 類似レポートの自動決定により既にdecisionが作成されている可能性があるため再読み込み
+      report.reload
+      next if report.decision.present?
 
-        TenantInvitation.create!(
-          tenant: tenant,
-          inviter: inviter,
-          invited_user: invited_user,
-          status: :pending
-        )
-      end
+      create_decision(tenant, report, moderators.sample)
+    end
+  end
+
+  def create_decision(tenant, report, moderator)
+    decision_type = determine_decision_type(report)
+
+    Decision.create!(
+      tenant: tenant,
+      report: report,
+      decider: moderator,
+      decision_type: decision_type,
+      note: Faker::Lorem.sentence(word_count: 5),
+      suspended_until: decision_type == 'suspend_user' ? rand(7..30).days.from_now : nil
+    )
+  end
+
+  def determine_decision_type(report)
+    case report.reportable_type
+    when 'Comment'
+      %w[reject hide_comment].sample
+    when 'User'
+      %w[reject suspend_user].sample
+    else
+      'reject'
+    end
+  end
+
+  def generate_unique_display_name(used_names)
+    loop do
+      name = Faker::Japanese::Name.name
+      return name unless used_names.include?(name)
     end
   end
 
   def put_records
-    puts_tenants
-    puts_users
-    puts_tenant_memberships
-    puts_tenant_invitations
-    puts_moderators
-    puts_topics
-    puts_comments
-    puts_comment_histories
-    puts_reports
-    puts_decisions
+    puts_sample_tenants
+    puts_sample_users
+    puts_sample_topics
+    puts_sample_comments
+    puts_sample_reports
+    puts_sample_decisions
   end
 
-  def puts_tenants
-    puts 'Tenants'
-    Tenant.find_each do |tenant|
-      puts "Tenant: #{tenant.name} (@#{tenant.identifier})}"
-    end
-  end
-
-  def puts_users
-    User.find_each do |user|
-      puts "User: #{user.login_id}, Suspended: #{user.suspended? ? 'Yes' : 'No'}"
+  def puts_sample_tenants
+    puts "\nTenants (showing 5):"
+    Tenant.order(created_at: :desc).limit(5).each do |tenant|
+      member_count = tenant.tenant_memberships.count
+      topic_count = tenant.topics.count
+      puts "  - #{tenant.name} (@#{tenant.slug})"
+      puts "    Members: #{member_count}, Topics: #{topic_count}"
     end
   end
 
-  def puts_tenant_memberships
-    puts 'Tenant Memberships'
-    Tenant.includes(tenant_memberships: :user).find_each do |tenant|
-      puts "テナント: #{tenant.name}"
-      tenant.tenant_memberships.each do |membership|
-        puts "  - #{membership.display_name} (#{membership.user.login_id})"
-      end
-      puts "  合計: #{tenant.tenant_memberships.count}人"
-      puts ''
-    end
-
-    # マルチテナント所属ユーザーの表示
-    puts 'マルチテナント所属ユーザー'
-    User.joins(:tenant_memberships)
-        .group('users.id')
-        .having('COUNT(tenant_memberships.id) > 1')
-        .includes(tenant_memberships: :tenant)
-        .find_each do |user|
-      puts "ユーザー: #{user.login_id}"
-      user.tenant_memberships.each do |membership|
-        puts "  - #{membership.tenant.name}: #{membership.display_name}"
-      end
-      puts ''
+  def puts_sample_users
+    puts "\nUsers (showing 5):"
+    User.includes(:tenant_memberships).limit(5).each do |user|
+      membership_count = user.tenant_memberships.count
+      suspended_count = user.tenant_memberships.select(&:suspended?).count
+      status = suspended_count.positive? ? " (suspended in #{suspended_count} tenants)" : ''
+      puts "  - #{user.login_id}: #{membership_count} memberships#{status}"
     end
   end
 
-  def puts_moderators
-    Moderator.find_each do |moderator|
-      puts "Moderator: #{moderator.login_id}"
+  def puts_sample_topics
+    puts "\nTopics (showing 5):"
+    Topic.includes(:tenant, :author).order('RAND()').limit(5).each do |topic|
+      puts "  - \"#{topic.title}\" by #{topic.author.login_id}"
+      puts "    Tenant: #{topic.tenant.name}, Comments: #{topic.total_comment}"
     end
   end
 
-  def puts_topics
-    puts "\n#{'=' * 50}"
-    puts 'Topics sample (showing 10 topics)'
-    puts '=' * 50
-
-    Topic.includes(:tenant, :author).order('RAND()').limit(10).each do |topic|
-      puts "📌 Tenant: #{topic.tenant.name} (@#{topic.tenant.identifier})"
-      puts "   Title: #{topic.title}"
-      puts "   Author: #{topic.author.login_id}"
-      puts "   Comments: #{topic.total_comment}"
-      puts "   Created: #{topic.created_at.strftime('%Y-%m-%d %H:%M')}"
-      puts ''
+  def puts_sample_comments
+    puts "\nComments (showing 5):"
+    Comment.includes(:topic, :author).order('RAND()').limit(5).each do |comment|
+      puts "  - #{comment.author.login_id} on \"#{comment.topic.title}\""
+      puts "    Content: #{comment.content.truncate(60)}, Version: #{comment.current_version_no}"
     end
   end
 
-  def puts_comments
-    puts "\n#{'=' * 50}"
-    puts 'Comments sample (showing 10 comments)'
-    puts '=' * 50
-
-    Comment.includes(:topic, :author).order('RAND()').limit(10).each do |comment|
-      puts "   Topic: #{comment.topic.title}"
-      puts "   Author: #{comment.author.login_id}"
-      puts "   Content: #{comment.content.truncate(100)}"
-      puts "   Version: #{comment.current_version_no}"
-      puts "   Created: #{comment.created_at.strftime('%Y-%m-%d %H:%M')}"
-      puts ''
+  def puts_sample_reports
+    puts "\nReports (showing 5):"
+    Report.includes(:tenant, :reporter, :reportable, :ban_reason).order('RAND()').limit(5).each do |report|
+      status = report.reviewed? ? 'reviewed' : 'pending'
+      puts "  - #{report.reportable_type} report by #{report.reporter.login_id}"
+      puts "    Tenant: #{report.tenant.name}, Reason: #{report.ban_reason.name}, Status: #{status}"
     end
   end
 
-  def puts_comment_histories
-    puts "\n#{'=' * 50}"
-    puts 'Comment Histories sample (showing 10 histories)'
-    puts '=' * 50
-
-    CommentHistory.includes(:comment, :author).order('RAND()').limit(10).each do |history|
-      puts "   Comment ID: #{history.comment.id}"
-      puts "   Author: #{history.author.login_id}"
-      puts "   Version: #{history.version_no}"
-      puts "   Content: #{history.content.truncate(100)}"
-      puts "   Created: #{history.created_at.strftime('%Y-%m-%d %H:%M')}"
-      puts ''
+  def puts_sample_decisions
+    puts "\nDecisions (showing 5):"
+    Decision.includes(:tenant, :decider, :report).order('RAND()').limit(5).each do |decision|
+      puts "  - #{decision.decision_type} by #{decision.decider.login_id}"
+      puts "    Tenant: #{decision.tenant.name}, Report: #{decision.report.reportable_type}"
     end
   end
 
-  def puts_reports
-    puts 'Reports sample'
-    Report.take(10).each do |report|
-      puts <<~MSG
-        Reporter: #{report.reporter.login_id},
-        Reportable Type: #{report.reportable_type},
-        Reason Type: #{report.reason_type},
-        Reason Text: #{report.reason_text}
-      MSG
-    end
-  end
-
-  def puts_decisions
-    puts 'Decisions sample'
-    Decision.take(10).each do |decision|
-      puts <<~MSG
-        Report: #{decision.report.id},
-        Decided By: #{decision.decider.login_id},
-        Decision Type: #{decision.decision_type},
-        Note: #{decision.note}
-      MSG
-    end
-  end
-
-  def puts_tenant_invitations
-    puts 'Tenant Invitations'
-    Tenant.includes(tenant_invitations: %i[inviter invited_user]).find_each do |tenant|
-      invitations = tenant.tenant_invitations
-      next if invitations.empty?
-
-      puts "テナント: #{tenant.name}"
-      puts "  招待数: #{invitations.count}件"
-      invitations.first(3).each do |invitation|
-        puts "    - #{invitation.inviter.login_id} → #{invitation.invited_user.login_id} [#{invitation.status}]"
-      end
-      puts ''
-    end
+  def puts_record_count
+    puts "Tenants: #{Tenant.count}"
+    puts "Users: #{User.count}"
+    puts "Tenant Memberships: #{TenantMembership.count}"
+    puts "Tenant Invitations: #{TenantInvitation.count}"
+    puts "Moderators: #{Moderator.count}"
+    puts "Topics: #{Topic.count}"
+    puts "Comments: #{Comment.count}"
+    puts "Comment Histories: #{CommentHistory.count}"
+    puts "Reports: #{Report.count}"
+    puts "Decisions: #{Decision.count}"
   end
 end

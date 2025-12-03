@@ -11,21 +11,24 @@
 #  suspended_until                                                   :datetime
 #  created_at                                                        :datetime         not null
 #  report_id                                                         :bigint           not null
+#  tenant_id                                                         :bigint           not null
 #
 # Indexes
 #
-#  idx_decisions_created_at_report_id  (created_at,report_id)
 #  idx_decisions_decided_by            (decided_by)
 #  idx_decisions_report_id             (report_id) UNIQUE
+#  idx_decisions_tenant_id_created_at  (tenant_id,created_at)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (decided_by => moderators.id)
 #  fk_rails_...  (report_id => reports.id)
+#  fk_rails_...  (tenant_id => tenants.id)
 #
 class Decision < ApplicationRecord
   MAX_BULK_INSERT_SIZE = 1000
 
+  belongs_to :tenant
   belongs_to :report
   belongs_to :decider, class_name: 'Moderator', foreign_key: 'decided_by', inverse_of: :decisions
 
@@ -73,6 +76,7 @@ class Decision < ApplicationRecord
     now = Time.current
     report_ids.map do |rid|
       {
+        tenant_id: tenant_id,
         report_id: rid,
         decision_type: decision_type,
         note: auto_note,

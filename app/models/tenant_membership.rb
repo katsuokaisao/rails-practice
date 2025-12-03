@@ -4,12 +4,13 @@
 #
 # Table name: tenant_memberships
 #
-#  id           :bigint           not null, primary key
-#  display_name :string(255)      not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  tenant_id    :bigint           not null
-#  user_id      :bigint           not null
+#  id              :bigint           not null, primary key
+#  display_name    :string(255)      not null
+#  suspended_until :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  tenant_id       :bigint           not null
+#  user_id         :bigint           not null
 #
 # Indexes
 #
@@ -31,4 +32,34 @@ class TenantMembership < ApplicationRecord
   validates :display_name, uniqueness: { scope: :tenant_id,
                                          case_sensitive: true }
   validates :user_id, uniqueness: { scope: :tenant_id }
+
+  validate :suspended_until_future
+
+  def suspended?
+    suspended_until.present? && suspended_until.future?
+  end
+
+  def suspend!(suspended_until)
+    update!(suspended_until: suspended_until)
+  end
+
+  def suspended_until_date
+    return unless suspended?
+
+    suspended_until.to_date
+  end
+
+  def enforce_release_suspension!
+    return unless suspended?
+
+    update!(suspended_until: nil)
+  end
+
+  private
+
+  def suspended_until_future
+    return if suspended_until.nil?
+
+    errors.add(:suspended_until, :must_be_in_future) unless suspended_until.future?
+  end
 end

@@ -2,7 +2,7 @@
 
 module Tenants
   class CommentsController < BaseController
-    before_action :set_topic, only: %i[create edit update]
+    before_action :set_topic, only: %i[create]
     before_action :set_comment, only: %i[edit update]
     before_action -> { authorize_action!(@comment) }
 
@@ -15,7 +15,7 @@ module Tenants
       )
 
       flash[:notice] = t('flash.actions.comment_created.notice')
-      redirect_to tenant_topic_path(tenant_slug: current_tenant.identifier, id: @topic.id)
+      redirect_to tenant_topic_path(tenant_slug: current_tenant.slug, id: @topic.id)
     rescue ActiveRecord::RecordInvalid => e
       @comment = e.record
       set_pagination
@@ -30,7 +30,7 @@ module Tenants
     def update
       @comment.update_content!(comment_params[:content])
       flash[:notice] = t('flash.actions.update.notice', resource: Comment.model_name.human)
-      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.identifier, comment_id: @comment.id)
+      redirect_to tenant_comment_histories_path(tenant_slug: current_tenant.slug, comment_id: @comment.id)
     rescue ActiveRecord::RecordInvalid => e
       @comment = e.record
       render :edit, status: :unprocessable_content
@@ -53,7 +53,7 @@ module Tenants
     end
 
     def set_comment
-      @comment = @topic.comments.find(params[:id])
+      @comment = Comment.find(params[:id])
     end
   end
 end

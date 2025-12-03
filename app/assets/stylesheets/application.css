@@ -128,3 +128,7 @@ a {
 .vertical-middle {
     vertical-align: middle;
 }
+
+.turbo-progress-bar {
+    display: none !important;
+}

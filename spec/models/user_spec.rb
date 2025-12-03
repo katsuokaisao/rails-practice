@@ -7,7 +7,6 @@
 #  id                        :bigint           not null, primary key
 #  encrypted_password        :string(255)      not null
 #  pending_invitations_count :integer          default(0), not null
-#  suspended_until           :datetime
 #  time_zone                 :string(255)      default("Tokyo"), not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -21,8 +20,8 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:user) { create(:user) }
-  let(:tenant_a) { create(:tenant, identifier: 'tenant-a') }
-  let(:tenant_b) { create(:tenant, identifier: 'tenant-b') }
+  let(:tenant_a) { create(:tenant, slug: 'tenant-a') }
+  let(:tenant_b) { create(:tenant, slug: 'tenant-b') }
 
   describe 'バリデーション' do
     context '新規作成時' do

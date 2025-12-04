@@ -23,7 +23,7 @@ module TenantPolicyApplicable
 
   def unsubscribed_users_topic_ids
     Topic
-      .joins('INNER JOIN tenant_memberships ON tenant_memberships.user_id = topics.author_id')
+      .joins(author: :tenant_memberships)
       .where(
         topics: { tenant_id: id },
         tenant_memberships: { tenant_id: id }
@@ -47,7 +47,7 @@ module TenantPolicyApplicable
   def unsubscribed_users_comment_ids
     Comment
       .joins(:topic)
-      .joins('INNER JOIN tenant_memberships ON tenant_memberships.user_id = comments.author_id')
+      .joins(author: :tenant_memberships)
       .where(
         topics: { tenant_id: id },
         tenant_memberships: { tenant_id: id }

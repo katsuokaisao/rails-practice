@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class BulkUnsubscriptionProcessor
+class UnsubscriptionProcessor
   attr_reader :user, :tenant_ids
 
   def initialize(user, tenant_ids)

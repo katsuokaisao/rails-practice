@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe BulkUnsubscriptionProcessor, type: :model do
+RSpec.describe UnsubscriptionProcessor, type: :model do
   let(:user) { create(:user) }
   let(:first_tenant) { create(:tenant) }
   let(:second_tenant) { create(:tenant) }

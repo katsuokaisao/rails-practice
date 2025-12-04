@@ -34,15 +34,13 @@ module TenantPolicyApplicable
   end
 
   def apply_topic_policy_action(topic_ids)
-    ActiveRecord::Base.transaction do
-      case unsubscribed_user_topic_policy
-      when 'keep_visible'
-        Topic.where(id: topic_ids).locked.update_all(locked_at: nil)
-      when 'lock'
-        Topic.where(id: topic_ids).unlocked.update_all(locked_at: Time.current)
-      when 'delete'
-        topic_ids.each_slice(1000) { |batch_ids| Topic.delete_with_dependencies(batch_ids) }
-      end
+    case unsubscribed_user_topic_policy
+    when 'keep_visible'
+      Topic.where(id: topic_ids).locked.update_all(locked_at: nil)
+    when 'lock'
+      Topic.where(id: topic_ids).unlocked.update_all(locked_at: Time.current)
+    when 'delete'
+      topic_ids.each_slice(1000) { |batch_ids| Topic.delete_with_dependencies(batch_ids) }
     end
   end
 

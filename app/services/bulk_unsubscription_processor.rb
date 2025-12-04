@@ -12,10 +12,8 @@ class BulkUnsubscriptionProcessor
   end
 
   def execute
-    ActiveRecord::Base.transaction do
-      tenant_ids.each do |tenant_id|
-        process_tenant_unsubscription(tenant_id)
-      end
+    tenant_ids.each do |tenant_id|
+      process_tenant_unsubscription(tenant_id)
     end
   end
 
@@ -23,8 +21,10 @@ class BulkUnsubscriptionProcessor
 
   def process_tenant_unsubscription(tenant_id)
     tenant = Tenant.find(tenant_id)
-    record_unsubscription_history(tenant)
-    apply_unsubscription_policies(tenant)
+    ActiveRecord::Base.transaction do
+      record_unsubscription_history(tenant)
+      apply_unsubscription_policies(tenant)
+    end
   end
 
   def record_unsubscription_history(tenant)

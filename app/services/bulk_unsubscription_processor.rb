@@ -24,7 +24,7 @@ class BulkUnsubscriptionProcessor
   def process_tenant_unsubscription(tenant_id)
     tenant = Tenant.find(tenant_id)
     record_unsubscription_history(tenant)
-    handle_user_content(tenant)
+    apply_unsubscription_policies(tenant)
   end
 
   def record_unsubscription_history(tenant)
@@ -37,7 +37,7 @@ class BulkUnsubscriptionProcessor
     )
   end
 
-  def handle_user_content(tenant)
+  def apply_unsubscription_policies(tenant)
     apply_comment_policy(tenant)
     apply_topic_policy(tenant)
   end

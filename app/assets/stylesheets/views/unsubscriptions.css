@@ -1,6 +1,7 @@
 .unsubscriptions_controller.new_action {
     .form-card {
-        width: 600px;
+        width: 900px;
+        max-width: 95vw;
     }
 
     .unsubscription-controls {
@@ -9,69 +10,111 @@
         margin-bottom: var(--spacing-lg);
     }
 
-    .tenant-list {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-md);
-        margin-bottom: var(--spacing-lg);
+    .table {
         width: 100%;
-    }
-
-    .tenant-item {
+        border-collapse: collapse;
+        background-color: var(--color-white);
         border: 1px solid var(--color-gray-200);
         border-radius: var(--radius-md);
-        padding: var(--spacing-md);
-        transition: all var(--transition-fast);
-        background: var(--color-white);
-
-        &:hover {
-            border-color: var(--color-gray-300);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+        margin-bottom: var(--spacing-lg);
     }
 
-    .tenant-item-label {
-        display: flex;
-        gap: var(--spacing-md);
-        cursor: pointer;
-        align-items: flex-start;
+    .table thead {
+        background-color: var(--color-gray-50);
+    }
+
+    .table th {
+        padding: var(--spacing-sm) var(--spacing-md);
+        text-align: left;
+        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+
+    .table th:first-child {
+        width: 40px;
+        text-align: center;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid var(--color-gray-200);
+        transition: background-color var(--transition-fast);
+    }
+
+    .table tbody tr:hover {
+        background-color: var(--color-gray-50);
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table td {
+        padding: var(--spacing-sm) var(--spacing-md);
+        vertical-align: middle;
+        color: var(--color-text-primary);
+        font-size: var(--font-size-sm);
+    }
+
+    .table td:first-child {
+        text-align: center;
     }
 
     .tenant-checkbox {
-        margin-top: 4px;
         width: 18px;
         height: 18px;
         cursor: pointer;
-        flex-shrink: 0;
     }
 
-    .tenant-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-sm);
+    .policy-legend {
+        background: var(--color-gray-50);
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
     }
 
-    .tenant-name {
-        font-size: var(--font-size-lg);
+    .legend-title {
         font-weight: var(--font-weight-semibold);
-        color: var(--color-text-primary);
-        margin-bottom: var(--spacing-xs);
-    }
-
-    .tenant-policies {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-
-    .policy-description {
         font-size: var(--font-size-sm);
         color: var(--color-text-secondary);
-        margin: 0;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        background: var(--color-gray-50);
-        border-radius: var(--radius-sm);
-        line-height: 1.5;
+        margin: 0 0 var(--spacing-sm) 0;
+    }
+
+    .legend-items {
+        display: flex;
+        gap: var(--spacing-xl);
+    }
+
+    .legend-section {
+        flex: 1;
+    }
+
+    .legend-label {
+        font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-primary);
+    }
+
+    .legend-section ul {
+        margin: var(--spacing-xs) 0 0 0;
+        padding-left: var(--spacing-md);
+    }
+
+    .legend-section li {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+    }
+
+    .actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        justify-content: flex-start;
+    }
+
+    .actions .btn {
+        width: auto;
     }
 }

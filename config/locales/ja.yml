@@ -89,13 +89,13 @@ ja:
   unsubscription:
     policy_descriptions:
       comment:
-        delete: "💬 あなたのコメント → 完全に削除されます"
-        hide_content: "💬 あなたのコメント → 「退会ユーザーによる書き込みです」と表示されます"
-        keep_visible: "💬 あなたのコメント → そのまま表示されます"
+        delete: 完全に削除
+        hide_content: 内容非表示
+        keep_visible: そのまま表示
       topic:
-        delete: "📝 あなたのトピック → 完全に削除されます"
-        keep_visible: "📝 あなたのトピック → そのまま表示されます（他の人は書き込み可能）"
-        lock: "📝 あなたのトピック → 誰も書き込めなくなります（ロック）"
+        delete: 完全に削除
+        keep_visible: そのまま表示
+        lock: ロック
     policy_labels:
       comment:
         delete: 完全削除

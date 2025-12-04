@@ -15,6 +15,28 @@
                       confirm_message: t('.confirm_message')
                     } do |f| %>
 
+        <div class="policy-legend">
+          <p class="legend-title"><%= t('.legend.title') %></p>
+          <div class="legend-items">
+            <div class="legend-section">
+              <span class="legend-label"><%= t('.table.comment_policy') %></span>
+              <ul>
+                <li><%= t('.legend.comment.keep_visible') %></li>
+                <li><%= t('.legend.comment.hide_content') %></li>
+                <li><%= t('.legend.comment.delete') %></li>
+              </ul>
+            </div>
+            <div class="legend-section">
+              <span class="legend-label"><%= t('.table.topic_policy') %></span>
+              <ul>
+                <li><%= t('.legend.topic.keep_visible') %></li>
+                <li><%= t('.legend.topic.lock') %></li>
+                <li><%= t('.legend.topic.delete') %></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="unsubscription-controls">
           <button type="button"
                   class="btn btn-primary btn-sm"
@@ -28,30 +50,36 @@
           </button>
         </div>
 
-        <div class="tenant-list">
-          <% @subscribed_memberships.each do |membership| %>
-            <div class="tenant-item">
-              <label class="tenant-item-label">
-                <%= check_box_tag 'tenant_ids[]',
-                                  membership.tenant_id,
-                                  false,
-                                  data: {
-                                    unsubscription_target: "checkbox",
-                                    action: "change->unsubscription#updateSubmitButton"
-                                  },
-                                  class: "tenant-checkbox" %>
-                <div class="tenant-info">
-                  <div class="tenant-name"><%= membership.tenant.name %></div>
-                  <div class="tenant-policies">
-                    <% policies = unsubscribed_user_policy_description(membership.tenant) %>
-                    <p class="policy-description"><%= policies[:comment] %></p>
-                    <p class="policy-description"><%= policies[:topic] %></p>
-                  </div>
-                </div>
-              </label>
-            </div>
-          <% end %>
-        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th><%= t('.table.tenant') %></th>
+              <th><%= t('.table.comment_policy') %></th>
+              <th><%= t('.table.topic_policy') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @subscribed_memberships.each do |membership| %>
+              <% policies = unsubscribed_user_policy_description(membership.tenant) %>
+              <tr>
+                <td>
+                  <%= check_box_tag 'tenant_ids[]',
+                                    membership.tenant_id,
+                                    false,
+                                    data: {
+                                      unsubscription_target: "checkbox",
+                                      action: "change->unsubscription#updateSubmitButton"
+                                    },
+                                    class: "tenant-checkbox" %>
+                </td>
+                <td><strong><%= membership.tenant.name %></strong></td>
+                <td><%= policies[:comment] %></td>
+                <td><%= policies[:topic] %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
 
         <div class="actions">
           <%= f.submit t('action.unsubscribe'),

@@ -30,7 +30,7 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会フォームに所属テナントのポリシー情報が表示される' do
       visit new_unsubscription_path
 
-      expect(page).to have_css('.tenant-policies')
+      expect(page).to have_css('.policy-legend')
     end
   end
 
@@ -38,8 +38,8 @@ RSpec.describe '退会機能', type: :system do
     scenario 'ユーザーが単一のテナントから退会できる' do
       visit new_unsubscription_path
 
-      within('.tenant-item', text: 'テナントA') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントA') do
+        find('.tenant-checkbox').check
       end
 
       accept_confirm do
@@ -57,11 +57,11 @@ RSpec.describe '退会機能', type: :system do
     scenario 'ユーザーが複数のテナントから同時に退会できる' do
       visit new_unsubscription_path
 
-      within('.tenant-item', text: 'テナントA') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントA') do
+        find('.tenant-checkbox').check
       end
-      within('.tenant-item', text: 'テナントB') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントB') do
+        find('.tenant-checkbox').check
       end
 
       accept_confirm do
@@ -131,7 +131,7 @@ RSpec.describe '退会機能', type: :system do
 
       click_button '全て選択'
 
-      expect(all('.tenant-item input[type="checkbox"]')).to all(be_checked)
+      expect(all('.tenant-checkbox')).to all(be_checked)
     end
 
     scenario 'すべて解除ボタンで全テナントの選択が解除される' do
@@ -140,7 +140,7 @@ RSpec.describe '退会機能', type: :system do
       click_button '全て選択'
       click_button '全て解除'
 
-      all('.tenant-item input[type="checkbox"]').each do |checkbox|
+      all('.tenant-checkbox').each do |checkbox|
         expect(checkbox).not_to be_checked
       end
     end
@@ -155,8 +155,8 @@ RSpec.describe '退会機能', type: :system do
     scenario 'テナントが選択されると、送信ボタンが有効化される' do
       visit new_unsubscription_path
 
-      within('.tenant-item', text: 'テナントA') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントA') do
+        find('.tenant-checkbox').check
       end
 
       submit_button = find('[data-unsubscription-target="submitButton"]')
@@ -168,8 +168,8 @@ RSpec.describe '退会機能', type: :system do
     scenario '退会実行時に確認ダイアログが表示される' do
       visit new_unsubscription_path
 
-      within('.tenant-item', text: 'テナントA') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントA') do
+        find('.tenant-checkbox').check
       end
 
       dismiss_confirm do
@@ -183,8 +183,8 @@ RSpec.describe '退会機能', type: :system do
     scenario '確認ダイアログでOKを押すと退会処理が実行される' do
       visit new_unsubscription_path
 
-      within('.tenant-item', text: 'テナントA') do
-        find('input[type="checkbox"]').check
+      within('tr', text: 'テナントA') do
+        find('.tenant-checkbox').check
       end
 
       accept_confirm do

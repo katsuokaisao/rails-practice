@@ -89,14 +89,13 @@ en:
   unsubscription:
     policy_descriptions:
       comment:
-        delete: "💬 Your comments → Completely deleted"
-        hide_content: "💬 Your comments → Displayed as 'Content hidden (posted
-          by unsubscribed user)'"
-        keep_visible: "💬 Your comments → Remain visible as is"
+        delete: Permanently deleted
+        hide_content: Hide content
+        keep_visible: Remains visible
       topic:
-        delete: "📝 Your topics → Completely deleted"
-        keep_visible: "📝 Your topics → Remain visible (Others can still post)"
-        lock: "📝 Your topics → No one can post (Locked)"
+        delete: Permanently deleted
+        keep_visible: Remains visible
+        lock: Locked
     policy_labels:
       comment:
         delete: Delete

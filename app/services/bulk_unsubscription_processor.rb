@@ -4,9 +4,6 @@ class BulkUnsubscriptionProcessor
   attr_reader :user, :tenant_ids
 
   def initialize(user, tenant_ids)
-    raise ArgumentError, 'user is required' if user.blank?
-    raise ArgumentError, 'tenant_ids is required' if tenant_ids.blank?
-
     @user = user
     @tenant_ids = Array(tenant_ids).map(&:to_i)
   end

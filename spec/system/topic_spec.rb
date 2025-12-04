@@ -63,11 +63,12 @@ RSpec.describe 'トピック', type: :system do
       fill_in 'タイトル', with: '新しいトピック'
       click_button '登録する'
       expect(page).to have_content('お題が作成されました。')
+      new_topic = Topic.find_by(title: '新しいトピック')
       within('.topic-show') do
         expect(page).to have_content('新しいトピック')
         expect(page).to have_content(user_membership.display_name)
         expect(page).to have_content("(ID: #{user.id})")
-        expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
+        expect(page).to have_content("作成日: #{new_topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
 

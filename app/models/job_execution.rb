@@ -37,16 +37,4 @@ class JobExecution < ApplicationRecord
   }, validate: true
 
   validates :job_id, uniqueness: true
-
-  def execution_duration
-    return nil unless started_at && (completed_at || failed_at)
-
-    (completed_at || failed_at) - started_at
-  end
-
-  def queue_duration
-    return nil unless enqueued_at && started_at
-
-    started_at - enqueued_at
-  end
 end

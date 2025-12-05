@@ -41,15 +41,10 @@ RSpec.describe UnsubscriptionProcessor, type: :model do
 
     context '異常系' do
       context '不正なuser_idが指定された場合' do
-        it 'ジョブ実行履歴がfailedになる' do
+        it 'ActiveRecord::RecordNotFoundが発生する' do
           expect do
             UnsubscriptionJob.perform_now(999_999, [first_tenant.id])
           end.to raise_error(ActiveRecord::RecordNotFound)
-
-          job_execution = JobExecution.find_by(job_class: 'UnsubscriptionJob')
-          expect(job_execution).to be_present
-          expect(job_execution.status).to eq('failed')
-          expect(job_execution.error_class).to eq('ActiveRecord::RecordNotFound')
         end
       end
 

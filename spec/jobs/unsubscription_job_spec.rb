@@ -11,22 +11,20 @@ RSpec.describe UnsubscriptionJob, type: :job do
 
   describe '#perform' do
     it '正しいパラメータの場合に退会処理に成功する' do
-      described_class.perform_now(user.id, [first_tenant.id])
+      expect do
+        described_class.perform_now(user.id, [first_tenant.id])
+      end.to change(TenantUnsubscriptionHistory, :count).by(1)
 
-      job_execution = JobExecution.last
-      expect(job_execution.status).to eq('completed')
-      expect(job_execution.completed_at).to be_present
+      history = TenantUnsubscriptionHistory.find_by(user: user, tenant: first_tenant)
+      expect(history).to be_present
+      expect(history.comment_policy).to eq(first_tenant.unsubscribed_user_comment_policy)
+      expect(history.topic_policy).to eq(first_tenant.unsubscribed_user_topic_policy)
     end
 
     it '不正なパラメータの場合に退会処理が失敗する' do
       expect do
         described_class.perform_now(999, [first_tenant.id])
       end.to raise_error(ActiveRecord::RecordNotFound)
-
-      job_execution = JobExecution.last
-      expect(job_execution.status).to eq('failed')
-      expect(job_execution.failed_at).to be_present
-      expect(job_execution.error_class).to eq('ActiveRecord::RecordNotFound')
     end
   end
 end

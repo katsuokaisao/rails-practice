@@ -27,7 +27,9 @@ class SampleCreator
       Tenant.create!(
         name: Faker::Company.name,
         slug: "tenant-#{i + 1}-#{SecureRandom.hex(3)}",
-        description: Faker::Lorem.sentence(word_count: 10)
+        description: Faker::Lorem.sentence(word_count: 10),
+        unsubscribed_user_topic_policy: :keep_visible,
+        unsubscribed_user_comment_policy: :keep_visible
       )
     end
   end

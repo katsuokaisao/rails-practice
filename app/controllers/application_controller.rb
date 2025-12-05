@@ -26,4 +26,8 @@ class ApplicationController < ActionController::Base
   def render_forbidden
     render file: Rails.public_path.join('403.html'), status: :forbidden, layout: false, content_type: 'text/html'
   end
+
+  def preload_current_user_memberships
+    current_user&.tenant_memberships&.load
+  end
 end

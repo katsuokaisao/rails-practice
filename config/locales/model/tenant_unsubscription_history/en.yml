@@ -1,0 +1,14 @@
+---
+en:
+  activerecord:
+    attributes:
+      tenant_unsubscription_history:
+        comment_policy: Comment Policy
+        created_at: Created At
+        tenant: Tenant
+        topic_policy: Topic Policy
+        unsubscribed_at: Unsubscribed At
+        updated_at: Updated At
+        user: User
+    models:
+      tenant_unsubscription_history: Tenant Unsubscription History

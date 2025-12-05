@@ -3,15 +3,22 @@
 module Tenants
   class CommentsPolicy < ApplicationPolicy
     def create?
-      tenant_member? && unsuspended_user?
+      active_tenant_member? && unsuspended_user? && !topic_locked?
     end
 
     def edit?
-      tenant_member? && unsuspended_user? && owner?
+      active_tenant_member? && unsuspended_user? && owner? && !topic_locked?
     end
 
     def update?
-      tenant_member? && unsuspended_user? && owner?
+      active_tenant_member? && unsuspended_user? && owner? && !topic_locked?
+    end
+
+    private
+
+    def topic_locked?
+      topic = record.is_a?(Topic) ? record : record.topic
+      topic.locked?
     end
   end
 end

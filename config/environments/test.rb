@@ -49,4 +49,9 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # システムテストで非同期ジョブを同期的に実行する
+  # Capybara が別プロセスで Rails サーバーを起動するため、
+  # :inline アダプターを使ってジョブを即座に実行する
+  config.active_job.queue_adapter = :inline
 end

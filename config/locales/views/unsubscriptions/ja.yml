@@ -1,0 +1,28 @@
+---
+ja:
+  unsubscriptions:
+    create:
+      invalid_tenant: 無効なテナントが含まれています
+      no_tenants_selected: 退会するテナントを選択してください
+      success: 退会処理を開始しました。処理が完了すると、選択したテナントから退会されます。
+    new:
+      confirm_message: 選択したテナントから退会します。よろしいですか？
+      description: 退会するテナントを選択してください。退会後の処理はテナントごとに異なります。
+      deselect_all: 全て解除
+      legend:
+        comment:
+          delete: 完全に削除 - コメントが削除されます
+          hide_content: 内容非表示 - 内容が非表示になります
+          keep_visible: そのまま表示 - コメントはそのまま残ります
+        title: 退会後の処理について
+        topic:
+          delete: 完全に削除 - お題と全コメントが削除されます
+          keep_visible: そのまま表示 - 他のユーザーが書き込み可能です
+          lock: ロック - 誰も書き込めなくなります
+      no_tenants: 所属しているテナントがありません
+      select_all: 全て選択
+      table:
+        comment_policy: コメント
+        tenant: テナント
+        topic_policy: お題
+      title: テナント退会

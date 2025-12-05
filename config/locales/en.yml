@@ -10,6 +10,7 @@ en:
     select: Please, select
     settle: Confirm
     settle_confirm: Are you sure you want to confirm?
+    unsubscribe: Unsubscribe
   active_status:
     active: Active
     inactive: Inactive
@@ -69,7 +70,12 @@ en:
     logout: Logout
     password: Password
     profile: Profile
+    tenant_settings: Tenant Settings
+    unsubscribe: Unsubscribe from Tenants
   history: History
+  locked: Locked
+  notices:
+    topic_locked: This topic is locked (no posting or editing allowed)
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
@@ -80,4 +86,23 @@ en:
     index: "%{resource} List"
     new: Create New %{resource}
     show: "%{resource} Details"
+  unsubscription:
+    policy_descriptions:
+      comment:
+        delete: Permanently deleted
+        hide_content: Hide content
+        keep_visible: Remains visible
+      topic:
+        delete: Permanently deleted
+        keep_visible: Remains visible
+        lock: Locked
+    policy_labels:
+      comment:
+        delete: Delete
+        hide_content: Hide Content
+        keep_visible: Keep Visible
+      topic:
+        delete: Delete
+        keep_visible: Keep Visible
+        lock: Lock
   version: 'Version:'

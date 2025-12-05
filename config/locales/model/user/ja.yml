@@ -5,6 +5,7 @@ ja:
       user:
         login_id: ログインID
         time_zone: タイムゾーン
+        unsubscribed_user: 退会済みユーザー
     errors:
       models:
         user:

@@ -7,19 +7,25 @@ module Tenants
     end
 
     def new?
-      tenant_member? && unsuspended_user?
+      active_tenant_member? && unsuspended_user?
     end
 
     def create?
-      tenant_member? && unsuspended_user?
+      active_tenant_member? && unsuspended_user?
     end
 
     def edit?
-      tenant_member? && unsuspended_user? && owner?
+      active_tenant_member? && unsuspended_user? && owner? && !topic_locked?
     end
 
     def update?
-      tenant_member? && unsuspended_user? && owner?
+      active_tenant_member? && unsuspended_user? && owner? && !topic_locked?
+    end
+
+    private
+
+    def topic_locked?
+      record.locked?
     end
   end
 end

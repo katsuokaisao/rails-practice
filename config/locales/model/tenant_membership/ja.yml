@@ -5,7 +5,9 @@ ja:
       tenant_membership:
         created_at: 作成日時
         display_name: 表示名
+        suspended_until: 停止期限
         tenant_id: テナント
+        unsubscribed_at: 退会日時
         updated_at: 更新日時
         user_id: ユーザー
     errors:

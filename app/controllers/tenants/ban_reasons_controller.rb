@@ -6,8 +6,12 @@ module Tenants
     before_action -> { authorize_action!(@ban_reason) }
 
     def index
-      @system_reasons = current_tenant.ban_reasons.system_reasons.order(created_at: :asc)
-      @custom_reasons = current_tenant.ban_reasons.custom_reasons.order(created_at: :desc)
+      @system_reasons = BanReasonDecorator.decorate_collection(
+        current_tenant.ban_reasons.system_reasons.order(created_at: :asc)
+      )
+      @custom_reasons = BanReasonDecorator.decorate_collection(
+        current_tenant.ban_reasons.custom_reasons.order(created_at: :desc)
+      )
     end
 
     def new

@@ -91,6 +91,12 @@ class ApplicationPolicy
     user.member_of?(tenant)
   end
 
+  def active_tenant_member?
+    return false unless user? && tenant
+
+    user.active_member_of?(tenant)
+  end
+
   def moderator_tenant_member?
     return false unless moderator? && tenant
 

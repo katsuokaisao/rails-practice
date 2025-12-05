@@ -1,0 +1,22 @@
+---
+en:
+  activerecord:
+    attributes:
+      job_execution:
+        arguments: Arguments
+        attempt_number: Attempt Number
+        completed_at: Completed At
+        created_at: Created At
+        enqueued_at: Enqueued At
+        error_backtrace: Error Backtrace
+        error_class: Error Class
+        error_message: Error Message
+        failed_at: Failed At
+        job_class: Job Class
+        job_id: Job ID
+        queue_name: Queue Name
+        started_at: Started At
+        status: Status
+        updated_at: Updated At
+    models:
+      job_execution: Job Execution

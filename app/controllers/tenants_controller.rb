@@ -5,7 +5,7 @@ class TenantsController < ApplicationController
 
   def index
     if user_signed_in?
-      member_tenants_relation = current_user.tenants.order(id: :desc)
+      member_tenants_relation = current_user.subscribed_tenants.order(id: :desc)
       no_member_tenants_relation = Tenant.where.not(id: member_tenants_relation.pluck(:id)).order(id: :desc)
     else
       member_tenants_relation = Tenant.none
@@ -46,7 +46,7 @@ class TenantsController < ApplicationController
 
   def topics
     current_tenant.topics
-      .order(created_at: :desc, id: :desc)
-      .eager_load(:author)
+                  .order(created_at: :desc, id: :desc)
+                  .eager_load(:author)
   end
 end

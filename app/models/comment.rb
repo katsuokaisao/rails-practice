@@ -29,7 +29,7 @@ class Comment < ApplicationRecord
   include CommentSharedBehavior
 
   belongs_to :hidden_cause_decision, class_name: 'Decision', optional: true
-  has_many :histories, class_name: 'CommentHistory', dependent: :restrict_with_error
+  has_many :histories, class_name: 'CommentHistory', dependent: :destroy
 
   validates :current_version_no, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
@@ -66,6 +66,26 @@ class Comment < ApplicationRecord
 
   def invisible?
     hidden? || author.suspended?(topic.tenant)
+  end
+
+  def self.delete_with_dependencies(comment_ids)
+    return if comment_ids.empty?
+
+    transaction do
+      CommentHistory.where(comment_id: comment_ids).delete_all
+
+      report_ids = Report.where(
+        reportable_type: 'Comment',
+        reportable_id: comment_ids
+      ).pluck(:id)
+
+      if report_ids.any?
+        Decision.where(report_id: report_ids).delete_all
+        Report.where(id: report_ids).delete_all
+      end
+
+      where(id: comment_ids).delete_all
+    end
   end
 
   private

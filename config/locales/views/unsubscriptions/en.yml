@@ -1,0 +1,31 @@
+---
+en:
+  unsubscriptions:
+    create:
+      invalid_tenant: Invalid tenant(s) included
+      no_tenants_selected: Please select tenants to unsubscribe from
+      success: Unsubscription process has been started. You will be unsubscribed from
+        the selected tenants once the process is complete.
+    new:
+      confirm_message: You are about to unsubscribe from the selected tenants. Are
+        you sure?
+      description: Select tenants to unsubscribe from. Post-unsubscription handling
+        varies by tenant.
+      deselect_all: Deselect All
+      legend:
+        comment:
+          delete: Permanently deleted - Comments will be deleted
+          hide_content: Hide content - Content will be hidden
+          keep_visible: Remains visible - Comments remain as is
+        title: What happens after unsubscribing
+        topic:
+          delete: Permanently deleted - Topic and all comments will be deleted
+          keep_visible: Remains visible - Others can still comment
+          lock: Locked - No one can comment anymore
+      no_tenants: You are not a member of any tenants
+      select_all: Select All
+      table:
+        comment_policy: Comment
+        tenant: Tenant
+        topic_policy: Topic
+      title: Unsubscribe from Tenants

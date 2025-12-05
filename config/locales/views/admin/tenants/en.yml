@@ -1,0 +1,9 @@
+---
+en:
+  admin:
+    tenants:
+      edit:
+        title: Tenant Settings
+        unsubscribed_user_policies: Unsubscribed User Policies
+      update:
+        success: Tenant settings updated successfully

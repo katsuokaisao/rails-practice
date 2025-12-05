@@ -5,6 +5,7 @@ en:
       topic:
         author: Author
         created_at: Created At
+        locked_at: Locked at
         tenant: Tenant
         tenant_id: Tenant ID
         title: Title

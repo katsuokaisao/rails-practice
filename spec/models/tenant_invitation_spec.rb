@@ -89,6 +89,14 @@ RSpec.describe TenantInvitation, type: :model do
         expect(invitation.errors[:invited_user_id]).to include('は既にメンバーです')
       end
 
+      it '過去に退会したユーザーは招待できない' do
+        create(:tenant_unsubscription_history, tenant: tenant, user: invited_user)
+
+        invitation = build(:tenant_invitation, tenant: tenant, inviter: inviter, invited_user: invited_user)
+        expect(invitation).to be_invalid
+        expect(invitation.errors[:invited_user_id]).to include('は過去に退会しているため、再招待できません')
+      end
+
       it '異なるテナントであれば同じユーザーを招待できる' do
         other_tenant = create(:tenant)
         create(:tenant_membership, tenant: other_tenant, user: inviter, display_name: '招待者')

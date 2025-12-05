@@ -304,4 +304,29 @@ RSpec.describe 'コメント', type: :system do
       expect(page).not_to have_content('コメントを投稿する')
     end
   end
+
+  context 'ロックされたトピック' do
+    let!(:locked_topic) { create(:topic, :locked, tenant: tenant, author: user, title: 'ロックされたトピック') }
+    let!(:locked_topic_comment) { create(:comment, topic: locked_topic, author: user, content: 'ロック前のコメント') }
+
+    scenario 'ロックされたトピックにはコメント投稿フォームが表示されない' do
+      login_as(user)
+
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).not_to have_content('コメントを投稿する')
+      expect(page).to have_content('このトピックはロックされています')
+    end
+
+    scenario 'ロックされたトピックのコメントは編集できない' do
+      login_as(user)
+
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).not_to have_link('編集',
+                                    href: edit_tenant_comment_path(tenant_slug: tenant.slug,
+                                                                   id: locked_topic_comment.id))
+
+      visit edit_tenant_comment_path(tenant_slug: tenant.slug, id: locked_topic_comment.id)
+      expect(page).to have_content('アクセスが禁止されています。')
+    end
+  end
 end

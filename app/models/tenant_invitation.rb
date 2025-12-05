@@ -72,9 +72,16 @@ class TenantInvitation < ApplicationRecord
     return errors.add(:invited_user_id, :required) if invited_user_id.blank?
     return errors.add(:invited_user_id, :not_exist) unless User.exists?(id: invited_user_id)
     return errors.add(:invited_user_id, :invalid_self) if self_invitation?
+    return errors.add(:invited_user_id, :unsubscribed) if unsubscribed_user?
     return unless status_pending?
 
     errors.add(:invited_user_id, :already_member) if already_member?
+  end
+
+  def unsubscribed_user?
+    return false if invited_user_id.blank? || tenant_id.blank?
+
+    TenantUnsubscriptionHistory.exists?(user_id: invited_user_id, tenant_id: tenant_id)
   end
 
   def self_invitation?

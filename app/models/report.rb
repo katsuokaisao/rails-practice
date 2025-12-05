@@ -41,8 +41,8 @@ class Report < ApplicationRecord
 
   scope :similar_reports, lambda { |report|
     where(tenant_id: report.tenant_id)
-    .where(reportable: report.reportable)
-    .where.not(id: report.id)
+      .where(reportable: report.reportable)
+      .where.not(id: report.id)
   }
 
   validates :reason_text, presence: true, length: { maximum: 2000 }, no_html: true
@@ -61,9 +61,5 @@ class Report < ApplicationRecord
 
   def user_suspended?
     decision.decision_type_suspend_user?
-  end
-
-  def reason_type
-    ban_reason.display_name
   end
 end

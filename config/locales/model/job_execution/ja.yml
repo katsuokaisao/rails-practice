@@ -1,0 +1,22 @@
+---
+ja:
+  activerecord:
+    attributes:
+      job_execution:
+        arguments: 引数
+        attempt_number: 試行回数
+        completed_at: 完了日時
+        created_at: 作成日時
+        enqueued_at: キュー登録日時
+        error_backtrace: エラーバックトレース
+        error_class: エラークラス
+        error_message: エラーメッセージ
+        failed_at: 失敗日時
+        job_class: ジョブクラス
+        job_id: ジョブID
+        queue_name: キュー名
+        started_at: 開始日時
+        status: ステータス
+        updated_at: 更新日時
+    models:
+      job_execution: ジョブ実行履歴

@@ -148,7 +148,7 @@ RSpec.describe Decision, type: :model do
         expect do
           decision.save!
         end.to change(described_class, :count).by(1)
-          .and(change { user.reload.suspended?(tenant) }.from(false).to(true))
+                                              .and(change { user.reload.suspended?(tenant) }.from(false).to(true))
 
         expect(decision).to be_persisted
         expect(user.reload.suspended?(tenant)).to be true

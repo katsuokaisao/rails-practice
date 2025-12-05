@@ -8,6 +8,8 @@ en:
         description: Description
         name: Name
         slug: slug
+        unsubscribed_user_comment_policy: Comment Display Policy
+        unsubscribed_user_topic_policy: Topic Display Policy
         updated_at: Updated At
     errors:
       models:
@@ -15,5 +17,9 @@ en:
           attributes:
             slug:
               invalid: can only contain lowercase letters, numbers, and hyphens
+            unsubscribed_user_comment_policy:
+              policy_applying: cannot be changed while policy is being applied
+            unsubscribed_user_topic_policy:
+              policy_applying: cannot be changed while policy is being applied
     models:
       tenant: Tenant

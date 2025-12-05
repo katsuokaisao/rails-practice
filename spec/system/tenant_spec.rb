@@ -185,5 +185,22 @@ RSpec.describe 'テナント', type: :system do
         expect(page).not_to have_content('テナントB')
       end
     end
+
+    scenario '退会したテナントは所属テナント一覧に表示されない' do
+      membership_b = user_multi.tenant_memberships.find_by(tenant: tenant_b)
+      membership_b.update!(unsubscribed_at: Time.current)
+
+      login_as user_multi
+      visit root_path
+
+      within('.tenant-section', text: /\A所属テナント/) do
+        expect(page).to have_content('テナントA')
+        expect(page).not_to have_content('テナントB')
+      end
+
+      within('.tenant-section', text: '未所属テナント') do
+        expect(page).to have_content('テナントB')
+      end
+    end
   end
 end

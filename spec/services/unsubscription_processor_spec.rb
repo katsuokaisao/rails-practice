@@ -1,0 +1,62 @@
+# frozen_string_literal: true
+
+require 'rails_helper'
+
+RSpec.describe UnsubscriptionProcessor, type: :model do
+  let(:user) { create(:user) }
+  let(:first_tenant) { create(:tenant) }
+  let(:second_tenant) { create(:tenant) }
+  let!(:first_membership) { create(:tenant_membership, :unsubscribed, user: user, tenant: first_tenant) }
+  let!(:second_membership) { create(:tenant_membership, :unsubscribed, user: user, tenant: second_tenant) }
+
+  describe '#execute' do
+    context '正常系' do
+      context '単一のテナントから退会できる' do
+        let(:processor) { described_class.new(user, [first_tenant.id]) }
+
+        it '正しいテナントの退会履歴が作成される' do
+          expect do
+            processor.execute
+          end.to change(TenantUnsubscriptionHistory, :count).by(1)
+
+          history = TenantUnsubscriptionHistory.find_by(user: user, tenant: first_tenant)
+          expect(history.comment_policy).to eq(first_tenant.unsubscribed_user_comment_policy)
+          expect(history.topic_policy).to eq(first_tenant.unsubscribed_user_topic_policy)
+        end
+      end
+
+      context '複数のテナントから退会できる' do
+        let(:processor) { described_class.new(user, [first_tenant.id, second_tenant.id]) }
+
+        it '各テナントの退会履歴が作成される' do
+          expect do
+            processor.execute
+          end.to change(TenantUnsubscriptionHistory, :count).by(2)
+
+          expect(TenantUnsubscriptionHistory.where(user: user, tenant: first_tenant).count).to eq(1)
+          expect(TenantUnsubscriptionHistory.where(user: user, tenant: second_tenant).count).to eq(1)
+        end
+      end
+    end
+
+    context '異常系' do
+      context '不正なuser_idが指定された場合' do
+        it 'ActiveRecord::RecordNotFoundが発生する' do
+          expect do
+            UnsubscriptionJob.perform_now(999_999, [first_tenant.id])
+          end.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+
+      context '不正なtenant_idが指定された場合' do
+        let(:processor) { described_class.new(user, [999_999]) }
+
+        it 'ActiveRecord::RecordNotFoundが発生する' do
+          expect do
+            processor.execute
+          end.to raise_error(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+  end
+end

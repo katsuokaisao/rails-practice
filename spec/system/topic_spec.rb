@@ -31,7 +31,7 @@ RSpec.describe 'トピック', type: :system do
 
       within('.topic-show') do
         expect(page).to have_content('テストトピック')
-        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content(user_membership.display_name)
         expect(page).to have_content("(ID: #{user.id})")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
@@ -63,11 +63,12 @@ RSpec.describe 'トピック', type: :system do
       fill_in 'タイトル', with: '新しいトピック'
       click_button '登録する'
       expect(page).to have_content('お題が作成されました。')
+      new_topic = Topic.find_by(title: '新しいトピック')
       within('.topic-show') do
         expect(page).to have_content('新しいトピック')
-        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content(user_membership.display_name)
         expect(page).to have_content("(ID: #{user.id})")
-        expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
+        expect(page).to have_content("作成日: #{new_topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
     end
 
@@ -82,7 +83,7 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_content('お題が更新されました。')
       within('.topic-show') do
         expect(page).to have_content('編集されたトピック')
-        expect(page).to have_content(user.display_name_for(tenant))
+        expect(page).to have_content(user_membership.display_name)
         expect(page).to have_content("(ID: #{user.id})")
         expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       end
@@ -158,7 +159,7 @@ RSpec.describe 'トピック', type: :system do
       expect(page).to have_selector('.pagination')
       click_link '2'
       expect(page).to have_content(topic.title)
-      expect(page).to have_content(topic.author.display_name_for(tenant))
+      expect(page).to have_content(user_membership.display_name)
       expect(page).to have_content("(ID: #{topic.author.id})")
       expect(page).to have_content("作成日: #{topic.created_at.strftime('%Y/%m/%d %H:%M')}")
       visit tenant_path(tenant_slug: tenant.slug, page: 999)
@@ -173,7 +174,7 @@ RSpec.describe 'トピック', type: :system do
       click_link '2'
       comment = topic.comments.order(created_at: :desc).last
       expect(page).to have_content(comment.content)
-      expect(page).to have_content(comment.author.display_name_for(tenant))
+      expect(page).to have_content(user_membership.display_name)
       expect(page).to have_content("作成日: #{comment.created_at.strftime('%Y/%m/%d %H:%M')}")
       visit tenant_topic_path(tenant_slug: tenant.slug, id: topic.id, page: 999)
       expect(page).to have_content('範囲外のリクエストです。')
@@ -254,6 +255,27 @@ RSpec.describe 'トピック', type: :system do
 
       visit tenant_path(tenant_slug: member_tenant.slug)
       expect(page).to have_link('お題を投稿する')
+    end
+  end
+
+  context 'ロックされたトピック' do
+    let!(:locked_topic) { create(:topic, :locked, tenant: tenant, author: user, title: 'ロックされたトピック') }
+
+    scenario 'ロックされたトピックは編集できない' do
+      login_as(user)
+
+      visit tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).not_to have_link('edit')
+
+      visit edit_tenant_topic_path(tenant_slug: tenant.slug, id: locked_topic.id)
+      expect(page).to have_content('アクセスが禁止されています。')
+    end
+
+    scenario 'ロックされたトピックは一覧でロックアイコンが表示される' do
+      visit tenant_path(tenant_slug: tenant.slug)
+
+      expect(page).to have_content('🔒')
+      expect(page).to have_content('ロック済み')
     end
   end
 end

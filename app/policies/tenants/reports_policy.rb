@@ -7,11 +7,11 @@ module Tenants
     end
 
     def new?
-      tenant_member? && unsuspended_user? && !owner?
+      active_tenant_member? && unsuspended_user? && !owner?
     end
 
     def create?
-      tenant_member? && unsuspended_user? && !owner?
+      active_tenant_member? && unsuspended_user? && !owner?
     end
   end
 end

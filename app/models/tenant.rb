@@ -4,18 +4,23 @@
 #
 # Table name: tenants
 #
-#  id                          :bigint           not null, primary key
-#  description(テナントの説明) :text(65535)      not null
-#  name(テナント名（表示用）)  :string(255)      not null
-#  slug(テナント識別子)        :string(255)      not null
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
+#  id                                                                                                           :bigint           not null, primary key
+#  applying_policy(ポリシー適用状態（idle / progress / failed）)                                                :string(255)      default("idle"), not null
+#  description(テナントの説明)                                                                                  :text(65535)      not null
+#  name(テナント名（表示用）)                                                                                   :string(255)      not null
+#  slug(テナント識別子)                                                                                         :string(255)      not null
+#  unsubscribed_user_comment_policy(退会ユーザーのコメント表示ポリシー（keep_visible / hide_content / delete）) :string(255)      default("keep_visible"), not null
+#  unsubscribed_user_topic_policy(退会ユーザーのトピック表示ポリシー（keep_visible / lock / delete）)           :string(255)      default("keep_visible"), not null
+#  created_at                                                                                                   :datetime         not null
+#  updated_at                                                                                                   :datetime         not null
 #
 # Indexes
 #
 #  idx_tenants_slug  (slug) UNIQUE
 #
 class Tenant < ApplicationRecord
+  include TenantPolicyApplicable
+
   has_many :tenant_memberships, dependent: :destroy
   has_many :members, through: :tenant_memberships, source: :user
   has_many :tenant_invitations, dependent: :destroy
@@ -30,6 +35,24 @@ class Tenant < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 100 }
 
+  enum :unsubscribed_user_topic_policy, {
+    keep_visible: 'keep_visible',
+    lock: 'lock',
+    delete: 'delete'
+  }, prefix: :topic_policy, validate: true
+
+  enum :unsubscribed_user_comment_policy, {
+    keep_visible: 'keep_visible',
+    hide_content: 'hide_content',
+    delete: 'delete'
+  }, prefix: :comment_policy, validate: true
+
+  enum :applying_policy, {
+    idle: 'idle',
+    progress: 'progress',
+    failed: 'failed'
+  }, prefix: :applying_policy, validate: true
+
   validates :slug,
             presence: true,
             uniqueness: true,
@@ -40,6 +63,10 @@ class Tenant < ApplicationRecord
 
   validates :description, presence: true, length: { maximum: 500 }
 
+  validate :cannot_update_policy_while_applying, on: :update
+
+  after_update :apply_policy_later, if: :policy_changed?
+
   def member?(user)
     return false if user.nil?
 
@@ -47,6 +74,30 @@ class Tenant < ApplicationRecord
   end
 
   private
+
+  def cannot_update_policy_while_applying
+    return unless applying_policy_progress?
+
+    errors.add(:unsubscribed_user_topic_policy, :policy_applying) if unsubscribed_user_topic_policy_changed?
+
+    return unless unsubscribed_user_comment_policy_changed?
+
+    errors.add(:unsubscribed_user_comment_policy, :policy_applying)
+  end
+
+  def apply_policy_later
+    changed_policies = []
+    changed_policies << :topic if saved_change_to_unsubscribed_user_topic_policy?
+    changed_policies << :comment if saved_change_to_unsubscribed_user_comment_policy?
+
+    applying_policy_progress!
+    ApplyPolicyJob.perform_later(id, changed_policies)
+  end
+
+  def policy_changed?
+    saved_change_to_unsubscribed_user_topic_policy? ||
+      saved_change_to_unsubscribed_user_comment_policy?
+  end
 
   def create_default_ban_reasons
     default_reasons = [

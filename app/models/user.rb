@@ -30,6 +30,10 @@ class User < ApplicationRecord
   has_many :comments, foreign_key: 'author_id', dependent: :restrict_with_exception, inverse_of: :author
   has_many :tenant_memberships, dependent: :destroy
   has_many :tenants, through: :tenant_memberships
+  has_many :subscribed_tenant_memberships, lambda {
+    subscribed
+  }, class_name: 'TenantMembership', dependent: :destroy, inverse_of: :user
+  has_many :subscribed_tenants, through: :subscribed_tenant_memberships, source: :tenant
   has_many :sent_invitations,
            class_name: 'TenantInvitation', foreign_key: :inviter_id, dependent: :destroy,
            inverse_of: :inviter
@@ -42,7 +46,7 @@ class User < ApplicationRecord
   end
 
   def suspended?(tenant)
-    tenant_memberships.find_by(tenant: tenant)&.suspended? || false
+    membership_for(tenant)&.suspended? || false
   end
 
   def suspend!(tenant, suspended_until)
@@ -50,7 +54,7 @@ class User < ApplicationRecord
   end
 
   def suspended_until_date(tenant)
-    tenant_memberships.find_by(tenant: tenant)&.suspended_until_date
+    membership_for(tenant)&.suspended_until_date
   end
 
   def enforce_release_suspension!(tenant)
@@ -58,16 +62,15 @@ class User < ApplicationRecord
   end
 
   def member_of?(tenant)
-    tenant_memberships.exists?(tenant: tenant)
+    membership_for(tenant).present?
   end
 
-  def display_name_for(tenant)
-    membership = if association(:tenant_memberships).loaded?
-                   tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
-                 else
-                   tenant_memberships.find_by(tenant: tenant)
-                 end
-    membership&.display_name || ''
+  def unsubscribed_from?(tenant)
+    membership_for(tenant)&.unsubscribed? || false
+  end
+
+  def active_member_of?(tenant)
+    membership_for(tenant)&.subscribed? || false
   end
 
   def pending_invitations
@@ -79,6 +82,24 @@ class User < ApplicationRecord
   end
 
   def memberships_ordered_by_tenant_name
-    tenant_memberships.includes(:tenant).order('tenants.name')
+    subscribed_tenant_memberships.includes(:tenant).order('tenants.name')
+  end
+
+  def comments_in_tenant(tenant)
+    comments.joins(:topic).where(
+      topics: { tenant_id: tenant.id }
+    )
+  end
+
+  def topics_in_tenant(tenant)
+    topics.where(tenant_id: tenant.id)
+  end
+
+  def membership_for(tenant)
+    if association(:tenant_memberships).loaded?
+      tenant_memberships.detect { |tm| tm.tenant_id == tenant.id }
+    else
+      tenant_memberships.find_by(tenant: tenant)
+    end
   end
 end

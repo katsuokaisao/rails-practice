@@ -259,3 +259,12 @@ select.form-control {
 .close-button-icon {
     font-size: 1.5rem;
 }
+
+.field-section h2 + .field,
+.field-section .text-heading + .field {
+    margin-top: 1.5rem;
+}
+
+.field-section .field + .field {
+    margin-top: 1.5rem;
+}

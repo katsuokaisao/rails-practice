@@ -5,6 +5,7 @@ create_table 'topics', options: 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4' do |t|
   t.bigint   'author_id',     null: false
   t.string   'title',         null: false
   t.integer  'total_comment', null: false, default: 0
+  t.datetime 'locked_at',     null: true
   t.datetime 'created_at',    null: false
   t.datetime 'updated_at',    null: false
 
